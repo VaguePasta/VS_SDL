@@ -105,7 +105,7 @@ void Buttons::DrawButton(SDL_Point Position, int Scale)
 	else SDL_SetTextureColorMod(Button, 255, 255, 255);
 	SDL_RenderCopy(renderer, Button, NULL, &ButtonRect);
 }
-void DrawScore(SDL_Surface* ScoreTemp[], SDL_Texture* ScoreAnnounce[], SDL_Rect ScoreRect[])
+void DrawScore(SDL_Texture* ScoreAnnounce[], SDL_Rect ScoreRect[])
 {
 	SDL_RenderClear(renderer);
 	SDL_RenderCopy(renderer, ScoreAnnounce[0], NULL, &ScoreRect[0]);
@@ -125,10 +125,10 @@ void DrawCurrentScore()
 	SDL_DestroyTexture(ScoreTexture);
 	SDL_FreeSurface(ScoreTemp);
 }
-void DrawLetter(SDL_Surface* StringContent, SDL_Point pos)
+void DrawLetter(SDL_Texture* StringContent, SDL_Point pos)
 {
-	SDL_Texture* StringTexture = SDL_CreateTextureFromSurface(renderer, StringContent);
-	SDL_Rect StringRect = { pos.x,pos.y,StringContent->w,StringContent->h };
-	SDL_RenderCopy(renderer, StringTexture, NULL, &StringRect);
-	SDL_DestroyTexture(StringTexture);
+    int w,h;
+    SDL_QueryTexture(StringContent,NULL,NULL,&w,&h);
+	SDL_Rect StringRect = { pos.x,pos.y,w,h };
+	SDL_RenderCopy(renderer, StringContent, NULL, &StringRect);
 }

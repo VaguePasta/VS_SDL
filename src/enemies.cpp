@@ -123,13 +123,11 @@ void Enemies::Hurt()
 }
 void Enemies::Spawn(SDL_FPoint PlayerPosition)
 {
-	float distance_to_player;
 	do
 	{
 		position.x = rand() % LEVEL_WIDTH - 200;
 		position.y = rand() % LEVEL_HEIGHT - 200;
-		distance_to_player = sqrt((position.x - PlayerPosition.x) * (position.x - PlayerPosition.x) + (position.y - PlayerPosition.y) * (position.y - PlayerPosition.y));
-	} while (distance_to_player <= 1300);
+	} while (DistanceCalculation(player1.position,position) <= 1300);
 	flip = (rand() % 2 + 1 == 1) ? (SDL_FLIP_HORIZONTAL) : (SDL_FLIP_NONE);
 	LoadTexture(1);
 	Cooldown.Start();

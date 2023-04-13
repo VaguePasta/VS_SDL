@@ -48,7 +48,7 @@ class Buttons
         Buttons();
         ~Buttons();
 };
-void DrawScore(SDL_Surface*[], SDL_Texture*[],SDL_Rect ScoreRect[]);
+void DrawScore(SDL_Texture*[],SDL_Rect ScoreRect[]);
 void DrawCurrentScore();
-void DrawLetter(SDL_Surface*,SDL_Point);
+void DrawLetter(SDL_Texture*,SDL_Point);
 #endif // UI_H_INCLUDED

@@ -97,19 +97,29 @@ void PauseMenu()
 }
 void GameOver()
 {
-	if (BackgroundMusicIsPlaying) Mix_HaltChannel(BackgroundMusicChannel);
+	if (BackgroundMusicIsPlaying)
+    {
+        Mix_HaltChannel(BackgroundMusicChannel);
+        BackgroundMusicIsPlaying = false;
+    }
 	static SDL_Rect ScoreRect[3];
-	static SDL_Surface* ScoreTemp[3];
-	static SDL_Texture* ScoreAnnounce[3];
-	if (!gamestate.game_is_over)
+	static SDL_Texture* ScoreAnnounce[3] = {NULL,NULL,NULL};
+	if (ScoreAnnounce[0] == NULL)
+	{
+	    SDL_Surface *TempSurface = TTF_RenderText_Solid(GlobalFont, "You died.", { 178,34,34 });
+	    ScoreAnnounce[0] = SDL_CreateTextureFromSurface(renderer, TempSurface);
+	    ScoreRect[0] = { LOGICAL_WIDTH / 2 - 2 * (TempSurface->w),100,TempSurface->w * 4,TempSurface->h * 4 };
+	    SDL_FreeSurface(TempSurface);
+	}
+    if (!gamestate.game_is_over)
 	{
 		gamestate.game_is_over = true;
 		SDL_SetRenderTarget(renderer, NULL);
 		SDL_ShowCursor(SDL_ENABLE);
-		ScoreTemp[0] = TTF_RenderText_Solid(GlobalFont, "You died.", { 178,34,34 });
-		ScoreAnnounce[0] = SDL_CreateTextureFromSurface(renderer, ScoreTemp[0]);
-		ScoreTemp[1] = TTF_RenderText_Solid(GlobalFont, std::to_string(SCORE).c_str(), { 178,34,34 });
-		ScoreAnnounce[1] = SDL_CreateTextureFromSurface(renderer, ScoreTemp[1]);
+		SDL_Surface *TempSurface = TTF_RenderText_Solid(GlobalFont, std::to_string(SCORE).c_str(), { 178,34,34 });
+		ScoreAnnounce[1] = SDL_CreateTextureFromSurface(renderer, TempSurface);
+		ScoreRect[1] = { LOGICAL_WIDTH / 2 - 2 * (TempSurface->w),200,TempSurface->w * 4,TempSurface->h * 4 };
+		SDL_FreeSurface(TempSurface);
 		std::string HighscoreString;
 		if (SCORE > HIGH_SCORE)
 		{
@@ -117,13 +127,12 @@ void GameOver()
 			HIGH_SCORE = SCORE;
 		}
 		else HighscoreString = "Highest score: " + std::to_string(HIGH_SCORE);
-		ScoreTemp[2] = TTF_RenderText_Solid(GlobalFont, HighscoreString.c_str(), { 178,34,34 });
-		ScoreAnnounce[2] = SDL_CreateTextureFromSurface(renderer, ScoreTemp[2]);
-		ScoreRect[0] = { LOGICAL_WIDTH / 2 - 2 * (ScoreTemp[0]->w),100,ScoreTemp[0]->w * 4,ScoreTemp[0]->h * 4 };
-		ScoreRect[1] = { LOGICAL_WIDTH / 2 - 2 * (ScoreTemp[1]->w),200,ScoreTemp[1]->w * 4,ScoreTemp[1]->h * 4 };
-		ScoreRect[2] = { LOGICAL_WIDTH / 2 - 2 * (ScoreTemp[2]->w),300,ScoreTemp[2]->w * 4,ScoreTemp[2]->h * 4 };
+		TempSurface = TTF_RenderText_Solid(GlobalFont, HighscoreString.c_str(), { 178,34,34 });
+		ScoreAnnounce[2] = SDL_CreateTextureFromSurface(renderer, TempSurface);
+		ScoreRect[2] = { LOGICAL_WIDTH / 2 - 2 * (TempSurface->w),300,TempSurface->w * 4,TempSurface->h * 4 };
+		SDL_FreeSurface(TempSurface);
 	}
-	DrawScore(ScoreTemp, ScoreAnnounce, ScoreRect);
+	DrawScore(ScoreAnnounce, ScoreRect);
 	GameButtons[2].DrawButton({ LOGICAL_WIDTH / 2 - GameButtons[0].Size.x / 2 / 2,400 }, 2);
 	GameButtons[3].DrawButton({ LOGICAL_WIDTH / 2 - GameButtons[1].Size.x / 2 / 2,550 }, 2);
 	GameButtons[5].DrawButton({ 30,780 }, 2);
@@ -132,12 +141,8 @@ void GameOver()
 		if (SDL_PointInRect(&MousePosition, &GameButtons[2].ButtonRect))
 		{
 			Menu_Button();
-			SDL_DestroyTexture(ScoreAnnounce[0]);
 			SDL_DestroyTexture(ScoreAnnounce[1]);
 			SDL_DestroyTexture(ScoreAnnounce[2]);
-			SDL_FreeSurface(ScoreTemp[0]);
-			SDL_FreeSurface(ScoreTemp[1]);
-			SDL_FreeSurface(ScoreTemp[2]);
 		}
 		else if (SDL_PointInRect(&MousePosition, &GameButtons[3].ButtonRect))
 		{
@@ -153,11 +158,16 @@ void GameOver()
 void Settings()
 {
 	static std::string contents[] = { "Music","Sound effects","Resolution","Fullscreen","1280x720","1366x768","1600x900","1920x1080" };
-	static SDL_Surface* StringContent[] = { NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL };
+	static SDL_Texture* StringContent[] = { NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL };
 	static Buttons SettingButtons[5];
 	if (StringContent[0] == NULL)
 	{
-		for (int i = 0; i < 8; i++) StringContent[i] = TTF_RenderText_Solid(GlobalFont, contents[i].c_str(), { 255,255,255 });
+		for (int i = 0; i < 8; i++)
+        {
+            SDL_Surface *TempSurface = TTF_RenderText_Solid(GlobalFont, contents[i].c_str(), { 255,255,255 });
+            StringContent[i] = SDL_CreateTextureFromSurface(renderer,TempSurface);
+            SDL_FreeSurface(TempSurface);
+        }
 		for (int i = 0; i < 5; i++) SettingButtons[i] = GameButtons[7];
 	}
 	SDL_SetRenderTarget(renderer, NULL);
@@ -173,13 +183,9 @@ void Settings()
 	DrawLetter(StringContent[5], { 30,440 }); SettingButtons[2].DrawButton({ 150,435 }, 6); //1366x768
 	DrawLetter(StringContent[6], { 30,490 }); SettingButtons[3].DrawButton({ 150,485 }, 6); //1600x900
 	DrawLetter(StringContent[7], { 30,540 }); SettingButtons[4].DrawButton({ 150,535 }, 6); //1920x1080
-	static bool ChangingMusicVolume = false;
-	static bool ChangingSoundEffectVolume = false;
 	if (MouseDown)
 	{
-		if (SDL_PointInRect(&MousePosition, &GameButtons[6].ButtonRect)) gamestate.settings = false;
-		if (SDL_PointInRect(&MousePosition, &MusicVolumeBar.BarRect)) ChangingMusicVolume = true;
-		else if (SDL_PointInRect(&MousePosition, &SoundEffectVolumeBar.BarRect)) ChangingSoundEffectVolume = true;
+	    if (SDL_PointInRect(&MousePosition, &GameButtons[6].ButtonRect)) gamestate.settings = false;
 		else if (SDL_PointInRect(&MousePosition, &SettingButtons[0].ButtonRect) && !isFullScreen)
 		{
 			isFullScreen = true;
@@ -207,22 +213,17 @@ void Settings()
 		{
 			ChangeResolution(1920, 1080);
 		}
-		if (ChangingMusicVolume)
-		{
-			ChangeVolume(MusicVolumeBar);
-			Mix_VolumeMusic(MusicVolumeBar.Value * 1.0 / 100 * MIX_MAX_VOLUME);
-		}
-		else if (ChangingSoundEffectVolume)
-		{
-			ChangeVolume(SoundEffectVolumeBar);
-			Mix_MasterVolume(SoundEffectVolumeBar.Value * 1.0 / 100 * MIX_MAX_VOLUME);
-		}
 	}
-	else
-	{
-		ChangingMusicVolume = false;
-		ChangingSoundEffectVolume = false;
-	}
+    if (SDL_PointInRect(&MousePosition, &MusicVolumeBar.BarRect) && MouseState&SDL_BUTTON(1))
+    {
+        ChangeVolume(MusicVolumeBar);
+        Mix_VolumeMusic(MusicVolumeBar.Value * 1.0 / 100 * MIX_MAX_VOLUME);
+    }
+    else if (SDL_PointInRect(&MousePosition, &SoundEffectVolumeBar.BarRect) && MouseState&SDL_BUTTON(1))
+    {
+        ChangeVolume(SoundEffectVolumeBar);
+        Mix_MasterVolume(SoundEffectVolumeBar.Value * 1.0 / 100 * MIX_MAX_VOLUME);
+    }
 }
 void Start_Button()
 {
