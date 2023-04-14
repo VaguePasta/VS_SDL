@@ -104,6 +104,7 @@ void DrawUI()
 	player1.PlayerShield.ShieldIcon.DrawIcon({ 40,800 }, player1.PlayerShield.isOn);
 	DashIcon.DrawIcon({ 100,800 }, player1.Dashing);
 	DrawCurrentScore();
+	DrawFPS();
 }
 void DrawCursor()
 {

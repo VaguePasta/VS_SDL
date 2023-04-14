@@ -22,3 +22,6 @@ GameState::~GameState() {}
 GameState gamestate;
 SDL_Rect CurrentScoreRect;
 SDL_Texture* ScoreTexture;
+SDL_Rect FPSRect;
+SDL_Texture* FPSTexture;
+Timer FPSCounter;

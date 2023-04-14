@@ -60,6 +60,7 @@ void PauseMenu()
 				enemy[i]->Cooldown.Pause();
 				enemy[i]->MovingCounter.Pause();
 			}
+		FPSCounter.Pause();
 	}
 	if (gamestate.pause)
 	{
@@ -232,6 +233,7 @@ void Start_Button()
 	Mix_PauseMusic();
 	SDL_ShowCursor(SDL_DISABLE);
 	UpdateCurrentScore();
+	FPSCounter.Restart();
 }
 void Menu_Button()
 {
@@ -244,6 +246,7 @@ void Menu_Button()
 	ClearTexture(screentexture);
 	ClearTexture(CamTexture);
 	gamestate.start = false;
+	FPSTexture = nullptr;
 	for (int i = 0; i < Max_Bullets; i++)
 	{
 		delete player1.PlayerWeapon.bullets[i];
@@ -275,7 +278,7 @@ void Back_Button()
 			enemy[i]->Cooldown.Unpause();
 			enemy[i]->MovingCounter.Unpause();
 		}
-	SDL_Delay(200);
+	FPSCounter.Unpause();
 }
 void ChangeResolution(int _Width, int _Height)
 {

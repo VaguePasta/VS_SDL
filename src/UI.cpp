@@ -134,3 +134,18 @@ void DrawLetter(SDL_Texture* StringContent, SDL_Point pos)
 	SDL_Rect StringRect = { pos.x,pos.y,w,h };
 	SDL_RenderCopy(renderer, StringContent, NULL, &StringRect);
 }
+void DrawFPS()
+{
+	static int fps;
+	if (FPSCounter.GetTime() >= 1500 || FPSTexture == nullptr)
+	{
+		int CurrentFPS = (FPSCounter.GetTime()>=1500) ? (FrameCount / int(round(FPSCounter.GetTime() / 1000.0))):(0);
+		SDL_Surface* TempSurface = TTF_RenderText_Solid(GlobalFont, std::to_string(CurrentFPS).c_str(), { 255,255,0 });
+		FPSRect = { 400,10,TempSurface->w,TempSurface->h };
+		FPSTexture = SDL_CreateTextureFromSurface(renderer, TempSurface);
+		SDL_FreeSurface(TempSurface);
+		FPSCounter.Restart();
+		FrameCount = 0;
+	}
+	SDL_RenderCopy(renderer, FPSTexture, nullptr, &FPSRect);
+}

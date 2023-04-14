@@ -52,4 +52,5 @@ void DrawScore(SDL_Texture*[],SDL_Rect ScoreRect[]);
 void DrawCurrentScore();
 void DrawLetter(SDL_Texture*,SDL_Point);
 void UpdateCurrentScore();
+void DrawFPS();
 #endif // UI_H_INCLUDED

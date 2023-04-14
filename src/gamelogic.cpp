@@ -145,4 +145,5 @@ void GameLogic()
 	if (!player1.isDead) UpdateUI();
 	BulletCollision();
 	EnemyLogics();
+	FrameCount++;
 }

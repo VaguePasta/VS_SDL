@@ -10,6 +10,7 @@ const int LEVEL_HEIGHT = 5120;
 bool isFullScreen = true;
 int SCORE = 0;
 int HIGH_SCORE = 0;
+Uint32 FrameCount = 0;
 SDL_Window* window = NULL;
 SDL_Renderer* renderer = NULL;
 float DeltaTime = 0;

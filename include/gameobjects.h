@@ -19,6 +19,9 @@ extern Icons DashIcon;
 extern Buttons GameButtons[];
 extern SDL_Rect CurrentScoreRect;
 extern SDL_Texture* ScoreTexture;
+extern SDL_Rect FPSRect;
+extern SDL_Texture* FPSTexture;
+extern Timer FPSCounter;
 class GameState
 {
     public:
