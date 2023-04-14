@@ -17,6 +17,8 @@ extern Bars MusicVolumeBar;
 extern Bars SoundEffectVolumeBar;
 extern Icons DashIcon;
 extern Buttons GameButtons[];
+extern SDL_Rect CurrentScoreRect;
+extern SDL_Texture* ScoreTexture;
 class GameState
 {
     public:

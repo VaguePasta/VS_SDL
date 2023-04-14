@@ -20,3 +20,5 @@ GameState::GameState() :quit(false), start(false), pause(false), game_is_over(fa
 {}
 GameState::~GameState() {}
 GameState gamestate;
+SDL_Rect CurrentScoreRect;
+SDL_Texture* ScoreTexture;

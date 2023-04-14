@@ -8,6 +8,7 @@
 #include <SDL_mixer.h>
 #include <string>
 #include <SDL_ttf.h>
+#include "UI.h"
 void StartMenu()
 {
 	if (!gamestate.start)
@@ -230,6 +231,7 @@ void Start_Button()
 	gamestate.start = true;
 	Mix_PauseMusic();
 	SDL_ShowCursor(SDL_DISABLE);
+	UpdateCurrentScore();
 }
 void Menu_Button()
 {

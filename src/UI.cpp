@@ -112,18 +112,20 @@ void DrawScore(SDL_Texture* ScoreAnnounce[], SDL_Rect ScoreRect[])
 	SDL_RenderCopy(renderer, ScoreAnnounce[1], NULL, &ScoreRect[1]);
 	SDL_RenderCopy(renderer, ScoreAnnounce[2], NULL, &ScoreRect[2]);
 }
-void DrawCurrentScore()
+void UpdateCurrentScore()
 {
 	SDL_Color ScoreColor;
 	if (SCORE < 30) ScoreColor = { 0,192,0 };
 	else if (SCORE < 50) ScoreColor = { 255,255,0 };
 	else ScoreColor = { 255,0,0 };
 	SDL_Surface* ScoreTemp = TTF_RenderText_Solid(GlobalFont, std::to_string(SCORE).c_str(), ScoreColor);
-	SDL_Texture* ScoreTexture = SDL_CreateTextureFromSurface(renderer, ScoreTemp);
-	SDL_Rect ScoreRect = { 1500 - ScoreTemp->w * 2,20,ScoreTemp->w * 4,ScoreTemp->h * 4 };
-	SDL_RenderCopy(renderer, ScoreTexture, NULL, &ScoreRect);
-	SDL_DestroyTexture(ScoreTexture);
+	ScoreTexture = SDL_CreateTextureFromSurface(renderer, ScoreTemp);
+	CurrentScoreRect = { 1500 - ScoreTemp->w * 2,20,ScoreTemp->w * 4,ScoreTemp->h * 4 };
 	SDL_FreeSurface(ScoreTemp);
+}
+void DrawCurrentScore()
+{
+	SDL_RenderCopy(renderer, ScoreTexture, NULL, &CurrentScoreRect);
 }
 void DrawLetter(SDL_Texture* StringContent, SDL_Point pos)
 {

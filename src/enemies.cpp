@@ -8,6 +8,7 @@
 #include "gameobjects.h"
 #include <cstdlib>
 #include <cmath>
+#include "UI.h"
 using namespace std;
 vector<vector<vector<float>>> EnemiesInfo =   //{So thu tu, kich co, toc do, toc do danh, mau, gan-xa(0-1),dmg}, {So frame, toc do chuyen frame},{HitboxNoFlip},{HitboxFlip},{AttackBoxNoFlip},{AttackBoxFlip}
 {
@@ -113,6 +114,7 @@ void Enemies::Death()
 	Hitbox = { 0,0,0,0 };
 	AttackBox = { 0,0,0,0 };
 	MovingCounter.Restart();
+	UpdateCurrentScore();
 }
 void Enemies::Hurt()
 {
