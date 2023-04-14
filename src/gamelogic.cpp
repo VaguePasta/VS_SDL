@@ -8,7 +8,6 @@
 #include "gameobjects.h"
 #include "sounds.h"
 #include <cmath>
-using namespace std;
 void BulletCollision()
 {
 

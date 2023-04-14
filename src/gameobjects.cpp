@@ -4,9 +4,8 @@
 #include "UI.h"
 #include <SDL.h>
 #include <vector>
-using namespace std;
-vector <Enemies*> enemy;
-vector <EnemyProjectiles*> Projectiles;
+std::vector <Enemies*> enemy;
+std::vector <EnemyProjectiles*> Projectiles;
 player player1;
 sprite SlashEffect(21, 1);
 Bars HealthBar;

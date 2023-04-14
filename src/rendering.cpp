@@ -2,15 +2,12 @@
 #include "sprites.h"
 #include "effects.h"
 #include "global.h"
-#include "weapons.h"
 #include "enemies.h"
-#include "skills.h"
 #include "player.h"
 #include "gameobjects.h"
 #include "UI.h"
 #include "menu.h"
 #include "texturerendering.h"
-#include "enemyprojectiles.h"
 #include <cmath>
 #include <SDL_image.h>
 #include <SDL.h>

@@ -136,7 +136,6 @@ void DrawLetter(SDL_Texture* StringContent, SDL_Point pos)
 }
 void DrawFPS()
 {
-	static int fps;
 	if (FPSCounter.GetTime() >= 1500 || FPSTexture == nullptr)
 	{
 		int CurrentFPS = (FPSCounter.GetTime()>=1500) ? (FrameCount / int(round(FPSCounter.GetTime() / 1000.0))):(0);
