@@ -93,6 +93,8 @@ void GameProcessing()
 }
 void GameLoop()
 {
+	static Uint64 GetTime = 0;
+	static auto freq = 1000000000 / SDL_GetPerformanceFrequency();
 	GetMouseClick();
 	PlayMusic();
 	SDL_RenderClear(renderer);
@@ -112,4 +114,7 @@ void GameLoop()
 	PauseMenu();
 	if (player1.isDead && player1.CurrentSprite >= player1.NumOfSprites - 1) GameOver();
 	rendergame();
+	LoopTime = SDL_GetPerformanceCounter() * freq - GetTime;
+	GetTime = SDL_GetPerformanceCounter() * freq;
+	DeltaTime = 1.0 * (LoopTime) / 16666666;
 }
