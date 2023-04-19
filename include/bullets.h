@@ -18,6 +18,7 @@ class bullet
         int BulletSize;
         int BulletSpeed;
         int BulletRange;
+        int Damage;
         int CurrentWeapon;
         float DistanceTraveled;
         float angle;
@@ -32,4 +33,5 @@ class bullet
 extern std::vector <std::vector<int>> BulletSpritesList;
 void BulletDrawCorner(SDL_Rect[],SDL_Rect*,int);
 void BulletDrawEdge(SDL_Rect*,int);
+void BulletExplosion(bullet*);
 #endif // BULLETS_H_INCLUDED

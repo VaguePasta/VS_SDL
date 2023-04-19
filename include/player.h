@@ -5,26 +5,19 @@
 #include "sprites.h"
 #include "weapons.h"
 #include "skills.h"
-class player:public sprite
+class player:public sprite,public objects
 {
     public:
         weapon PlayerWeapon;
         Shield PlayerShield;
         Timer DashCooldown;
-        SDL_FPoint DashPosition;
         SDL_FPoint Direction;
-        SDL_FPoint DashDirection;
         SDL_FPoint BulletOrigin;
-        int Health;
         float Stamina;
-        bool isHurt;
         bool Dashing;
-        bool isDead;
         bool isSprinting;
         Uint32 DashCooldownTime;
         int CurrentWeapon;
-        bool isMoving;
-        bool isAttacking;
         bool MeleeAttacking;
         bool MeleeAttacked;
         player();

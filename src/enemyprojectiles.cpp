@@ -15,20 +15,6 @@ void LoadEnemiesProjectileSpritesFromDisk()
 }
 EnemyProjectiles::EnemyProjectiles()
 {
-	FPosition = { 0,0 };
-	Hitbox = { 0,0,0,0 };
-	Origin = { 0,0 };
-	Position = { 0,0 };
-	ProjectileSize = { 0,0 };
-	Target = { 0,0 };
-	angle = 0;
-	damage = 0;
-	distancetraveled = 0;
-	isAnimated = false;
-	range = 0;
-	speed = 0;
-	type = 0;
-
 	isShot = false;
 	Decayed = false;
 }

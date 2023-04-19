@@ -2,6 +2,6 @@
 #define GAMELOGIC_H_INCLUDED
 void GameLogic();
 void SpawnAndDeadEnemies();
-void BulletCollision();
+void BulletUpdate();
 void UpdateUI();
 #endif // GAMELOGIC_H_INCLUDED

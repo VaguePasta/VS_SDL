@@ -25,23 +25,21 @@ std::vector <std::vector<int>> PlayerSpritesInfo =                           //S
 };
 player::player() : PlayerWeapon(0)
 {
-}
-void player::Init(int CurrentSet, int Using_Weapon)
-{
-	NumOfSprites = PlayerSpritesInfo[0][1];
-	framespeed = PlayerSpritesInfo[0][2];
-	CurrentSprite = 0;
-	tempframe = 1;
 	speed = 5;
 	HitBoxSize = 62;
 	SpriteSize = 100;
 	DashCooldownTime = 3000;
+}
+void player::Init(int CurrentSet, int Using_Weapon)
+{
+	CurrentSprite = 0;
+	tempframe = 1;
+	NumOfSprites = PlayerSpritesInfo[0][1];
+	framespeed = PlayerSpritesInfo[0][2];
 	PlayerWeapon.LoadWeapon(0);
 	CurrentWeapon = Using_Weapon;
 	NumOfSprites = PlayerSpritesInfo[CurrentSet][1];
-	tempframe = 1;
 	framespeed = PlayerSpritesInfo[CurrentSet][2];
-	CurrentSprite = 0;
 	Health = 100;
 	Stamina = 100;
 	isMoving = false;
@@ -49,13 +47,13 @@ void player::Init(int CurrentSet, int Using_Weapon)
 	isSprinting = false;
 	MeleeAttacking = false;
 	MeleeAttacked = false;
-	flip = SDL_FLIP_NONE;
-	DashCooldown.Restart();
 	Dashing = false;
 	isAttacking = false;
 	isHurt = false;
 	DashIcon.isOnCooldown = false;
 	PlayerShield.ShieldIcon.isOnCooldown = false;
+	flip = SDL_FLIP_NONE;
+	DashCooldown.Restart();
 	position.x = LEVEL_WIDTH / 2;
 	position.y = LEVEL_HEIGHT / 2;
 	LoadTexture(CurrentSet);

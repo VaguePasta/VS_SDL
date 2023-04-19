@@ -69,6 +69,8 @@ void Shield::ShieldDamage(int damage)
 }
 void PlayerDash(SDL_FPoint& TempPos)
 {
+	static SDL_FPoint DashPosition;
+	static SDL_FPoint DashDirection;
 	if (player1.Dashing)
 	{
 		if (player1.DashCooldown.GetTime() >= 300)
@@ -80,8 +82,8 @@ void PlayerDash(SDL_FPoint& TempPos)
 		}
 		else
 		{
-			TempPos.x += 10 * player1.DashDirection.x * DeltaTime;
-			TempPos.y += 10 * player1.DashDirection.y * DeltaTime;
+			TempPos.x += 10 * DashDirection.x * DeltaTime;
+			TempPos.y += 10 * DashDirection.y * DeltaTime;
 		}
 	}
 	else
@@ -92,8 +94,8 @@ void PlayerDash(SDL_FPoint& TempPos)
 			{
 				Mix_PlayChannel(-1, SoundEffects[7], 0);
 				player1.Dashing = true;
-				player1.DashPosition = player1.position;
-				player1.DashDirection = player1.Direction;
+				DashPosition = player1.position;
+				DashDirection = player1.Direction;
 				player1.DashCooldown.Restart();
 			}
 		}
@@ -145,6 +147,7 @@ void GunShoot(bool& Recoil, Timer& RecoilTimer, float& ShootAngle)
             player1.PlayerWeapon.bullets[i]->BulletPositionFloat.y = BulletOrigin.y - player1.PlayerWeapon.bullets[i]->BulletSize / 2;
             player1.PlayerWeapon.bullets[i]->BulletPosition.x = (int)player1.PlayerWeapon.bullets[i]->BulletPositionFloat.x;
             player1.PlayerWeapon.bullets[i]->BulletPosition.y = (int)player1.PlayerWeapon.bullets[i]->BulletPositionFloat.y;
+			player1.PlayerWeapon.bullets[i]->Damage = player1.PlayerWeapon.damage;
             player1.PlayerWeapon.bullets[i]->angle = ShootAngle;
             player1.PlayerWeapon.bullets[i]->BulletSpeed = player1.PlayerWeapon.bulletspeed;
             player1.PlayerWeapon.bullets[i]->BulletRange = player1.PlayerWeapon.range;

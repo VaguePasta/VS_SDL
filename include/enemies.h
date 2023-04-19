@@ -8,19 +8,13 @@
 #include <cmath>
 extern std::vector<std::vector<std::vector<float>>> EnemiesInfo;
 void LoadEnemiesSpritesFromDisk();
-class Enemies:public sprite
+class Enemies:public sprite,public objects
 {
     public:
-        float Health;
         float Damage;
-        bool isRanged;
-        bool isDead;
-        bool Decayed;
-        bool isHurt;
         bool isSpawn;
-        bool isAttacking;
-        bool isRunning;
-        bool isIdling;
+        bool isRanged; 
+        bool Decayed;
         Timer Cooldown;
         Timer MovingCounter;
         float AttackSpeed;

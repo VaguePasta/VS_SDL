@@ -11,12 +11,9 @@ class sprite
         int tempframe;
         int framespeed;
         Uint32 AnimationDelay;
-        float speed;
         float SpriteAngle;
         SDL_Rect frame;
-        SDL_Rect Hitbox;
         SDL_Rect SpriteBox;
-        int HitBoxSize;
         sprite();
         sprite(int,int);
         ~sprite();
@@ -27,5 +24,17 @@ class sprite
         void animation();
 
 };
-SDL_Texture *animation(sprite &CurrentSprite);
+class objects
+{
+    public:
+        float speed;
+        float Health;
+        bool isDead;
+        bool isHurt;
+        bool isMoving;
+        bool isIdling;
+        bool isAttacking;
+        SDL_Rect Hitbox;
+        int HitBoxSize;
+};
 #endif // SPRITES_H_LOAD

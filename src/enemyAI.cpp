@@ -23,6 +23,7 @@ void EnemyLogics()
 		{
 			enemy[i]->Idle();
 		}
+		EnemyBulletCollision(enemy[i]);
 	}
 	EnemyProjectilesProcessing();
 }
@@ -69,7 +70,7 @@ void EnemyPathfinding(Enemies* enemy)
 		if (enemy->isAttacking) return;
 		if (!enemy->isHurt && !SDL_HasIntersection(&Hitbox, &enemy->AttackBox))
 		{
-			if (!enemy->isRunning) enemy->Run();
+			if (!enemy->isMoving) enemy->Run();
 			SDL_FPoint TempPos = enemy->position;
 			if (!enemy->isRanged) EnemyMoving(enemy, EnemyCenter, PlayerCenter);
 			else
@@ -93,7 +94,7 @@ void EnemyPathfinding(Enemies* enemy)
 		}
 		else
 		{
-			enemy->isRunning = false;
+			enemy->isMoving = false;
 		}
 	}
 }
@@ -264,4 +265,28 @@ SDL_FPoint EnemyAiming(SDL_FPoint& PlayerCenter, SDL_FPoint& EnemyCenter, int Cu
 	}
 	SDL_FPoint Target = { PlayerCenter.x + (int)player1.Direction.x * int(round(ScaleDistance)),PlayerCenter.y + (int)player1.Direction.y * int(round(ScaleDistance)) };
 	return Target;
+}
+void EnemyBulletCollision(Enemies* enemy)
+{
+	for (int i=0;i<Max_Bullets;i++) if (player1.PlayerWeapon.bullets[i]->isShot && !player1.PlayerWeapon.bullets[i]->Decayed)
+	{
+		if (SDL_HasIntersection(&player1.PlayerWeapon.bullets[i]->Hitbox, &enemy->Hitbox))
+		{
+			if (player1.PlayerWeapon.bullets[i]->CurrentWeapon != 2)
+			{
+				enemy->Health -= player1.PlayerWeapon.damage;
+				if (!enemy->isDead)
+				{
+					if (enemy->Health <= 0) enemy->Death();
+					else if (!enemy->isAttacking) enemy->Hurt();
+				}
+				delete player1.PlayerWeapon.bullets[i];
+				player1.PlayerWeapon.bullets[i] = new bullet(player1.CurrentWeapon);
+			}
+			else
+			{
+				BulletExplosion(player1.PlayerWeapon.bullets[i]);
+			}
+		}
+	}
 }

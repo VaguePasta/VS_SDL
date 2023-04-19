@@ -60,7 +60,7 @@ Enemies::Enemies()
 	isDead = false;
 	isIdling = true;
 	isAttacking = false;
-	isRunning = false;
+	isMoving = false;
 	isRanged = EnemiesInfo[CurrentEnemyType][0][5];
 	Decayed = false;
 }
@@ -106,7 +106,7 @@ void Enemies::Death()
 {
 	SCORE++;
 	isDead = true;
-	isRunning = false;
+	isMoving = false;
 	isAttacking = false;
 	isIdling = false;
 	isHurt = false;
@@ -129,7 +129,7 @@ void Enemies::Spawn(SDL_FPoint PlayerPosition)
 	{
 		position.x = rand() % LEVEL_WIDTH - 200;
 		position.y = rand() % LEVEL_HEIGHT - 200;
-	} while (DistanceCalculation(player1.position,position) <= 1300);
+	} while (DistanceCalculation(player1.position,position) <= 1500);
 	flip = (rand() % 2 + 1 == 1) ? (SDL_FLIP_HORIZONTAL) : (SDL_FLIP_NONE);
 	LoadTexture(1);
 	Cooldown.Start();
@@ -139,7 +139,7 @@ void Enemies::Spawn(SDL_FPoint PlayerPosition)
 void Enemies::Attack()
 {
 	isIdling = false;
-	isRunning = false;
+	isMoving = false;
 	isAttacking = true;
 	Cooldown.Restart();
 	LoadTexture(3);
@@ -149,13 +149,13 @@ void Enemies::Run()
 {
 	isIdling = false;
 	isAttacking = false;
-	isRunning = true;
+	isMoving = true;
 	LoadTexture(2);
 }
 void Enemies::Idle()
 {
 	isAttacking = false;
-	isRunning = false;
+	isMoving = false;
 	isIdling = true;
 	LoadTexture(1);
 }

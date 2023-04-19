@@ -3,6 +3,7 @@
 #include "bullets.h"
 #include "global.h"
 #include "gameobjects.h"
+#include "sounds.h"
 #include <cmath>
 SDL_FPoint CalculateOrigin()
 {
@@ -88,6 +89,23 @@ void bullet::Update()
 	}
 	Hitbox = { BulletPosition.x + BulletSize / 3,BulletPosition.y + BulletSize / 3,BulletSize / 3,BulletSize / 3 };
 	BulletSprite = { BulletPosition.x,BulletPosition.y,BulletSize,BulletSize };
+}
+void BulletExplosion(bullet* CurrentBullet)
+{
+	CurrentBullet->Decayed = true;
+	SDL_Rect DamageSite = { CurrentBullet->BulletPosition.x - 120,CurrentBullet->BulletPosition.y - 120,240,240 };
+	for (int j = 0; j < Current_max_enemies; j++) if (SDL_HasIntersection(&enemy[j]->Hitbox, &DamageSite))
+	{
+		enemy[j]->Health -= CurrentBullet->Damage;
+		if (!enemy[j]->isDead)
+		{
+			if (enemy[j]->Health <= 0) enemy[j]->Death();
+			else if (!enemy[j]->isAttacking) enemy[j]->Hurt();
+		}
+	}
+	CurrentBullet->Explosion(8, 8);
+	Mix_HaltChannel(PlayingChannel);
+	Mix_PlayChannel(-1, SoundEffects[3], 0);
 }
 void bullet::Explosion(int NumOfFrame, int framespeed)
 {
