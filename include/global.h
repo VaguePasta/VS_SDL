@@ -11,6 +11,8 @@ extern const int LOGICAL_HEIGHT;
 extern const int LEVEL_WIDTH;
 extern const int LEVEL_HEIGHT;
 extern Uint32 FrameCount;
+extern Uint64 GetTime;
+extern Uint16 freq;
 extern float DeltaTime;
 extern Uint32 LoopTime;
 extern bool isFullScreen;

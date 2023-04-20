@@ -7,4 +7,5 @@ void InitSDL();
 void InitWindow();
 void GameLoop();
 void GameProcessing();
+void Pause();
 #endif // PROGRAM_H_INCLUDED

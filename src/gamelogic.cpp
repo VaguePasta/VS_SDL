@@ -12,7 +12,8 @@ void BulletUpdate()
 {
 	for (int i = 0; i < Max_Bullets; i++)
 	{
-		if (!player1.PlayerWeapon.bullets[i]->isAnimated||(player1.PlayerWeapon.bullets[i]->isAnimated && !player1.PlayerWeapon.bullets[i]->Decayed))
+	    if (!player1.PlayerWeapon.bullets[i]->isShot) continue;
+		if (!player1.PlayerWeapon.bullets[i]->Decayed)
 		{
 			if (player1.PlayerWeapon.bullets[i]->Decay())
 			{
@@ -20,9 +21,12 @@ void BulletUpdate()
 				player1.PlayerWeapon.bullets[i] = new bullet(player1.CurrentWeapon);
 				return;
 			}
-			else player1.PlayerWeapon.bullets[i]->Update();
+			else
+            {
+                player1.PlayerWeapon.bullets[i]->Update();
+            }
 		}
-		else if (player1.PlayerWeapon.bullets[i]->Decayed)
+		else
 			if (player1.PlayerWeapon.bullets[i]->BulletAnimation.CurrentSprite >= player1.PlayerWeapon.bullets[i]->BulletAnimation.NumOfSprites - 1)
 			{
 				delete player1.PlayerWeapon.bullets[i];

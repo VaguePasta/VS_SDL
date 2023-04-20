@@ -43,59 +43,46 @@ void StartMenu()
 }
 void PauseMenu()
 {
-	if (Keyboard[SDL_SCANCODE_ESCAPE] && !gamestate.pause && !player1.isDead)
-	{
-		gamestate.pause = true;
-		MouseDown = false;
-		if (BackgroundMusicIsPlaying) Mix_HaltChannel(BackgroundMusicChannel);
-		Mix_ResumeMusic();
-		SDL_ShowCursor(SDL_ENABLE);
-		SDL_SetTextureColorMod(CamTexture, 192, 192, 192);
-		player1.DashCooldown.Pause();
-		player1.PlayerShield.Time.Pause();
-		player1.PlayerWeapon.ShootingDelay.Pause();
-		for (int i = 0; i < Current_max_enemies; i++)
-			if (enemy[i]->isSpawn)
-			{
-				enemy[i]->Cooldown.Pause();
-				enemy[i]->MovingCounter.Pause();
-			}
-		FPSCounter.Pause();
-	}
-	if (gamestate.pause)
-	{
-		SDL_SetRenderTarget(renderer, NULL);
-		SDL_RenderClear(renderer);
-		SDL_RenderCopy(renderer, CamTexture, NULL, NULL);
-		GameButtons[1].DrawButton({ LOGICAL_WIDTH / 2 - GameButtons[0].Size.x / 2 / 2,250 }, 2);
-		GameButtons[2].DrawButton({ LOGICAL_WIDTH / 2 - GameButtons[0].Size.x / 2 / 2,400 }, 2);
-		GameButtons[3].DrawButton({ LOGICAL_WIDTH / 2 - GameButtons[1].Size.x / 2 / 2,550 }, 2);
-		GameButtons[4].DrawButton({ 1480,780 }, 2);
-		GameButtons[5].DrawButton({ 30,780 }, 2);
-		if (MouseDown)
-		{
-			if (SDL_PointInRect(&MousePosition, &GameButtons[1].ButtonRect))
-			{
-				Back_Button();
-			}
-			else if (SDL_PointInRect(&MousePosition, &GameButtons[2].ButtonRect))
-			{
-				Menu_Button();
-			}
-			else if (SDL_PointInRect(&MousePosition, &GameButtons[3].ButtonRect))
-			{
-				gamestate.quit = true;
-			}
-			else if (SDL_PointInRect(&MousePosition, &GameButtons[4].ButtonRect))
-			{
-				Mix_HaltMusic();
-			}
-			else if (SDL_PointInRect(&MousePosition, &GameButtons[5].ButtonRect))
-			{
-				gamestate.settings = true;
-			}
-		}
-	}
+    static Timer PauseDelay(1);
+    if (!PauseDelay.Started) PauseDelay.Start();
+    SDL_SetRenderTarget(renderer, NULL);
+    SDL_RenderClear(renderer);
+    SDL_RenderCopy(renderer, CamTexture, NULL, NULL);
+    GameButtons[1].DrawButton({ LOGICAL_WIDTH / 2 - GameButtons[0].Size.x / 2 / 2,250 }, 2);
+    GameButtons[2].DrawButton({ LOGICAL_WIDTH / 2 - GameButtons[0].Size.x / 2 / 2,400 }, 2);
+    GameButtons[3].DrawButton({ LOGICAL_WIDTH / 2 - GameButtons[1].Size.x / 2 / 2,550 }, 2);
+    GameButtons[4].DrawButton({ 1480,780 }, 2);
+    GameButtons[5].DrawButton({ 30,780 }, 2);
+	if (Keyboard[SDL_SCANCODE_ESCAPE] && PauseDelay.GetTime() >= 500)
+    {
+        Back_Button();
+        PauseDelay.Reset();
+        return;
+    }
+    if (MouseDown)
+    {
+        if (SDL_PointInRect(&MousePosition, &GameButtons[1].ButtonRect))
+        {
+            Back_Button();
+            PauseDelay.Reset();
+        }
+        else if (SDL_PointInRect(&MousePosition, &GameButtons[2].ButtonRect))
+        {
+            Menu_Button();
+        }
+        else if (SDL_PointInRect(&MousePosition, &GameButtons[3].ButtonRect))
+        {
+            gamestate.quit = true;
+        }
+        else if (SDL_PointInRect(&MousePosition, &GameButtons[4].ButtonRect))
+        {
+            Mix_HaltMusic();
+        }
+        else if (SDL_PointInRect(&MousePosition, &GameButtons[5].ButtonRect))
+        {
+            gamestate.settings = true;
+        }
+    }
 }
 void GameOver()
 {
@@ -279,6 +266,7 @@ void Back_Button()
 			enemy[i]->MovingCounter.Unpause();
 		}
 	FPSCounter.Unpause();
+	GetTime = SDL_GetPerformanceCounter() *freq;
 }
 void ChangeResolution(int _Width, int _Height)
 {

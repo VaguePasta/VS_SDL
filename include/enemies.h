@@ -13,7 +13,7 @@ class Enemies:public sprite,public objects
     public:
         float Damage;
         bool isSpawn;
-        bool isRanged; 
+        bool isRanged;
         bool Decayed;
         Timer Cooldown;
         Timer MovingCounter;

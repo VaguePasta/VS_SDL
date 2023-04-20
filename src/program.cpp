@@ -93,8 +93,6 @@ void GameProcessing()
 }
 void GameLoop()
 {
-	static Uint64 GetTime = 0;
-	static auto freq = 1000000000 / SDL_GetPerformanceFrequency();
 	GetMouseClick();
 	PlayMusic();
 	SDL_RenderClear(renderer);
@@ -110,11 +108,50 @@ void GameLoop()
 		rendergame();
 		return;
 	}
-	else if (!gamestate.pause && !gamestate.game_is_over) GameProcessing();
-	PauseMenu();
-	if (player1.isDead && player1.CurrentSprite >= player1.NumOfSprites - 1) GameOver();
-	rendergame();
-	LoopTime = SDL_GetPerformanceCounter() * freq - GetTime;
-	GetTime = SDL_GetPerformanceCounter() * freq;
-	DeltaTime = 1.0 * (LoopTime) / 16666666;
+	Pause();
+	if (gamestate.pause)
+    {
+        PauseMenu();
+        rendergame();
+        return;
+    }
+    if (player1.isDead && player1.CurrentSprite >= player1.NumOfSprites - 1)
+    {
+        GameOver();
+        rendergame();
+        return;
+    }
+    if (!gamestate.game_is_over)
+    {
+        GameProcessing();
+        rendergame();
+        LoopTime = SDL_GetPerformanceCounter() * freq - GetTime;
+        GetTime = SDL_GetPerformanceCounter() * freq;
+        DeltaTime = 1.0 * (LoopTime) / 16666666;
+    }
+}
+void Pause()
+{
+	static Timer PauseDelay(1);
+	if (!PauseDelay.Started && !gamestate.pause) PauseDelay.Start();
+	if (Keyboard[SDL_SCANCODE_ESCAPE] && !gamestate.pause && !player1.isDead && PauseDelay.GetTime() >= 500)
+	{
+		gamestate.pause = true;
+		MouseDown = false;
+		if (BackgroundMusicIsPlaying) Mix_HaltChannel(BackgroundMusicChannel);
+		Mix_ResumeMusic();
+		SDL_ShowCursor(SDL_ENABLE);
+		SDL_SetTextureColorMod(CamTexture, 192, 192, 192);
+		player1.DashCooldown.Pause();
+		player1.PlayerShield.Time.Pause();
+		player1.PlayerWeapon.ShootingDelay.Pause();
+		for (int i = 0; i < Current_max_enemies; i++)
+			if (enemy[i]->isSpawn)
+			{
+				enemy[i]->Cooldown.Pause();
+				enemy[i]->MovingCounter.Pause();
+			}
+		FPSCounter.Pause();
+		PauseDelay.Reset();
+	}
 }
