@@ -20,7 +20,7 @@ void StartMenu()
 		GameButtons[3].DrawButton({ LOGICAL_WIDTH / 2 - GameButtons[1].Size.x / 2 / 2,650 }, 2);
 		GameButtons[4].DrawButton({ 1480,780 }, 2);
 		GameButtons[5].DrawButton({ 30,780 }, 2);
-		if (MouseDown)
+		if (MouseLeftDown)
 		{
 			if (SDL_PointInRect(&MousePosition, &GameButtons[0].ButtonRect) && (MouseState & SDL_BUTTON(1)))
 			{
@@ -44,26 +44,39 @@ void StartMenu()
 void PauseMenu()
 {
     static Timer PauseDelay(1);
+	static bool HideHUD = false;
     if (!PauseDelay.Started) PauseDelay.Start();
     SDL_SetRenderTarget(renderer, NULL);
     SDL_RenderClear(renderer);
     SDL_RenderCopy(renderer, CamTexture, NULL, NULL);
-    GameButtons[1].DrawButton({ LOGICAL_WIDTH / 2 - GameButtons[0].Size.x / 2 / 2,250 }, 2);
-    GameButtons[2].DrawButton({ LOGICAL_WIDTH / 2 - GameButtons[0].Size.x / 2 / 2,400 }, 2);
-    GameButtons[3].DrawButton({ LOGICAL_WIDTH / 2 - GameButtons[1].Size.x / 2 / 2,550 }, 2);
-    GameButtons[4].DrawButton({ 1480,780 }, 2);
-    GameButtons[5].DrawButton({ 30,780 }, 2);
+	if (!HideHUD)
+	{
+		GameButtons[1].DrawButton({ LOGICAL_WIDTH / 2 - GameButtons[0].Size.x / 2 / 2,250 }, 2);
+		GameButtons[2].DrawButton({ LOGICAL_WIDTH / 2 - GameButtons[0].Size.x / 2 / 2,400 }, 2);
+		GameButtons[3].DrawButton({ LOGICAL_WIDTH / 2 - GameButtons[1].Size.x / 2 / 2,550 }, 2);
+		GameButtons[4].DrawButton({ 1480,780 }, 2);
+		GameButtons[5].DrawButton({ 30,780 }, 2);
+	}
 	if (Keyboard[SDL_SCANCODE_ESCAPE] && PauseDelay.GetTime() >= 500)
     {
         Back_Button();
+		HideHUD = false;
         PauseDelay.Reset();
         return;
     }
-    if (MouseDown)
+	if (MouseRightDown)
+	{
+		HideHUD = !HideHUD;
+		if (HideHUD) SDL_SetTextureColorMod(CamTexture, 255, 255, 255);
+		else SDL_SetTextureColorMod(CamTexture, 192, 192, 192);
+	}
+    if (MouseLeftDown)
     {
+		if (HideHUD) return;
         if (SDL_PointInRect(&MousePosition, &GameButtons[1].ButtonRect))
         {
             Back_Button();
+			HideHUD = false;
             PauseDelay.Reset();
         }
         else if (SDL_PointInRect(&MousePosition, &GameButtons[2].ButtonRect))
@@ -125,7 +138,7 @@ void GameOver()
 	GameButtons[2].DrawButton({ LOGICAL_WIDTH / 2 - GameButtons[0].Size.x / 2 / 2,400 }, 2);
 	GameButtons[3].DrawButton({ LOGICAL_WIDTH / 2 - GameButtons[1].Size.x / 2 / 2,550 }, 2);
 	GameButtons[5].DrawButton({ 30,780 }, 2);
-	if (MouseDown)
+	if (MouseLeftDown)
 	{
 		if (SDL_PointInRect(&MousePosition, &GameButtons[2].ButtonRect))
 		{
@@ -172,13 +185,14 @@ void Settings()
 	DrawLetter(StringContent[5], { 30,440 }); SettingButtons[2].DrawButton({ 150,435 }, 6); //1366x768
 	DrawLetter(StringContent[6], { 30,490 }); SettingButtons[3].DrawButton({ 150,485 }, 6); //1600x900
 	DrawLetter(StringContent[7], { 30,540 }); SettingButtons[4].DrawButton({ 150,535 }, 6); //1920x1080
-	if (MouseDown)
+	if (MouseLeftDown)
 	{
 		if (SDL_PointInRect(&MousePosition, &GameButtons[6].ButtonRect)) gamestate.settings = false;
 		else if (SDL_PointInRect(&MousePosition, &SettingButtons[0].ButtonRect) && !isFullScreen)
 		{
 			isFullScreen = true;
-			MouseDown = false;
+			MouseLeftDown = false;
+			MouseRightDown = false;
 			SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN_DESKTOP);
 			SDL_GetWindowSize(window, &SCREEN_WIDTH, &SCREEN_HEIGHT);
 			SDL_DestroyTexture(GameBackground);
@@ -278,7 +292,8 @@ void ChangeResolution(int _Width, int _Height)
 	Drawbackground(); combinetexture();
 	WrapCamera();
 	isFullScreen = false;
-	MouseDown = false;
+	MouseLeftDown = false;
+	MouseRightDown = false;
 }
 void ChangeVolume(Bars& VolumeBar)
 {

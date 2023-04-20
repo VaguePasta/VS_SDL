@@ -251,16 +251,27 @@ void GetMouseClick()
 	if (MouseRelativePosition.y < 0) MouseRelativePosition.y += LEVEL_HEIGHT;
 	if (MouseRelativePosition.x > LEVEL_WIDTH) MouseRelativePosition.x -= LEVEL_WIDTH;
 	if (MouseRelativePosition.y > LEVEL_HEIGHT) MouseRelativePosition.y -= LEVEL_HEIGHT;
-	static bool Down1, Down2 = false;
-	Down1 = false;
+	static bool Down1l, Down1r, Down2l = false, Down2r = false;
+	Down1l = false;
 	if (MouseState & SDL_BUTTON(1))
 	{
-		Down1 = true;
-		if (Down1 != Down2)
+		Down1l = true;
+		if (Down1l != Down2l)
 		{
-			MouseDown = true;
+			MouseLeftDown = true;
 		}
-		else MouseDown = false;
+		else MouseLeftDown = false;
 	}
-	Down2 = Down1;
+	Down1r = false;
+	if (MouseState & SDL_BUTTON(3))
+	{
+		Down1r = true;
+		if (Down1r != Down2r)
+		{
+			MouseRightDown = true;
+		}
+		else MouseRightDown = false;
+	}
+	Down2l = Down1l;
+	Down2r = Down1r;
 }

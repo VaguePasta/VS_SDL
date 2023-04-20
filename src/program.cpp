@@ -137,7 +137,8 @@ void Pause()
 	if (Keyboard[SDL_SCANCODE_ESCAPE] && !gamestate.pause && !player1.isDead && PauseDelay.GetTime() >= 500)
 	{
 		gamestate.pause = true;
-		MouseDown = false;
+		MouseLeftDown = false;
+		MouseRightDown = false;
 		if (BackgroundMusicIsPlaying) Mix_HaltChannel(BackgroundMusicChannel);
 		Mix_ResumeMusic();
 		SDL_ShowCursor(SDL_ENABLE);
