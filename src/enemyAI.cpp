@@ -274,7 +274,7 @@ void EnemyBulletCollision(Enemies* enemy)
 		{
 			if (player1.PlayerWeapon.bullets[i]->CurrentWeapon != 2)
 			{
-				enemy->Health -= player1.PlayerWeapon.damage;
+				enemy->Health -= player1.PlayerWeapon.bullets[i]->Damage;
 				if (!enemy->isDead)
 				{
 					if (enemy->Health <= 0) enemy->Death();
