@@ -76,6 +76,7 @@ void InitObjects()
 	GameButtons[5].Init(5);
 	GameButtons[6].Init(6);
 	GameButtons[7].Init(7);
+	GameButtons[8].Init(8);
 	EffectSprites[0] = IMG_LoadTexture(renderer, "resources/effects/Explosion.PNG");
 	EffectSprites[1] = IMG_LoadTexture(renderer, "resources/effects/Slash.PNG");
 	player1.Init(0, 0);

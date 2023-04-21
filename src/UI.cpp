@@ -15,6 +15,7 @@ void LoadButtons()
 	ButtonSprites[5] = IMG_LoadTexture(renderer, "resources/UI/buttons/Settings.PNG");
 	ButtonSprites[6] = IMG_LoadTexture(renderer, "resources/UI/buttons/BackSquare.PNG");
 	ButtonSprites[7] = IMG_LoadTexture(renderer, "resources/UI/buttons/Check.PNG");
+	ButtonSprites[8] = IMG_LoadTexture(renderer, "resources/UI/buttons/Cross.PNG");
 }
 void LoadFont()
 {

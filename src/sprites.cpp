@@ -14,6 +14,7 @@ sprite::sprite(int _NumOfFrames, int _FrameSpeed)
 	CurrentSprite = 0;
 	tempframe = 1;
 	flip = SDL_FLIP_NONE;
+	AnimationDelay = 0;
 }
 sprite::~sprite() {}
 void sprite::framecalc()
@@ -24,8 +25,8 @@ void sprite::framecalc()
 void sprite::animation()
 {
 	framecalc();
-	AnimationDelay += LoopTime;
-	if (AnimationDelay >= 16666666)
+	AnimationDelay += DeltaTime;
+	if (AnimationDelay >= 0.9)
 	{
 		if (tempframe / framespeed >= 1) { CurrentSprite++; tempframe = 1; }
 		tempframe++;

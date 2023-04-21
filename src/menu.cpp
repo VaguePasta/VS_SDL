@@ -157,18 +157,20 @@ void GameOver()
 }
 void Settings()
 {
-	static std::string contents[] = { "Music","Sound effects","Resolution","Fullscreen","1280x720","1366x768","1600x900","1920x1080" };
-	static SDL_Texture* StringContent[] = { NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL };
-	static Buttons SettingButtons[5];
+	static bool VSync = false;
+	static std::string contents[] = { "Music","Sound effects","Resolution","Fullscreen","1280x720","1366x768","1600x900","1920x1080","VSync" };
+	static SDL_Texture* StringContent[] = { NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL };
+	static Buttons SettingButtons[6];
 	if (StringContent[0] == NULL)
 	{
-		for (int i = 0; i < 8; i++)
+		for (int i = 0; i < 9; i++)
 		{
 			SDL_Surface* TempSurface = TTF_RenderText_Solid(GlobalFont, contents[i].c_str(), { 255,255,255 });
 			StringContent[i] = SDL_CreateTextureFromSurface(renderer, TempSurface);
 			SDL_FreeSurface(TempSurface);
 		}
 		for (int i = 0; i < 5; i++) SettingButtons[i] = GameButtons[7];
+		SettingButtons[5] = GameButtons[8];
 	}
 	SDL_SetRenderTarget(renderer, NULL);
 	SDL_RenderClear(renderer);
@@ -183,6 +185,7 @@ void Settings()
 	DrawLetter(StringContent[5], { 30,440 }); SettingButtons[2].DrawButton({ 150,435 }, 6); //1366x768
 	DrawLetter(StringContent[6], { 30,490 }); SettingButtons[3].DrawButton({ 150,485 }, 6); //1600x900
 	DrawLetter(StringContent[7], { 30,540 }); SettingButtons[4].DrawButton({ 150,535 }, 6); //1920x1080
+	DrawLetter(StringContent[8], { 30,590 }); SettingButtons[5].DrawButton({ 150,585 }, 6); //VSync
 	if (MouseLeftDown)
 	{
 		if (SDL_PointInRect(&MousePosition, &GameButtons[6].ButtonRect)) gamestate.settings = false;
@@ -213,6 +216,17 @@ void Settings()
 		else if (SDL_PointInRect(&MousePosition, &SettingButtons[4].ButtonRect) && SCREEN_WIDTH != 1920)
 		{
 			ChangeResolution(1920, 1080);
+		}
+		else if (SDL_PointInRect(&MousePosition, &SettingButtons[5].ButtonRect))
+		{
+			VSync = !VSync;
+			SettingButtons[5] = GameButtons[VSync ? 7 : 8];
+			SDL_RenderSetVSync(renderer, VSync);
+			SDL_DestroyTexture(GameBackground);
+			Drawbackground(); combinetexture();
+			WrapCamera();
+			MouseLeftDown = false;
+			MouseRightDown = false;
 		}
 	}
 	if (SDL_PointInRect(&MousePosition, &MusicVolumeBar.BarRect) && MouseState & SDL_BUTTON(1))

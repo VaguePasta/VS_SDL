@@ -14,7 +14,7 @@ Bars StaminaBar;
 Bars MusicVolumeBar;
 Bars SoundEffectVolumeBar;
 Icons DashIcon;
-Buttons GameButtons[8];
+Buttons GameButtons[9];
 GameState::GameState() :quit(false), start(false), pause(false), game_is_over(false), settings(false)
 {}
 GameState::~GameState() {}

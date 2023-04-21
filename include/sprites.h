@@ -10,7 +10,7 @@ class sprite
         int SpriteSize;
         int tempframe;
         int framespeed;
-        Uint32 AnimationDelay;
+        float AnimationDelay;
         float SpriteAngle;
         SDL_Rect frame;
         SDL_Rect SpriteBox;
