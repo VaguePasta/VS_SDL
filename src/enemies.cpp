@@ -151,6 +151,7 @@ void Enemies::Run()
 	isAttacking = false;
 	isMoving = true;
 	LoadTexture(2);
+	MovingCounter.Restart();
 }
 void Enemies::Idle()
 {
@@ -158,6 +159,7 @@ void Enemies::Idle()
 	isMoving = false;
 	isIdling = true;
 	LoadTexture(1);
+	MovingCounter.Restart();
 }
 void EnemyDrawCorner(SDL_Rect TempRect[], int i)
 {

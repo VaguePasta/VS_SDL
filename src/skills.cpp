@@ -131,37 +131,37 @@ void GunShoot(bool& Recoil, Timer& RecoilTimer, float& ShootAngle)
 {
 	if (player1.PlayerWeapon.ShootingDelay.GetTime() < 1000 / player1.PlayerWeapon.shootingspeed) return;
 	SDL_FPoint BulletOrigin;
-    BulletOrigin = CalculateOrigin();
-    int x_weapon = (player1.flip == SDL_FLIP_NONE) ? (19) : (-19);
-    int y_weapon = 16;
-    float vec_x = (player1.position.x + player1.SpriteSize / 2 + x_weapon) - (MousePosition.x + camera[0].CameraPosition.x);
-    float vec_y = (player1.position.y + player1.SpriteSize / 2 + y_weapon) - (MousePosition.y + camera[0].CameraPosition.y);
-    ShootAngle = atan2(vec_y, vec_x) * 180.000 / 3.14159265 + 180;
-    for (int i = 0; i < Max_Bullets; i++)
-    {
-        if (!player1.PlayerWeapon.bullets[i]->isShot)
-        {
-            player1.PlayerWeapon.bullets[i]->isShot = true;
-            player1.PlayerWeapon.bullets[i]->origin = BulletOrigin;
-            player1.PlayerWeapon.bullets[i]->BulletPositionFloat.x = BulletOrigin.x - player1.PlayerWeapon.bullets[i]->BulletSize / 2;
-            player1.PlayerWeapon.bullets[i]->BulletPositionFloat.y = BulletOrigin.y - player1.PlayerWeapon.bullets[i]->BulletSize / 2;
-            player1.PlayerWeapon.bullets[i]->BulletPosition.x = (int)player1.PlayerWeapon.bullets[i]->BulletPositionFloat.x;
-            player1.PlayerWeapon.bullets[i]->BulletPosition.y = (int)player1.PlayerWeapon.bullets[i]->BulletPositionFloat.y;
+	BulletOrigin = CalculateOrigin();
+	int x_weapon = (player1.flip == SDL_FLIP_NONE) ? (19) : (-19);
+	int y_weapon = 16;
+	float vec_x = (player1.position.x + player1.SpriteSize / 2 + x_weapon) - (MousePosition.x + camera[0].CameraPosition.x);
+	float vec_y = (player1.position.y + player1.SpriteSize / 2 + y_weapon) - (MousePosition.y + camera[0].CameraPosition.y);
+	ShootAngle = atan2(vec_y, vec_x) * 180.000 / 3.14159265 + 180;
+	for (int i = 0; i < Max_Bullets; i++)
+	{
+		if (!player1.PlayerWeapon.bullets[i]->isShot)
+		{
+			player1.PlayerWeapon.bullets[i]->isShot = true;
+			player1.PlayerWeapon.bullets[i]->origin = BulletOrigin;
+			player1.PlayerWeapon.bullets[i]->BulletPositionFloat.x = BulletOrigin.x - player1.PlayerWeapon.bullets[i]->BulletSize / 2;
+			player1.PlayerWeapon.bullets[i]->BulletPositionFloat.y = BulletOrigin.y - player1.PlayerWeapon.bullets[i]->BulletSize / 2;
+			player1.PlayerWeapon.bullets[i]->BulletPosition.x = (int)player1.PlayerWeapon.bullets[i]->BulletPositionFloat.x;
+			player1.PlayerWeapon.bullets[i]->BulletPosition.y = (int)player1.PlayerWeapon.bullets[i]->BulletPositionFloat.y;
 			player1.PlayerWeapon.bullets[i]->Damage = player1.PlayerWeapon.damage;
-            player1.PlayerWeapon.bullets[i]->angle = ShootAngle;
-            player1.PlayerWeapon.bullets[i]->BulletSpeed = player1.PlayerWeapon.bulletspeed;
-            player1.PlayerWeapon.bullets[i]->BulletRange = player1.PlayerWeapon.range;
-            player1.PlayerWeapon.ShootingDelay.Restart();
-            if (!Recoil)
-            {
-                RecoilTimer.Start();
-                Recoil = true;
-            }
-            if (player1.CurrentWeapon == 2) PlayingChannel = Mix_PlayChannel(-1, player1.PlayerWeapon.GunSound, 0);
-            else Mix_PlayChannel(-1, player1.PlayerWeapon.GunSound, 0);
-            break;
-        }
-    }
+			player1.PlayerWeapon.bullets[i]->angle = ShootAngle;
+			player1.PlayerWeapon.bullets[i]->BulletSpeed = player1.PlayerWeapon.bulletspeed;
+			player1.PlayerWeapon.bullets[i]->BulletRange = player1.PlayerWeapon.range;
+			player1.PlayerWeapon.ShootingDelay.Restart();
+			if (!Recoil)
+			{
+				RecoilTimer.Start();
+				Recoil = true;
+			}
+			if (player1.CurrentWeapon == 2) PlayingChannel = Mix_PlayChannel(-1, player1.PlayerWeapon.GunSound, 0);
+			else Mix_PlayChannel(-1, player1.PlayerWeapon.GunSound, 0);
+			break;
+		}
+	}
 }
 void Slash()
 {

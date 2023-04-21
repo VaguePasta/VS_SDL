@@ -110,88 +110,86 @@ void EnemyMoving(Enemies* enemy, SDL_FPoint& EnemyCenter, SDL_FPoint& Target)
 }
 void EnemyAttacking(Enemies* enemy)
 {
-	if (enemy->isSpawn && !enemy->isDead)
+	if (!enemy->isSpawn || enemy->isDead) return;
+	SDL_FPoint PlayerCenter = { player1.position.x + player1.SpriteSize / 2,player1.position.y + player1.SpriteSize / 2 };
+	SDL_FPoint EnemyCenter = { enemy->position.x + enemy->SpriteSize / 2,enemy->position.y + enemy->SpriteSize / 2 };
+	if (abs(PlayerCenter.x - EnemyCenter.x) > LEVEL_WIDTH / 2)
 	{
-		SDL_FPoint PlayerCenter = { player1.position.x + player1.SpriteSize / 2,player1.position.y + player1.SpriteSize / 2 };
-		SDL_FPoint EnemyCenter = { enemy->position.x + enemy->SpriteSize / 2,enemy->position.y + enemy->SpriteSize / 2 };
-		if (abs(PlayerCenter.x - EnemyCenter.x) > LEVEL_WIDTH / 2)
+		if (PlayerCenter.x < LEVEL_WIDTH / 2)
 		{
-			if (PlayerCenter.x < LEVEL_WIDTH / 2)
-			{
-				PlayerCenter.x += LEVEL_WIDTH;
-			}
-			else
-			{
-				PlayerCenter.x -= LEVEL_WIDTH;
-			}
+			PlayerCenter.x += LEVEL_WIDTH;
 		}
-		if (abs(PlayerCenter.y - EnemyCenter.y) > LEVEL_HEIGHT / 2)
+		else
 		{
-			if (PlayerCenter.y < LEVEL_HEIGHT / 2)
-			{
-				PlayerCenter.y += LEVEL_HEIGHT;
-			}
-			else
-			{
-				PlayerCenter.y -= LEVEL_HEIGHT;
-			}
+			PlayerCenter.x -= LEVEL_WIDTH;
 		}
-		SDL_FPoint Pos = { PlayerCenter.x - 50,PlayerCenter.y - 50 };
-		SDL_Rect Hitbox = PlayerHitbox(player1.flip, Pos);
-		if (!enemy->isAttacking && SDL_HasIntersection(&Hitbox, &enemy->AttackBox))
+	}
+	if (abs(PlayerCenter.y - EnemyCenter.y) > LEVEL_HEIGHT / 2)
+	{
+		if (PlayerCenter.y < LEVEL_HEIGHT / 2)
 		{
-			if (enemy->Cooldown.GetTime() > 1000 / enemy->AttackSpeed)
-			{
-				enemy->Attack();
-				return;
-			}
-			else if (!enemy->isIdling && !enemy->isHurt)
-			{
-				enemy->Idle();
-				return;
-			}
+			PlayerCenter.y += LEVEL_HEIGHT;
 		}
-		if (enemy->isAttacking)
+		else
 		{
-			switch (enemy->CurrentEnemyType)
+			PlayerCenter.y -= LEVEL_HEIGHT;
+		}
+	}
+	SDL_FPoint Pos = { PlayerCenter.x - 50,PlayerCenter.y - 50 };
+	SDL_Rect Hitbox = PlayerHitbox(player1.flip, Pos);
+	if (!enemy->isAttacking && SDL_HasIntersection(&Hitbox, &enemy->AttackBox))
+	{
+		if (enemy->Cooldown.GetTime() > 1000 / enemy->AttackSpeed)
+		{
+			enemy->Attack();
+			return;
+		}
+		else if (!enemy->isIdling && !enemy->isHurt)
+		{
+			enemy->Idle();
+			return;
+		}
+	}
+	if (enemy->isAttacking)
+	{
+		switch (enemy->CurrentEnemyType)
+		{
+		case 0: case 2:
+			if (enemy->CurrentSprite >= enemy->NumOfSprites - 1 && SDL_HasIntersection(&enemy->AttackBox, &Hitbox))
 			{
-			case 0: case 2:
-				if (enemy->CurrentSprite >= enemy->NumOfSprites - 1 && SDL_HasIntersection(&enemy->AttackBox, &Hitbox))
-				{
-					if (player1.PlayerShield.isOn) player1.PlayerShield.ShieldDamage(enemy->Damage);
-					else player1.Hurt(enemy->Damage);
-				}
-				break;
-			case 1:
-				if (enemy->CurrentSprite == 3 && SDL_HasIntersection(&enemy->AttackBox, &Hitbox))
-				{
-					enemy->CurrentSprite++;
-					if (player1.PlayerShield.isOn) player1.PlayerShield.ShieldDamage(enemy->Damage);
-					else player1.Hurt(enemy->Damage);
-				}
-				break;
-			case 3: case 4:
-				if (enemy->CurrentEnemyType == 3 && enemy->CurrentSprite == 2)
-				{
-					Mix_PlayChannel(-1, SoundEffects[10], 0);
-					enemy->CurrentSprite++;
-				}
-				if (enemy->CurrentSprite >= enemy->NumOfSprites - 1)
-					for (int i = 0; i < Current_max_enemies; i++) if (!Projectiles[i]->isShot)
-					{
-						Projectiles[i]->Origin = EnemyCenter;
-						Projectiles[i]->ChooseType(enemy->CurrentEnemyType);
-						Projectiles[i]->Target = EnemyAiming(PlayerCenter, EnemyCenter, enemy->CurrentEnemyType, Projectiles[i]->type);
-						Projectiles[i]->Shoot();
-						break;
-					}
-				break;
+				if (player1.PlayerShield.isOn) player1.PlayerShield.ShieldDamage(enemy->Damage);
+				else player1.Hurt(enemy->Damage);
+			}
+			break;
+		case 1:
+			if (enemy->CurrentSprite == 3 && SDL_HasIntersection(&enemy->AttackBox, &Hitbox))
+			{
+				enemy->CurrentSprite++;
+				if (player1.PlayerShield.isOn) player1.PlayerShield.ShieldDamage(enemy->Damage);
+				else player1.Hurt(enemy->Damage);
+			}
+			break;
+		case 3: case 4:
+			if (enemy->CurrentEnemyType == 3 && enemy->CurrentSprite == 2)
+			{
+				Mix_PlayChannel(-1, SoundEffects[10], 0);
+				enemy->CurrentSprite++;
 			}
 			if (enemy->CurrentSprite >= enemy->NumOfSprites - 1)
-			{
-				enemy->isAttacking = false;
-				enemy->Idle();
-			}
+				for (int i = 0; i < Current_max_enemies; i++) if (!Projectiles[i]->isShot)
+				{
+					Projectiles[i]->Origin = EnemyCenter;
+					Projectiles[i]->ChooseType(enemy->CurrentEnemyType);
+					Projectiles[i]->Target = EnemyAiming(PlayerCenter, EnemyCenter, enemy->CurrentEnemyType, Projectiles[i]->type);
+					Projectiles[i]->Shoot();
+					break;
+				}
+			break;
+		}
+		if (enemy->CurrentSprite >= enemy->NumOfSprites - 1)
+		{
+			enemy->isAttacking = false;
+			enemy->Idle();
 		}
 	}
 }

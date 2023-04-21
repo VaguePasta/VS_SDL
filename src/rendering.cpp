@@ -1,12 +1,6 @@
 #include "rendering.h"
-#include "sprites.h"
 #include "effects.h"
-#include "global.h"
-#include "enemies.h"
-#include "player.h"
 #include "gameobjects.h"
-#include "UI.h"
-#include "menu.h"
 #include "texturerendering.h"
 #include <cmath>
 #include <SDL_image.h>

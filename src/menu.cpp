@@ -11,33 +11,31 @@
 #include "UI.h"
 void StartMenu()
 {
-	if (!gamestate.start)
+	if (gamestate.start) return;
+	SDL_ShowCursor(SDL_ENABLE);
+	SDL_SetRenderTarget(renderer, NULL);
+	SDL_RenderClear(renderer);
+	GameButtons[0].DrawButton({ LOGICAL_WIDTH / 2 - GameButtons[0].Size.x / 2 / 2,500 }, 2);
+	GameButtons[3].DrawButton({ LOGICAL_WIDTH / 2 - GameButtons[1].Size.x / 2 / 2,650 }, 2);
+	GameButtons[4].DrawButton({ 1480,780 }, 2);
+	GameButtons[5].DrawButton({ 30,780 }, 2);
+	if (MouseLeftDown)
 	{
-		SDL_ShowCursor(SDL_ENABLE);
-		SDL_SetRenderTarget(renderer, NULL);
-		SDL_RenderClear(renderer);
-		GameButtons[0].DrawButton({ LOGICAL_WIDTH / 2 - GameButtons[0].Size.x / 2 / 2,500 }, 2);
-		GameButtons[3].DrawButton({ LOGICAL_WIDTH / 2 - GameButtons[1].Size.x / 2 / 2,650 }, 2);
-		GameButtons[4].DrawButton({ 1480,780 }, 2);
-		GameButtons[5].DrawButton({ 30,780 }, 2);
-		if (MouseLeftDown)
+		if (SDL_PointInRect(&MousePosition, &GameButtons[0].ButtonRect) && (MouseState & SDL_BUTTON(1)))
 		{
-			if (SDL_PointInRect(&MousePosition, &GameButtons[0].ButtonRect) && (MouseState & SDL_BUTTON(1)))
-			{
-				Start_Button();
-			}
-			else if (SDL_PointInRect(&MousePosition, &GameButtons[3].ButtonRect) && (MouseState & SDL_BUTTON(1)))
-			{
-				gamestate.quit = true;
-			}
-			else if (SDL_PointInRect(&MousePosition, &GameButtons[4].ButtonRect) && (MouseState & SDL_BUTTON(1)))
-			{
-				Mix_HaltMusic();
-			}
-			else if (SDL_PointInRect(&MousePosition, &GameButtons[5].ButtonRect) && (MouseState & SDL_BUTTON(1)))
-			{
-				gamestate.settings = true;
-			}
+			Start_Button();
+		}
+		else if (SDL_PointInRect(&MousePosition, &GameButtons[3].ButtonRect) && (MouseState & SDL_BUTTON(1)))
+		{
+			gamestate.quit = true;
+		}
+		else if (SDL_PointInRect(&MousePosition, &GameButtons[4].ButtonRect) && (MouseState & SDL_BUTTON(1)))
+		{
+			Mix_HaltMusic();
+		}
+		else if (SDL_PointInRect(&MousePosition, &GameButtons[5].ButtonRect) && (MouseState & SDL_BUTTON(1)))
+		{
+			gamestate.settings = true;
 		}
 	}
 }

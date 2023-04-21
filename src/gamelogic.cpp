@@ -26,12 +26,11 @@ void BulletUpdate()
                 player1.PlayerWeapon.bullets[i]->Update();
             }
 		}
-		else
-			if (player1.PlayerWeapon.bullets[i]->BulletAnimation.CurrentSprite >= player1.PlayerWeapon.bullets[i]->BulletAnimation.NumOfSprites - 1)
-			{
-				delete player1.PlayerWeapon.bullets[i];
-				player1.PlayerWeapon.bullets[i] = new bullet(player1.CurrentWeapon);
-			}
+		else if (player1.PlayerWeapon.bullets[i]->BulletAnimation.CurrentSprite >= player1.PlayerWeapon.bullets[i]->BulletAnimation.NumOfSprites - 1)
+		{
+			delete player1.PlayerWeapon.bullets[i];
+			player1.PlayerWeapon.bullets[i] = new bullet(player1.CurrentWeapon);
+		}
 	}
 }
 void SpawnAndDeadEnemies()

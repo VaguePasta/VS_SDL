@@ -20,7 +20,7 @@ EnemyProjectiles::EnemyProjectiles()
 }
 EnemyProjectiles::~EnemyProjectiles()
 {
-};
+}
 void EnemyProjectiles::ChooseType(int CurrentEnemy)
 {
 	switch (CurrentEnemy)

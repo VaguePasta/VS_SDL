@@ -123,12 +123,13 @@ void PlayerAttacking()
 		}
 		break;
 	case 3:
-		static bool* isDamaged;
+		static bool* isDamaged = nullptr;
 		if (player1.isAttacking)
 		{
 			if (player1.PlayerWeapon.ShootingDelay.GetTime() >= 1000 / player1.PlayerWeapon.shootingspeed && !player1.MeleeAttacking)
 			{
 				Slash();
+				if (isDamaged != nullptr) delete[] isDamaged;
 				isDamaged = new bool[Current_max_enemies];
 				for (int i = 0; i < Current_max_enemies; i++) isDamaged[i] = false;
 			}
@@ -158,6 +159,7 @@ void PlayerAttacking()
 			{
 				player1.MeleeAttacked = true;
 				delete[] isDamaged;
+				isDamaged = nullptr;
 			}
 			if (player1.MeleeAttacked)
 			{

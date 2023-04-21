@@ -28,7 +28,7 @@ void LoadSounds()
 	SoundEffects[9] = Mix_LoadWAV("resources/sounds/effects/LightningSpell.WAV");
 	SoundEffects[10] = Mix_LoadWAV("resources/sounds/effects/Bowshot.mp3");
 	SoundEffects[11] = Mix_LoadWAV("resources/sounds/effects/Slash.mp3");
-	for (int i = 0; i < NUM_OF_SOUNDTRACK; i++) BackgroundSoundtracks[0] = Mix_LoadWAV(("resources/sounds/backgroundsoundtracks/Soundtrack" + std::to_string(i) + ".mp3").c_str());
+	for (int i = 0; i < NUM_OF_SOUNDTRACK; i++) BackgroundSoundtracks[i] = Mix_LoadWAV(("resources/sounds/backgroundsoundtracks/Soundtrack" + std::to_string(i) + ".mp3").c_str());
 	Mix_AllocateChannels(32);
 }
 void PlayMusic()
