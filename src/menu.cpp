@@ -169,8 +169,14 @@ void Settings()
 			StringContent[i] = SDL_CreateTextureFromSurface(renderer, TempSurface);
 			SDL_FreeSurface(TempSurface);
 		}
-		for (int i = 0; i < 5; i++) SettingButtons[i] = GameButtons[7];
+		SettingButtons[0] = GameButtons[7]; SDL_SetTextureColorMod(StringContent[3], 255, 255, 255);
+		for (int i = 1; i < 5; i++)
+		{
+			SettingButtons[i] = GameButtons[8];
+			SDL_SetTextureColorMod(StringContent[i+3], 192, 192, 192);
+		}
 		SettingButtons[5] = GameButtons[8];
+		SDL_SetTextureColorMod(StringContent[8], 192, 192, 192);
 	}
 	SDL_SetRenderTarget(renderer, NULL);
 	SDL_RenderClear(renderer);
@@ -191,6 +197,7 @@ void Settings()
 		if (SDL_PointInRect(&MousePosition, &GameButtons[6].ButtonRect)) gamestate.settings = false;
 		else if (SDL_PointInRect(&MousePosition, &SettingButtons[0].ButtonRect) && !isFullScreen)
 		{
+			ChangeButton(SettingButtons, StringContent, 0, 8, 7, 5);
 			isFullScreen = true;
 			MouseLeftDown = false;
 			MouseRightDown = false;
@@ -204,23 +211,28 @@ void Settings()
 		else if (SDL_PointInRect(&MousePosition, &SettingButtons[1].ButtonRect) && SCREEN_WIDTH != 1280)
 		{
 			ChangeResolution(1280, 720);
+			ChangeButton(SettingButtons, StringContent, 1, 8, 7, 5);
 		}
 		else if (SDL_PointInRect(&MousePosition, &SettingButtons[2].ButtonRect) && SCREEN_WIDTH != 1366)
 		{
 			ChangeResolution(1366, 768);
+			ChangeButton(SettingButtons, StringContent, 2, 8, 7, 5);
 		}
 		else if (SDL_PointInRect(&MousePosition, &SettingButtons[3].ButtonRect) && SCREEN_WIDTH != 1600)
 		{
 			ChangeResolution(1600, 900);
+			ChangeButton(SettingButtons, StringContent, 3, 8, 7, 5);
 		}
 		else if (SDL_PointInRect(&MousePosition, &SettingButtons[4].ButtonRect) && SCREEN_WIDTH != 1920)
 		{
 			ChangeResolution(1920, 1080);
+			ChangeButton(SettingButtons, StringContent, 4, 8, 7, 5);
 		}
 		else if (SDL_PointInRect(&MousePosition, &SettingButtons[5].ButtonRect))
 		{
 			VSync = !VSync;
 			SettingButtons[5] = GameButtons[VSync ? 7 : 8];
+			SDL_SetTextureColorMod(StringContent[8], VSync ? 255 : 192, VSync ? 255 : 192, VSync ? 255 : 192);
 			SDL_RenderSetVSync(renderer, VSync);
 			SDL_DestroyTexture(GameBackground);
 			Drawbackground(); combinetexture();
@@ -247,6 +259,7 @@ void Start_Button()
 	SDL_ShowCursor(SDL_DISABLE);
 	UpdateCurrentScore();
 	FPSCounter.Restart();
+	GetTime = SDL_GetPerformanceCounter() * freq;
 }
 void Menu_Button()
 {
@@ -312,4 +325,20 @@ void ChangeVolume(Bars& VolumeBar)
 	VolumeBar.Value = ((MousePosition.x - VolumeBar.BarRect.x + 1) * 1.0 / VolumeBar.BarRect.w) * 100;
 	if (VolumeBar.Value < 0) VolumeBar.Value = 0;
 	else if (VolumeBar.Value > VolumeBar.MaxValue) VolumeBar.Value = VolumeBar.MaxValue;
+}
+void ChangeButton(Buttons SettingButton[],SDL_Texture *StringContent[],int Num_Change, int Change_from, int Change_to, int Num_of_buttons)
+{
+	for (int i = 0; i < Num_of_buttons; i++)
+	{
+		if (i == Num_Change)
+		{
+			SettingButton[i] = GameButtons[Change_to];
+			SDL_SetTextureColorMod(StringContent[i + 3], 255, 255, 255);
+		}
+		else
+		{
+			SettingButton[i] = GameButtons[Change_from];
+			SDL_SetTextureColorMod(StringContent[i + 3], 192, 192, 192);
+		}
+	}
 }

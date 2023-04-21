@@ -248,11 +248,7 @@ void EnemyProjectilesProcessing()
 }
 SDL_FPoint EnemyAiming(SDL_FPoint& PlayerCenter, SDL_FPoint& EnemyCenter, int CurrentEnemyType, int ProjectileType)
 {
-	if (SCORE < 50)
-	{
-		if (rand() % 10 > 1)
-			return PlayerCenter;
-	}
+	if (SCORE < 50) return PlayerCenter;
 	float Distance = DistanceCalculation(PlayerCenter,EnemyCenter);
 	float ScaleDistance;
 	switch (CurrentEnemyType)

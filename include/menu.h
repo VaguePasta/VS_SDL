@@ -11,4 +11,5 @@ void Quit_Button();
 void Back_Button();
 void ChangeResolution(int,int);
 void ChangeVolume(Bars&);
+void ChangeButton(Buttons[],SDL_Texture**, int, int, int, int);
 #endif // MENU_H_INCLUDED
