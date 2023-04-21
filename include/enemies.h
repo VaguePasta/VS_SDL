@@ -51,8 +51,8 @@ template <class T> float AngleCalculation(T pos1,T origin,SDL_RendererFlip *flip
 }
 template <class T> float DistanceCalculation(T pos1,T pos2)
 {
-    if (pos1.x-pos2.x>LEVEL_WIDTH) (pos1.x<pos2.x)?(pos1.x+=LEVEL_WIDTH):(pos1.x-=LEVEL_WIDTH);
-    if (pos1.y-pos2.y>LEVEL_HEIGHT) (pos1.y<pos2.y)?(pos1.y+=LEVEL_HEIGHT):(pos1.y-=LEVEL_HEIGHT);
+    if (pos1.x-pos2.x>LEVEL_WIDTH/2) (pos1.x<pos2.x)?(pos1.x+=LEVEL_WIDTH):(pos1.x-=LEVEL_WIDTH);
+    if (pos1.y-pos2.y>LEVEL_HEIGHT/2) (pos1.y<pos2.y)?(pos1.y+=LEVEL_HEIGHT):(pos1.y-=LEVEL_HEIGHT);
     return sqrt((pos1.x-pos2.x)*(pos1.x-pos2.x)+(pos1.y-pos2.y)*(pos1.y-pos2.y));
 }
 #endif // ENEMIES_H_INCLUDED
