@@ -80,8 +80,6 @@ void InitObjects()
 	GameButtons[6].Init(6);
 	GameButtons[7].Init(7);
 	GameButtons[8].Init(8);
-	EffectSprites[0] = IMG_LoadTexture(renderer, "resources/effects/Explosion.PNG");
-	EffectSprites[1] = IMG_LoadTexture(renderer, "resources/effects/Slash.PNG");
 	player1.Init(0, 0);
 	SlashEffect.texture = EffectSprites[1];
 	SDL_QueryTexture(SlashEffect.texture, NULL, NULL, &SlashEffect.texturesize.x, &SlashEffect.texturesize.y);

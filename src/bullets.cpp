@@ -23,6 +23,8 @@ void LoadBulletSpritesFromDisk()
 	BulletSprites[0] = IMG_LoadTexture(renderer, "resources/bullets/AK47_Bullets.PNG");
 	BulletSprites[1] = IMG_LoadTexture(renderer, "resources/bullets/Assault_Rifle_Bullets.PNG");
 	BulletSprites[2] = IMG_LoadTexture(renderer, "resources/bullets/Rocket.PNG");
+	EffectSprites[0] = IMG_LoadTexture(renderer, "resources/effects/Explosion.PNG");
+	EffectSprites[1] = IMG_LoadTexture(renderer, "resources/effects/Slash.PNG");
 }
 std::vector <std::vector<int>> BulletSpritesList =                //So thu tu, Kich co dan, co animation?,so frame,toc do frame
 {
