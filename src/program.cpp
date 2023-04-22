@@ -22,9 +22,11 @@ void init()
 	LoadSounds();
 	InitObjects();
 }
+#include <iostream>
 void InitSDL()
 {
 	SDL_SetHint(SDL_HINT_WINDOWS_DPI_AWARENESS, "permonitor");
+	SDL_SetHint(SDL_HINT_RENDER_DRIVER, "opengl");
 	IMG_Init(IMG_INIT_PNG);
 	SDL_Init(SDL_INIT_VIDEO);
 	TTF_Init();

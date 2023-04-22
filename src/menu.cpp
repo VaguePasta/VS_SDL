@@ -234,9 +234,6 @@ void Settings()
 			SettingButtons[5] = GameButtons[VSync ? 7 : 8];
 			SDL_SetTextureColorMod(StringContent[8], VSync ? 255 : 192, VSync ? 255 : 192, VSync ? 255 : 192);
 			SDL_RenderSetVSync(renderer, VSync);
-			SDL_DestroyTexture(GameBackground);
-			Drawbackground(); combinetexture();
-			WrapCamera();
 			MouseLeftDown = false;
 			MouseRightDown = false;
 		}
@@ -313,9 +310,6 @@ void ChangeResolution(int _Width, int _Height)
 	SCREEN_HEIGHT = _Height;
 	SDL_SetWindowFullscreen(window, 0);
 	SDL_SetWindowSize(window, SCREEN_WIDTH, SCREEN_HEIGHT);
-	SDL_DestroyTexture(GameBackground);
-	Drawbackground(); combinetexture();
-	WrapCamera();
 	isFullScreen = false;
 	MouseLeftDown = false;
 	MouseRightDown = false;
