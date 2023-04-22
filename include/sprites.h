@@ -13,7 +13,7 @@ class sprite
         float AnimationDelay;
         float SpriteAngle;
         SDL_Rect frame;
-        SDL_Rect SpriteBox;
+        SDL_FRect SpriteBox;
         sprite();
         sprite(int,int);
         ~sprite();
@@ -34,7 +34,7 @@ class objects
         bool isMoving;
         bool isIdling;
         bool isAttacking;
-        SDL_Rect Hitbox;
+        SDL_FRect Hitbox;
         int HitBoxSize;
 };
 #endif // SPRITES_H_LOAD

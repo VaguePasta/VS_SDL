@@ -4,7 +4,7 @@
 #include <SDL.h>
 void SlashEffectDraw()
 {
-	SDL_Point Center;
+	SDL_FPoint Center;
 	if (player1.flip == SDL_FLIP_NONE)
 	{
 		Center = { 111,108 };
@@ -34,12 +34,12 @@ void SlashEffectDraw()
 		}
 	}
 	SlashEffect.animation();
-	SDL_RenderCopyEx(renderer, SlashEffect.texture, &SlashEffect.frame, &SlashEffect.SpriteBox, SlashEffect.SpriteAngle, &Center, SlashEffect.flip);
+	SDL_RenderCopyExF(renderer, SlashEffect.texture, &SlashEffect.frame, &SlashEffect.SpriteBox, SlashEffect.SpriteAngle, &Center, SlashEffect.flip);
 	SlashEffectDrawEdge(Center);
 }
-void SlashEffectDrawEdge(SDL_Point Center)
+void SlashEffectDrawEdge(SDL_FPoint Center)
 {
-	SDL_Rect TempRect[3];
+	SDL_FRect TempRect[3];
 	TempRect[0] = SlashEffect.SpriteBox;
 	TempRect[1] = SlashEffect.SpriteBox;
 	TempRect[2] = SlashEffect.SpriteBox;
@@ -51,10 +51,10 @@ void SlashEffectDrawEdge(SDL_Point Center)
 			TempRect[1].x += LEVEL_WIDTH;
 			TempRect[1].y += LEVEL_HEIGHT;
 			TempRect[2].y += LEVEL_HEIGHT;
-			SDL_RenderCopyEx(renderer, SlashEffect.texture, &SlashEffect.frame, &TempRect[1], SlashEffect.SpriteAngle, &Center, SlashEffect.flip);
-			SDL_RenderCopyEx(renderer, SlashEffect.texture, &SlashEffect.frame, &TempRect[2], SlashEffect.SpriteAngle, &Center, SlashEffect.flip);
+			SDL_RenderCopyExF(renderer, SlashEffect.texture, &SlashEffect.frame, &TempRect[1], SlashEffect.SpriteAngle, &Center, SlashEffect.flip);
+			SDL_RenderCopyExF(renderer, SlashEffect.texture, &SlashEffect.frame, &TempRect[2], SlashEffect.SpriteAngle, &Center, SlashEffect.flip);
 		}
-		SDL_RenderCopyEx(renderer, SlashEffect.texture, &SlashEffect.frame, &TempRect[0], SlashEffect.SpriteAngle, &Center, SlashEffect.flip);
+		SDL_RenderCopyExF(renderer, SlashEffect.texture, &SlashEffect.frame, &TempRect[0], SlashEffect.SpriteAngle, &Center, SlashEffect.flip);
 	}
 	if (SlashEffect.SpriteBox.y < 0)
 	{
@@ -64,10 +64,10 @@ void SlashEffectDrawEdge(SDL_Point Center)
 			TempRect[1].x -= LEVEL_WIDTH;
 			TempRect[1].y += LEVEL_HEIGHT;
 			TempRect[2].x -= LEVEL_WIDTH;
-			SDL_RenderCopyEx(renderer, SlashEffect.texture, &SlashEffect.frame, &TempRect[1], SlashEffect.SpriteAngle, &Center, SlashEffect.flip);
-			SDL_RenderCopyEx(renderer, SlashEffect.texture, &SlashEffect.frame, &TempRect[2], SlashEffect.SpriteAngle, &Center, SlashEffect.flip);
+			SDL_RenderCopyExF(renderer, SlashEffect.texture, &SlashEffect.frame, &TempRect[1], SlashEffect.SpriteAngle, &Center, SlashEffect.flip);
+			SDL_RenderCopyExF(renderer, SlashEffect.texture, &SlashEffect.frame, &TempRect[2], SlashEffect.SpriteAngle, &Center, SlashEffect.flip);
 		}
-		SDL_RenderCopyEx(renderer, SlashEffect.texture, &SlashEffect.frame, &TempRect[0], SlashEffect.SpriteAngle, &Center, SlashEffect.flip);
+		SDL_RenderCopyExF(renderer, SlashEffect.texture, &SlashEffect.frame, &TempRect[0], SlashEffect.SpriteAngle, &Center, SlashEffect.flip);
 	}
 	if (SlashEffect.SpriteBox.x > LEVEL_WIDTH - SlashEffect.SpriteSize)
 	{
@@ -77,10 +77,10 @@ void SlashEffectDrawEdge(SDL_Point Center)
 			TempRect[1].x -= LEVEL_WIDTH;
 			TempRect[1].y -= LEVEL_HEIGHT;
 			TempRect[2].y -= LEVEL_HEIGHT;
-			SDL_RenderCopyEx(renderer, SlashEffect.texture, &SlashEffect.frame, &TempRect[1], SlashEffect.SpriteAngle, &Center, SlashEffect.flip);
-			SDL_RenderCopyEx(renderer, SlashEffect.texture, &SlashEffect.frame, &TempRect[2], SlashEffect.SpriteAngle, &Center, SlashEffect.flip);
+			SDL_RenderCopyExF(renderer, SlashEffect.texture, &SlashEffect.frame, &TempRect[1], SlashEffect.SpriteAngle, &Center, SlashEffect.flip);
+			SDL_RenderCopyExF(renderer, SlashEffect.texture, &SlashEffect.frame, &TempRect[2], SlashEffect.SpriteAngle, &Center, SlashEffect.flip);
 		}
-		SDL_RenderCopyEx(renderer, SlashEffect.texture, &SlashEffect.frame, &TempRect[0], SlashEffect.SpriteAngle, &Center, SlashEffect.flip);
+		SDL_RenderCopyExF(renderer, SlashEffect.texture, &SlashEffect.frame, &TempRect[0], SlashEffect.SpriteAngle, &Center, SlashEffect.flip);
 	}
 	if (SlashEffect.SpriteBox.y > LEVEL_HEIGHT - SlashEffect.SpriteSize)
 	{
@@ -91,9 +91,9 @@ void SlashEffectDrawEdge(SDL_Point Center)
 			TempRect[1].x += LEVEL_WIDTH;
 			TempRect[1].y -= LEVEL_HEIGHT;
 			TempRect[2].y -= LEVEL_HEIGHT;
-			SDL_RenderCopyEx(renderer, SlashEffect.texture, &SlashEffect.frame, &TempRect[1], SlashEffect.SpriteAngle, &Center, SlashEffect.flip);
-			SDL_RenderCopyEx(renderer, SlashEffect.texture, &SlashEffect.frame, &TempRect[2], SlashEffect.SpriteAngle, &Center, SlashEffect.flip);
+			SDL_RenderCopyExF(renderer, SlashEffect.texture, &SlashEffect.frame, &TempRect[1], SlashEffect.SpriteAngle, &Center, SlashEffect.flip);
+			SDL_RenderCopyExF(renderer, SlashEffect.texture, &SlashEffect.frame, &TempRect[2], SlashEffect.SpriteAngle, &Center, SlashEffect.flip);
 		}
-		SDL_RenderCopyEx(renderer, SlashEffect.texture, &SlashEffect.frame, &TempRect[0], SlashEffect.SpriteAngle, &Center, SlashEffect.flip);
+		SDL_RenderCopyExF(renderer, SlashEffect.texture, &SlashEffect.frame, &TempRect[0], SlashEffect.SpriteAngle, &Center, SlashEffect.flip);
 	}
 }

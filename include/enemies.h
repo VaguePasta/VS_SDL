@@ -20,7 +20,7 @@ class Enemies:public sprite,public objects
         float AttackSpeed;
         int CurrentEnemyType;
         int ShootingSlot;
-        SDL_Rect AttackBox;
+        SDL_FRect AttackBox;
         Enemies();
         ~Enemies();
         void Death();
@@ -32,7 +32,7 @@ class Enemies:public sprite,public objects
         void CalCulateBoxes();
         void LoadTexture(int CurrentState);
 };
-void EnemyDrawCorner(SDL_Rect[],int);
+void EnemyDrawCorner(SDL_FRect[],int);
 void EnemyDrawEdge(int);
 template <class T> float AngleCalculation(T pos1,T origin,SDL_RendererFlip *flip)
 {

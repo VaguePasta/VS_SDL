@@ -9,7 +9,7 @@ class Shield
 {
     public:
         SDL_Texture *ShieldTexture;
-        SDL_Point Position;
+        SDL_FPoint Position;
         Icons ShieldIcon;
         int Health;
         SDL_Point Size;
@@ -19,7 +19,7 @@ class Shield
         Uint32 LiveTime;
         bool isOn;
         bool Damaged;
-        SDL_Rect ShieldHitBox;
+        SDL_FRect ShieldHitBox;
         Shield();
         ~Shield();
         void ActivateShield(SDL_FPoint);

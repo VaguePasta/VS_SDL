@@ -21,10 +21,9 @@ class EnemyProjectiles
         SDL_Point ProjectileSize;
         SDL_FPoint Target;
         SDL_FPoint Origin;
-        SDL_Point Position;
-        SDL_FPoint FPosition;
-        SDL_Rect Hitbox;
-        SDL_Rect ProjectileSprite;
+        SDL_FPoint Position;
+        SDL_FRect Hitbox;
+        SDL_FRect ProjectileSprite;
         EnemyProjectiles();
         ~EnemyProjectiles();
         void Shoot();

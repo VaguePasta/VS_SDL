@@ -56,7 +56,7 @@ void EnemyPathfinding(Enemies* enemy)
 			}
 		}
 		SDL_FPoint Pos = { PlayerCenter.x - 50,PlayerCenter.y - 50 };
-		SDL_Rect Hitbox = PlayerHitbox(player1.flip, Pos);
+		SDL_FRect Hitbox = PlayerHitbox(player1.flip, Pos);
 		if (PlayerCenter.x < EnemyCenter.x - 5 && enemy->flip == SDL_FLIP_NONE)
 		{
 			enemy->flip = SDL_FLIP_HORIZONTAL;
@@ -68,7 +68,7 @@ void EnemyPathfinding(Enemies* enemy)
 			enemy->CalCulateBoxes();
 		}
 		if (enemy->isAttacking) return;
-		if (!enemy->isHurt && !SDL_HasIntersection(&Hitbox, &enemy->AttackBox))
+		if (!enemy->isHurt && !SDL_HasIntersectionF(&Hitbox, &enemy->AttackBox))
 		{
 			if (!enemy->isMoving) enemy->Run();
 			SDL_FPoint TempPos = enemy->position;
@@ -85,7 +85,7 @@ void EnemyPathfinding(Enemies* enemy)
 			if (enemy->position.x > LEVEL_WIDTH) enemy->position.x = 0;
 			if (enemy->position.y > LEVEL_HEIGHT) enemy->position.y = 0;
 			enemy->CalCulateBoxes();
-			if (SDL_HasIntersection(&enemy->Hitbox, &Hitbox))
+			if (SDL_HasIntersectionF(&enemy->Hitbox, &Hitbox))
 			{
 				enemy->position = TempPos;
 				enemy->CalCulateBoxes();
@@ -102,11 +102,11 @@ void EnemyMoving(Enemies* enemy, SDL_FPoint& EnemyCenter, SDL_FPoint& Target)
 {
 	if (EnemyCenter.x != Target.x && EnemyCenter.y != Target.y)
 	{
-		EnemyCenter.x += enemy->speed * 0.707 * DeltaTime * ((Target.x - EnemyCenter.x < 0) ? (-1) : (1));
-		EnemyCenter.y += enemy->speed * 0.707 * DeltaTime * ((Target.y - EnemyCenter.y < 0) ? (-1) : (1));
+		EnemyCenter.x += enemy->speed * DeltaTime * ((Target.x - EnemyCenter.x < 0) ? (-0.707) : (0.707));
+		EnemyCenter.y += enemy->speed * DeltaTime * ((Target.y - EnemyCenter.y < 0) ? (-0.707) : (0.707));
 	}
-	else if (EnemyCenter.x != Target.x) EnemyCenter.x += 1.0 * enemy->speed * DeltaTime * ((Target.x - EnemyCenter.x < 0) ? (-1) : (1));
-	else if (EnemyCenter.y != Target.y) EnemyCenter.y += 1.0 * enemy->speed * DeltaTime * ((Target.y - EnemyCenter.y < 0) ? (-1) : (1));
+	else if (EnemyCenter.x != Target.x) EnemyCenter.x += enemy->speed * DeltaTime * ((Target.x - EnemyCenter.x < 0) ? (-1) : (1));
+	else if (EnemyCenter.y != Target.y) EnemyCenter.y += enemy->speed * DeltaTime * ((Target.y - EnemyCenter.y < 0) ? (-1) : (1));
 }
 void EnemyAttacking(Enemies* enemy)
 {
@@ -136,8 +136,8 @@ void EnemyAttacking(Enemies* enemy)
 		}
 	}
 	SDL_FPoint Pos = { PlayerCenter.x - 50,PlayerCenter.y - 50 };
-	SDL_Rect Hitbox = PlayerHitbox(player1.flip, Pos);
-	if (!enemy->isAttacking && SDL_HasIntersection(&Hitbox, &enemy->AttackBox))
+	SDL_FRect Hitbox = PlayerHitbox(player1.flip, Pos);
+	if (!enemy->isAttacking && SDL_HasIntersectionF(&Hitbox, &enemy->AttackBox))
 	{
 		if (enemy->Cooldown.GetTime() > 1000 / enemy->AttackSpeed)
 		{
@@ -155,14 +155,14 @@ void EnemyAttacking(Enemies* enemy)
 		switch (enemy->CurrentEnemyType)
 		{
 		case 0: case 2:
-			if (enemy->CurrentSprite >= enemy->NumOfSprites - 1 && SDL_HasIntersection(&enemy->AttackBox, &Hitbox))
+			if (enemy->CurrentSprite >= enemy->NumOfSprites - 1 && SDL_HasIntersectionF(&enemy->AttackBox, &Hitbox))
 			{
 				if (player1.PlayerShield.isOn) player1.PlayerShield.ShieldDamage(enemy->Damage);
 				else player1.Hurt(enemy->Damage);
 			}
 			break;
 		case 1:
-			if (enemy->CurrentSprite == 3 && SDL_HasIntersection(&enemy->AttackBox, &Hitbox))
+			if (enemy->CurrentSprite == 3 && SDL_HasIntersectionF(&enemy->AttackBox, &Hitbox))
 			{
 				enemy->CurrentSprite++;
 				if (player1.PlayerShield.isOn) player1.PlayerShield.ShieldDamage(enemy->Damage);
@@ -203,7 +203,7 @@ void EnemyProjectilesProcessing()
 		{
 			if (!Projectiles[i]->isAnimated)
 			{
-				if (SDL_HasIntersection(&Projectiles[i]->Hitbox, &player1.Hitbox))
+				if (SDL_HasIntersectionF(&Projectiles[i]->Hitbox, &player1.Hitbox))
 				{
 					Projectiles[i]->Decayed = true;
 					if (player1.PlayerShield.isOn) player1.PlayerShield.ShieldDamage(Projectiles[i]->damage);
@@ -227,7 +227,7 @@ void EnemyProjectilesProcessing()
 				}
 				if (Projectiles[i]->Projectile.CurrentSprite == DamageFrame)
 				{
-					if (SDL_HasIntersection(&Projectiles[i]->Hitbox, &player1.Hitbox))
+					if (SDL_HasIntersectionF(&Projectiles[i]->Hitbox, &player1.Hitbox))
 					{
 						if (player1.PlayerShield.isOn) player1.PlayerShield.ShieldDamage(Projectiles[i]->damage);
 						else
@@ -261,14 +261,14 @@ SDL_FPoint EnemyAiming(SDL_FPoint& PlayerCenter, SDL_FPoint& EnemyCenter, int Cu
 		if (ProjectileType == 2) ScaleDistance = 172;
 		break;
 	}
-	SDL_FPoint Target = { PlayerCenter.x + (int)player1.Direction.x * int(round(ScaleDistance)),PlayerCenter.y + (int)player1.Direction.y * int(round(ScaleDistance)) };
+	SDL_FPoint Target = { PlayerCenter.x + player1.Direction.x * ScaleDistance,PlayerCenter.y + player1.Direction.y * ScaleDistance };
 	return Target;
 }
 void EnemyBulletCollision(Enemies* enemy)
 {
 	for (int i=0;i<Max_Bullets;i++) if (player1.PlayerWeapon.bullets[i]->isShot && !player1.PlayerWeapon.bullets[i]->Decayed)
 	{
-		if (SDL_HasIntersection(&player1.PlayerWeapon.bullets[i]->Hitbox, &enemy->Hitbox))
+		if (SDL_HasIntersectionF(&player1.PlayerWeapon.bullets[i]->Hitbox, &enemy->Hitbox))
 		{
 			if (player1.PlayerWeapon.bullets[i]->CurrentWeapon != 2)
 			{

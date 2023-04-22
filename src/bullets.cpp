@@ -63,10 +63,8 @@ bool bullet::Decay()
 void bullet::Update()
 {
 	DistanceTraveled += BulletSpeed * DeltaTime;
-	BulletPositionFloat.x = origin.x + DistanceTraveled * cos(angle * 0.017453) - BulletSize / 2;
-	BulletPositionFloat.y = origin.y + DistanceTraveled * sin(angle * 0.017453) - BulletSize / 2;
-	BulletPosition.x = int(round(BulletPositionFloat.x));
-	BulletPosition.y = int(round(BulletPositionFloat.y));
+	BulletPosition.x = origin.x + DistanceTraveled * cos(angle * 0.017453) - BulletSize / 2;
+	BulletPosition.y = origin.y + DistanceTraveled * sin(angle * 0.017453) - BulletSize / 2;
 	if (BulletPosition.x < -BulletSize)
 	{
 		origin.x += LEVEL_WIDTH;
@@ -87,14 +85,14 @@ void bullet::Update()
 		origin.y -= LEVEL_HEIGHT;
 		BulletPosition.y = 0;
 	}
-	Hitbox = { BulletPosition.x + BulletSize / 3,BulletPosition.y + BulletSize / 3,BulletSize / 3,BulletSize / 3 };
-	BulletSprite = { BulletPosition.x,BulletPosition.y,BulletSize,BulletSize };
+	Hitbox = { BulletPosition.x + BulletSize / 3,BulletPosition.y + BulletSize / 3,float(BulletSize / 3),float(BulletSize / 3) };
+	BulletSprite = { BulletPosition.x,BulletPosition.y,float(BulletSize),float(BulletSize) };
 }
 void BulletExplosion(bullet* CurrentBullet)
 {
 	CurrentBullet->Decayed = true;
-	SDL_Rect DamageSite = { CurrentBullet->BulletPosition.x - 120,CurrentBullet->BulletPosition.y - 120,240,240 };
-	for (int j = 0; j < Current_max_enemies; j++) if (SDL_HasIntersection(&enemy[j]->Hitbox, &DamageSite))
+	SDL_FRect DamageSite = { CurrentBullet->BulletPosition.x - 120,CurrentBullet->BulletPosition.y - 120,240,240 };
+	for (int j = 0; j < Current_max_enemies; j++) if (SDL_HasIntersectionF(&enemy[j]->Hitbox, &DamageSite))
 	{
 		enemy[j]->Health -= CurrentBullet->Damage;
 		if (!enemy[j]->isDead)
@@ -121,14 +119,14 @@ void bullet::Explosion(int NumOfFrame, int framespeed)
 	SDL_QueryTexture(bullettexture, NULL, NULL, &BulletAnimation.texturesize.x, &BulletAnimation.texturesize.y);
 	BulletAnimation.framecalc();
 }
-void BulletDrawCorner(SDL_Rect TempRect[], SDL_Rect* BulletFrame, int i)
+void BulletDrawCorner(SDL_FRect TempRect[], SDL_Rect* BulletFrame, int i)
 {
-	SDL_RenderCopyEx(renderer, player1.PlayerWeapon.bullets[i]->bullettexture, BulletFrame, &TempRect[1], player1.PlayerWeapon.bullets[i]->angle, NULL, SDL_FLIP_NONE);
-	SDL_RenderCopyEx(renderer, player1.PlayerWeapon.bullets[i]->bullettexture, BulletFrame, &TempRect[2], player1.PlayerWeapon.bullets[i]->angle, NULL, SDL_FLIP_NONE);
+	SDL_RenderCopyExF(renderer, player1.PlayerWeapon.bullets[i]->bullettexture, BulletFrame, &TempRect[1], player1.PlayerWeapon.bullets[i]->angle, NULL, SDL_FLIP_NONE);
+	SDL_RenderCopyExF(renderer, player1.PlayerWeapon.bullets[i]->bullettexture, BulletFrame, &TempRect[2], player1.PlayerWeapon.bullets[i]->angle, NULL, SDL_FLIP_NONE);
 }
 void BulletDrawEdge(SDL_Rect* Frame, int i)
 {
-	SDL_Rect TempRect[3];
+	SDL_FRect TempRect[3];
 	TempRect[0] = player1.PlayerWeapon.bullets[i]->BulletSprite;
 	TempRect[1] = player1.PlayerWeapon.bullets[i]->BulletSprite;
 	TempRect[2] = player1.PlayerWeapon.bullets[i]->BulletSprite;
@@ -142,7 +140,7 @@ void BulletDrawEdge(SDL_Rect* Frame, int i)
 			TempRect[2].y += LEVEL_HEIGHT;
 			BulletDrawCorner(TempRect, nullptr, i);
 		}
-		SDL_RenderCopyEx(renderer, player1.PlayerWeapon.bullets[i]->bullettexture, Frame, &TempRect[0], player1.PlayerWeapon.bullets[i]->angle, NULL, SDL_FLIP_NONE);
+		SDL_RenderCopyExF(renderer, player1.PlayerWeapon.bullets[i]->bullettexture, Frame, &TempRect[0], player1.PlayerWeapon.bullets[i]->angle, NULL, SDL_FLIP_NONE);
 	}
 	if (player1.PlayerWeapon.bullets[i]->BulletSprite.y < 0)
 	{
@@ -154,7 +152,7 @@ void BulletDrawEdge(SDL_Rect* Frame, int i)
 			TempRect[2].x -= LEVEL_WIDTH;
 			BulletDrawCorner(TempRect, nullptr, i);
 		}
-		SDL_RenderCopyEx(renderer, player1.PlayerWeapon.bullets[i]->bullettexture, Frame, &TempRect[0], player1.PlayerWeapon.bullets[i]->angle, NULL, SDL_FLIP_NONE);
+		SDL_RenderCopyExF(renderer, player1.PlayerWeapon.bullets[i]->bullettexture, Frame, &TempRect[0], player1.PlayerWeapon.bullets[i]->angle, NULL, SDL_FLIP_NONE);
 	}
 	if (player1.PlayerWeapon.bullets[i]->BulletSprite.x > LEVEL_WIDTH - player1.PlayerWeapon.bullets[i]->BulletSize)
 	{
@@ -166,7 +164,7 @@ void BulletDrawEdge(SDL_Rect* Frame, int i)
 			TempRect[2].y -= LEVEL_HEIGHT;
 			BulletDrawCorner(TempRect, nullptr, i);
 		}
-		SDL_RenderCopyEx(renderer, player1.PlayerWeapon.bullets[i]->bullettexture, Frame, &TempRect[0], player1.PlayerWeapon.bullets[i]->angle, NULL, SDL_FLIP_NONE);
+		SDL_RenderCopyExF(renderer, player1.PlayerWeapon.bullets[i]->bullettexture, Frame, &TempRect[0], player1.PlayerWeapon.bullets[i]->angle, NULL, SDL_FLIP_NONE);
 	}
 	if (player1.PlayerWeapon.bullets[i]->BulletSprite.y > LEVEL_HEIGHT - player1.PlayerWeapon.bullets[i]->BulletSize)
 	{
@@ -179,6 +177,6 @@ void BulletDrawEdge(SDL_Rect* Frame, int i)
 			TempRect[2].y -= LEVEL_HEIGHT;;
 			BulletDrawCorner(TempRect, nullptr, i);
 		}
-		SDL_RenderCopyEx(renderer, player1.PlayerWeapon.bullets[i]->bullettexture, Frame, &TempRect[0], player1.PlayerWeapon.bullets[i]->angle, NULL, SDL_FLIP_NONE);
+		SDL_RenderCopyExF(renderer, player1.PlayerWeapon.bullets[i]->bullettexture, Frame, &TempRect[0], player1.PlayerWeapon.bullets[i]->angle, NULL, SDL_FLIP_NONE);
 	}
 }

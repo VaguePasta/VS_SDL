@@ -32,16 +32,16 @@ class player:public sprite,public objects
 };
 void LoadPlayerSpritesFromDisk();
 void PlayerShield();
-template <class T> SDL_Rect PlayerHitbox(SDL_RendererFlip flip,T Position)
+template <class T> SDL_FRect PlayerHitbox(SDL_RendererFlip flip,T Position)
 {
-    SDL_Rect Hitbox;
-    if (flip==SDL_FLIP_NONE) Hitbox={(int)round(Position.x)+24,(int)round(Position.y)+22,62,62};
-    else Hitbox = {(int)round(Position.x)+14,(int)round(Position.y)+22,62,62};
+    SDL_FRect Hitbox;
+    if (flip==SDL_FLIP_NONE) Hitbox={Position.x+24,Position.y+22,62,62};
+    else Hitbox = {Position.x+14,Position.y+22,62,62};
     return Hitbox;
 }
 void PlayerDash(SDL_FPoint &TempPos);
 void TrailDrawing();
-void PlayerDrawCorner(SDL_Rect[],SDL_FRect[],SDL_Rect[]);
-void PlayerDraw(SDL_Rect,SDL_FRect,SDL_Rect);
+void PlayerDrawCorner(SDL_FRect[],SDL_FRect[],SDL_FRect[]);
+void PlayerDraw(SDL_FRect,SDL_FRect,SDL_FRect);
 void PlayerDrawEdge(SDL_FRect);
 #endif // PLAYER_H_INCLUDED

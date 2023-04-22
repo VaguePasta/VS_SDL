@@ -69,8 +69,8 @@ void player::LoadTexture(int CurrentSet)
 	SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
 	SDL_QueryTexture(texture, NULL, NULL, &texturesize.x, &texturesize.y);
 	framecalc();
-	if (flip == SDL_FLIP_NONE) Hitbox = { (int)round(position.x + 0.5 * (SpriteSize - HitBoxSize) + SpriteSize / 20),(int)round(position.y + 0.5 * (SpriteSize - HitBoxSize)) + SpriteSize / 20,HitBoxSize,HitBoxSize };
-	else Hitbox = { (int)round(position.x + 0.5 * (SpriteSize - HitBoxSize)) - SpriteSize / 20,(int)round(position.y + 0.5 * (SpriteSize - HitBoxSize)) + SpriteSize / 20,HitBoxSize,HitBoxSize };
+	if (flip == SDL_FLIP_NONE) Hitbox = { float(position.x + 0.5 * (SpriteSize - HitBoxSize) + SpriteSize / 20) ,float(position.y + 0.5 * (SpriteSize - HitBoxSize) + SpriteSize / 20) ,float(HitBoxSize),float(HitBoxSize) };
+	else Hitbox = { float(position.x + 0.5 * (SpriteSize - HitBoxSize) - SpriteSize / 20),float(position.y + 0.5 * (SpriteSize - HitBoxSize) + SpriteSize / 20),float(HitBoxSize),float(HitBoxSize) };
 }
 void player::Run()
 {
@@ -112,13 +112,6 @@ void PlayerShield()
 		player1.PlayerShield.DecayShield();
 	}
 }
-SDL_Rect PlayerHitbox(SDL_Point& Position)
-{
-	SDL_Rect Hitbox;
-	if (player1.flip == SDL_FLIP_NONE) Hitbox = { Position.x + 24,Position.y + 22,player1.HitBoxSize,player1.HitBoxSize };
-	else Hitbox = { Position.x + 14,Position.y + 22,player1.HitBoxSize,player1.HitBoxSize };
-	return Hitbox;
-}
 void player::PlayerDirection()
 {
 	Direction = { 0,0 };
@@ -138,10 +131,10 @@ void player::PlayerDirection()
 	Direction.x = Direction.x / sqrt(Direction.x * Direction.x + Direction.y * Direction.y);
 	Direction.y = Direction.y / sqrt(TempX * TempX + Direction.y * Direction.y);
 }
-void PlayerDrawCorner(SDL_Rect TempRect[], SDL_FRect TempWeaponRect[], SDL_Rect TempShieldRect[])
+void PlayerDrawCorner(SDL_FRect TempRect[], SDL_FRect TempWeaponRect[], SDL_FRect TempShieldRect[])
 {
-	SDL_RenderCopyEx(renderer, player1.texture, &player1.frame, &TempRect[1], 0, NULL, player1.flip);
-	SDL_RenderCopyEx(renderer, player1.texture, &player1.frame, &TempRect[2], 0, NULL, player1.flip);
+	SDL_RenderCopyExF(renderer, player1.texture, &player1.frame, &TempRect[1], 0, NULL, player1.flip);
+	SDL_RenderCopyExF(renderer, player1.texture, &player1.frame, &TempRect[2], 0, NULL, player1.flip);
 	if (!player1.isDead)
 	{
 		SDL_RenderCopyExF(renderer, player1.PlayerWeapon.weapontexture, NULL, &TempWeaponRect[1], player1.PlayerWeapon.angle, player1.PlayerWeapon.Center, player1.flip);
@@ -149,21 +142,21 @@ void PlayerDrawCorner(SDL_Rect TempRect[], SDL_FRect TempWeaponRect[], SDL_Rect 
 	}
 	if (player1.PlayerShield.isOn)
 	{
-		SDL_RenderCopy(renderer, player1.PlayerShield.ShieldTexture, NULL, &TempShieldRect[1]);
-		SDL_RenderCopy(renderer, player1.PlayerShield.ShieldTexture, NULL, &TempShieldRect[2]);
+		SDL_RenderCopyF(renderer, player1.PlayerShield.ShieldTexture, NULL, &TempShieldRect[1]);
+		SDL_RenderCopyF(renderer, player1.PlayerShield.ShieldTexture, NULL, &TempShieldRect[2]);
 	}
 }
-void PlayerDraw(SDL_Rect TempRect, SDL_FRect TempWeaponRect, SDL_Rect TempShieldRect)
+void PlayerDraw(SDL_FRect TempRect, SDL_FRect TempWeaponRect, SDL_FRect TempShieldRect)
 {
-	SDL_RenderCopyEx(renderer, player1.texture, &player1.frame, &TempRect, 0, NULL, player1.flip);
+	SDL_RenderCopyExF(renderer, player1.texture, &player1.frame, &TempRect, 0, NULL, player1.flip);
 	if (!player1.isDead) SDL_RenderCopyExF(renderer, player1.PlayerWeapon.weapontexture, NULL, &TempWeaponRect, player1.PlayerWeapon.angle, player1.PlayerWeapon.Center, player1.flip);
-	if (player1.PlayerShield.isOn) SDL_RenderCopy(renderer, player1.PlayerShield.ShieldTexture, NULL, &TempShieldRect);
+	if (player1.PlayerShield.isOn) SDL_RenderCopyF(renderer, player1.PlayerShield.ShieldTexture, NULL, &TempShieldRect);
 }
 void PlayerDrawEdge(SDL_FRect WeaponRect)
 {
-	SDL_Rect TempRect[3];
+	SDL_FRect TempRect[3];
 	SDL_FRect TempWeaponRect[3];
-	SDL_Rect TempShieldRect[3];
+	SDL_FRect TempShieldRect[3];
 	TempRect[0] = player1.SpriteBox;
 	TempRect[1] = player1.SpriteBox;
 	TempRect[2] = player1.SpriteBox;

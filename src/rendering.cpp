@@ -36,7 +36,7 @@ void DrawPlayer()
 	player1.animation();
 	if (!player1.Dashing)
 	{
-		SDL_FRect WeaponRect = { (float)round(player1.position.x + player1.PlayerWeapon.Position.x),(float)round(player1.position.y + player1.PlayerWeapon.Position.y),(float)player1.PlayerWeapon.WeaponSize / 12,(float)player1.PlayerWeapon.WeaponSize / 12 };
+		SDL_FRect WeaponRect = {player1.position.x + player1.PlayerWeapon.Position.x,player1.position.y + player1.PlayerWeapon.Position.y,1.0*player1.PlayerWeapon.WeaponSize / 12,1.0*player1.PlayerWeapon.WeaponSize / 12 };
 		PlayerDrawEdge(WeaponRect);
 		PlayerDraw(player1.SpriteBox, WeaponRect, player1.PlayerShield.ShieldHitBox);
 	}
@@ -49,13 +49,13 @@ void DrawEffects()
 		{
 			if (!player1.PlayerWeapon.bullets[i]->isAnimated)
 			{
-				SDL_RenderCopyEx(renderer, player1.PlayerWeapon.bullets[i]->bullettexture, NULL, &(player1.PlayerWeapon.bullets[i]->BulletSprite), player1.PlayerWeapon.bullets[i]->angle, NULL, SDL_FLIP_NONE);
+				SDL_RenderCopyExF(renderer, player1.PlayerWeapon.bullets[i]->bullettexture, NULL, &(player1.PlayerWeapon.bullets[i]->BulletSprite), player1.PlayerWeapon.bullets[i]->angle, NULL, SDL_FLIP_NONE);
 				BulletDrawEdge(nullptr, i);
 			}
 			else
 			{
 				player1.PlayerWeapon.bullets[i]->BulletAnimation.animation();
-				SDL_RenderCopyEx(renderer, player1.PlayerWeapon.bullets[i]->bullettexture, &player1.PlayerWeapon.bullets[i]->BulletAnimation.frame, &player1.PlayerWeapon.bullets[i]->BulletSprite, player1.PlayerWeapon.bullets[i]->angle, NULL, SDL_FLIP_NONE);
+				SDL_RenderCopyExF(renderer, player1.PlayerWeapon.bullets[i]->bullettexture, &player1.PlayerWeapon.bullets[i]->BulletAnimation.frame, &player1.PlayerWeapon.bullets[i]->BulletSprite, player1.PlayerWeapon.bullets[i]->angle, NULL, SDL_FLIP_NONE);
 				BulletDrawEdge(&player1.PlayerWeapon.bullets[i]->BulletAnimation.frame, i);
 			}
 		}
@@ -71,7 +71,7 @@ void DrawEnemies()
 		if (enemy[i]->isSpawn)
 		{
 			enemy[i]->animation();
-			SDL_RenderCopyEx(renderer, enemy[i]->texture, &enemy[i]->frame, &enemy[i]->SpriteBox, 0, NULL, enemy[i]->flip);
+			SDL_RenderCopyExF(renderer, enemy[i]->texture, &enemy[i]->frame, &enemy[i]->SpriteBox, 0, NULL, enemy[i]->flip);
 			EnemyDrawEdge(i);
 		}
 		if (Projectiles[i]->isShot)

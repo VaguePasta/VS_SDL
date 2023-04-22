@@ -182,8 +182,8 @@ void PlayerCollisions(SDL_FPoint& TempPos)
 	if (TempPos.y > LEVEL_HEIGHT) TempPos.y = 0;
 	for (int i = 0; i < Current_max_enemies; i++)
 	{
-		SDL_Rect FutureHitbox = PlayerHitbox(player1.flip, TempPos);
-		if (SDL_HasIntersection(&FutureHitbox, &enemy[i]->Hitbox)) TempPos = player1.position;
+		SDL_FRect FutureHitbox = PlayerHitbox(player1.flip, TempPos);
+		if (SDL_HasIntersectionF(&FutureHitbox, &enemy[i]->Hitbox)) TempPos = player1.position;
 	}
 }
 void Moving()

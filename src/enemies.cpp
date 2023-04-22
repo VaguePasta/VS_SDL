@@ -89,13 +89,13 @@ void Enemies::CalCulateBoxes()
 {
 	if (flip == SDL_FLIP_NONE)
 	{
-		Hitbox = { (int)position.x + (int)EnemiesInfo[CurrentEnemyType][6][0],(int)position.y + (int)EnemiesInfo[CurrentEnemyType][6][1],(int)EnemiesInfo[CurrentEnemyType][6][2],(int)EnemiesInfo[CurrentEnemyType][6][3] };
-		AttackBox = { (int)position.x + (int)EnemiesInfo[CurrentEnemyType][8][0],(int)position.y + (int)EnemiesInfo[CurrentEnemyType][8][1],(int)EnemiesInfo[CurrentEnemyType][8][2],(int)EnemiesInfo[CurrentEnemyType][8][3] };
+		Hitbox = { position.x + EnemiesInfo[CurrentEnemyType][6][0],position.y + EnemiesInfo[CurrentEnemyType][6][1],EnemiesInfo[CurrentEnemyType][6][2],EnemiesInfo[CurrentEnemyType][6][3] };
+		AttackBox = { position.x + EnemiesInfo[CurrentEnemyType][8][0],position.y + EnemiesInfo[CurrentEnemyType][8][1],EnemiesInfo[CurrentEnemyType][8][2],EnemiesInfo[CurrentEnemyType][8][3] };
 	}
 	if (flip == SDL_FLIP_HORIZONTAL)
 	{
-		Hitbox = { (int)position.x + (int)EnemiesInfo[CurrentEnemyType][7][0],(int)position.y + (int)EnemiesInfo[CurrentEnemyType][7][1],(int)EnemiesInfo[CurrentEnemyType][7][2],(int)EnemiesInfo[CurrentEnemyType][7][3] };
-		AttackBox = { (int)position.x + (int)EnemiesInfo[CurrentEnemyType][9][0],(int)position.y + (int)EnemiesInfo[CurrentEnemyType][9][1],(int)EnemiesInfo[CurrentEnemyType][9][2],(int)EnemiesInfo[CurrentEnemyType][9][3] };
+		Hitbox = { position.x + EnemiesInfo[CurrentEnemyType][7][0],position.y + EnemiesInfo[CurrentEnemyType][7][1],EnemiesInfo[CurrentEnemyType][7][2],EnemiesInfo[CurrentEnemyType][7][3] };
+		AttackBox = { position.x + EnemiesInfo[CurrentEnemyType][9][0],position.y + EnemiesInfo[CurrentEnemyType][9][1],EnemiesInfo[CurrentEnemyType][9][2],EnemiesInfo[CurrentEnemyType][9][3] };
 	}
 	if (Hitbox.x<0 && player1.BulletOrigin.x>LEVEL_WIDTH / 2) Hitbox.x += LEVEL_WIDTH;
 	else if (Hitbox.x + Hitbox.w > LEVEL_WIDTH && player1.BulletOrigin.x < LEVEL_WIDTH / 2) Hitbox.x -= LEVEL_WIDTH;
@@ -161,14 +161,14 @@ void Enemies::Idle()
 	LoadTexture(1);
 	MovingCounter.Restart();
 }
-void EnemyDrawCorner(SDL_Rect TempRect[], int i)
+void EnemyDrawCorner(SDL_FRect TempRect[], int i)
 {
-	SDL_RenderCopyEx(renderer, enemy[i]->texture, &enemy[i]->frame, &TempRect[1], 0, NULL, enemy[i]->flip);
-	SDL_RenderCopyEx(renderer, enemy[i]->texture, &enemy[i]->frame, &TempRect[2], 0, NULL, enemy[i]->flip);
+	SDL_RenderCopyExF(renderer, enemy[i]->texture, &enemy[i]->frame, &TempRect[1], 0, NULL, enemy[i]->flip);
+	SDL_RenderCopyExF(renderer, enemy[i]->texture, &enemy[i]->frame, &TempRect[2], 0, NULL, enemy[i]->flip);
 }
 void EnemyDrawEdge(int i)
 {
-	SDL_Rect TempRect[3];
+	SDL_FRect TempRect[3];
 	TempRect[0] = enemy[i]->SpriteBox;
 	TempRect[1] = enemy[i]->SpriteBox;
 	TempRect[2] = enemy[i]->SpriteBox;
@@ -182,7 +182,7 @@ void EnemyDrawEdge(int i)
 			TempRect[2].y += LEVEL_HEIGHT;
 			EnemyDrawCorner(TempRect, i);
 		}
-		SDL_RenderCopyEx(renderer, enemy[i]->texture, &enemy[i]->frame, &TempRect[0], 0, NULL, enemy[i]->flip);
+		SDL_RenderCopyExF(renderer, enemy[i]->texture, &enemy[i]->frame, &TempRect[0], 0, NULL, enemy[i]->flip);
 	}
 	if (enemy[i]->position.y < 0)
 	{
@@ -194,7 +194,7 @@ void EnemyDrawEdge(int i)
 			TempRect[2].x -= LEVEL_WIDTH;
 			EnemyDrawCorner(TempRect, i);
 		}
-		SDL_RenderCopyEx(renderer, enemy[i]->texture, &enemy[i]->frame, &TempRect[0], 0, NULL, enemy[i]->flip);
+		SDL_RenderCopyExF(renderer, enemy[i]->texture, &enemy[i]->frame, &TempRect[0], 0, NULL, enemy[i]->flip);
 	}
 	if (enemy[i]->position.x > LEVEL_WIDTH - enemy[i]->SpriteBox.w)
 	{
@@ -206,7 +206,7 @@ void EnemyDrawEdge(int i)
 			TempRect[2].y -= LEVEL_HEIGHT;
 			EnemyDrawCorner(TempRect, i);
 		}
-		SDL_RenderCopyEx(renderer, enemy[i]->texture, &enemy[i]->frame, &TempRect[0], 0, NULL, enemy[i]->flip);
+		SDL_RenderCopyExF(renderer, enemy[i]->texture, &enemy[i]->frame, &TempRect[0], 0, NULL, enemy[i]->flip);
 	}
 	if (enemy[i]->position.y > LEVEL_HEIGHT - enemy[i]->SpriteBox.h)
 	{
@@ -218,6 +218,6 @@ void EnemyDrawEdge(int i)
 			TempRect[2].y -= LEVEL_HEIGHT;
 			EnemyDrawCorner(TempRect, i);
 		}
-		SDL_RenderCopyEx(renderer, enemy[i]->texture, &enemy[i]->frame, &TempRect[0], 0, NULL, enemy[i]->flip);
+		SDL_RenderCopyExF(renderer, enemy[i]->texture, &enemy[i]->frame, &TempRect[0], 0, NULL, enemy[i]->flip);
 	}
 }

@@ -22,7 +22,6 @@ void init()
 	LoadSounds();
 	InitObjects();
 }
-#include <iostream>
 void InitSDL()
 {
 	SDL_SetHint(SDL_HINT_WINDOWS_DPI_AWARENESS, "permonitor");

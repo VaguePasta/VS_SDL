@@ -33,16 +33,16 @@ void Shield::ActivateShield(SDL_FPoint PlayerPosition)
 	{
 		isOn = true;
 		Health = 500;
-		Position.x = round(PlayerPosition.x);
-		Position.y = round(PlayerPosition.y);
-		ShieldHitBox = { (int)round(PlayerPosition.x),(int)round(PlayerPosition.y),Size.x,Size.y };
+		Position.x = PlayerPosition.x;
+		Position.y = PlayerPosition.y;
+		ShieldHitBox = { PlayerPosition.x,PlayerPosition.y,float(Size.x),float(Size.y) };
 		isOn = true;
 		Time.Restart();
 	}
 }
 void Shield::DecayShield()
 {
-	ShieldHitBox = { (int)round(player1.position.x),(int)round(player1.position.y),Size.x,Size.y };
+	ShieldHitBox = { player1.position.x,player1.position.y,float(Size.x),float(Size.y) };
 	if (!Damaged && DamageDelay >= 10)
 	{
 		SDL_SetTextureColorMod(ShieldTexture, 255, 255, 255);
@@ -143,10 +143,8 @@ void GunShoot(bool& Recoil, Timer& RecoilTimer, float& ShootAngle)
 		{
 			player1.PlayerWeapon.bullets[i]->isShot = true;
 			player1.PlayerWeapon.bullets[i]->origin = BulletOrigin;
-			player1.PlayerWeapon.bullets[i]->BulletPositionFloat.x = BulletOrigin.x - player1.PlayerWeapon.bullets[i]->BulletSize / 2;
-			player1.PlayerWeapon.bullets[i]->BulletPositionFloat.y = BulletOrigin.y - player1.PlayerWeapon.bullets[i]->BulletSize / 2;
-			player1.PlayerWeapon.bullets[i]->BulletPosition.x = (int)player1.PlayerWeapon.bullets[i]->BulletPositionFloat.x;
-			player1.PlayerWeapon.bullets[i]->BulletPosition.y = (int)player1.PlayerWeapon.bullets[i]->BulletPositionFloat.y;
+			player1.PlayerWeapon.bullets[i]->BulletPosition.x = BulletOrigin.x - player1.PlayerWeapon.bullets[i]->BulletSize / 2;
+			player1.PlayerWeapon.bullets[i]->BulletPosition.y = BulletOrigin.y - player1.PlayerWeapon.bullets[i]->BulletSize / 2;
 			player1.PlayerWeapon.bullets[i]->Damage = player1.PlayerWeapon.damage;
 			player1.PlayerWeapon.bullets[i]->angle = ShootAngle;
 			player1.PlayerWeapon.bullets[i]->BulletSpeed = player1.PlayerWeapon.bulletspeed;

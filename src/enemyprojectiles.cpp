@@ -59,8 +59,6 @@ void EnemyProjectiles::Shoot()
 		range = EnemyProjectilesInfo[type][4];
 		damage = EnemyProjectilesInfo[type][5];
 		angle = atan2(Target.y - Origin.y, Target.x - Origin.x);
-		FPosition.x = Origin.x;
-		FPosition.y = Origin.y;
 		Position.x = Origin.x;
 		Position.y = Origin.y;
 		break;
@@ -97,10 +95,8 @@ void EnemyProjectiles::Update()
 	if (type == 0)
 	{
 		distancetraveled += speed * DeltaTime;
-		FPosition.x = Origin.x + distancetraveled * cos(angle) - ProjectileSize.x / 2;
-		FPosition.y = Origin.y + distancetraveled * sin(angle) - ProjectileSize.y / 2;
-		Position.x = int(round(FPosition.x));
-		Position.y = int(round(FPosition.y));
+		Position.x = Origin.x + distancetraveled * cos(angle) - ProjectileSize.x / 2;
+		Position.y = Origin.y + distancetraveled * sin(angle) - ProjectileSize.y / 2;
 		if (Position.x < -ProjectileSize.x)
 		{
 			Origin.x += LEVEL_WIDTH;
@@ -121,15 +117,15 @@ void EnemyProjectiles::Update()
 			Origin.y -= LEVEL_HEIGHT;
 			Position.y = 0;
 		}
-		ProjectileSprite = { Position.x,Position.y,ProjectileSize.x,ProjectileSize.y };
+		ProjectileSprite = { Position.x,Position.y,float(ProjectileSize.x),float(ProjectileSize.y) };
 		if (angle >= 1.57)
-			Hitbox = { (int)round(Position.x + 17 * sin(angle)),(int)round(Position.y + 10 * sin(angle)),12,12 };
+			Hitbox = { Position.x + 17 * sin(angle),Position.y + 10 * sin(angle),12,12 };
 		if (angle >= -3.14 && angle <= -1.57)
-			Hitbox = { (int)round(Position.x - 15 * sin(angle)),(int)round(Position.y + 10 * sin(angle)),12,12 };
+			Hitbox = { Position.x - 15 * sin(angle),Position.y + 10 * sin(angle),12,12 };
 		if (angle >= 0 && angle < 1.57)
-			Hitbox = { (int)round(Position.x + 35 - 15 * sin(angle)),(int)round(Position.y + 10 * sin(angle)),12,12 };
+			Hitbox = { Position.x + 35 - 15 * sin(angle),Position.y + 10 * sin(angle),12,12 };
 		if (angle > -1.57 && angle < 0)
-			Hitbox = { (int)round(Position.x + 35 + 15 * sin(angle)),(int)round(Position.y + 10 * sin(angle)),12,12 };
+			Hitbox = { Position.x + 35 + 15 * sin(angle),Position.y + 10 * sin(angle),12,12 };
 	}
 	else if (type == 1)
 	{
@@ -153,8 +149,8 @@ void EnemyProjectiles::Decay()
 }
 void DrawEnemyProjectiles(SDL_Rect* ProjectileFrame, int i)
 {
-	SDL_RenderCopyEx(renderer, Projectiles[i]->ProjectileTexture, ProjectileFrame, &Projectiles[i]->ProjectileSprite, (Projectiles[i]->angle) * 57.2958, NULL, SDL_FLIP_NONE);
-	SDL_Rect TempRect[3];
+	SDL_RenderCopyExF(renderer, Projectiles[i]->ProjectileTexture, ProjectileFrame, &Projectiles[i]->ProjectileSprite, (Projectiles[i]->angle) * 57.2958, NULL, SDL_FLIP_NONE);
+	SDL_FRect TempRect[3];
 	TempRect[0] = Projectiles[i]->ProjectileSprite;
 	TempRect[1] = Projectiles[i]->ProjectileSprite;
 	TempRect[2] = Projectiles[i]->ProjectileSprite;
@@ -166,10 +162,10 @@ void DrawEnemyProjectiles(SDL_Rect* ProjectileFrame, int i)
 			TempRect[1].x += LEVEL_WIDTH;
 			TempRect[1].y += LEVEL_HEIGHT;
 			TempRect[2].y += LEVEL_HEIGHT;
-			SDL_RenderCopyEx(renderer, Projectiles[i]->ProjectileTexture, ProjectileFrame, &TempRect[1], (Projectiles[i]->angle) * 57.2958, NULL, SDL_FLIP_NONE);
-			SDL_RenderCopyEx(renderer, Projectiles[i]->ProjectileTexture, ProjectileFrame, &TempRect[2], (Projectiles[i]->angle) * 57.2958, NULL, SDL_FLIP_NONE);
+			SDL_RenderCopyExF(renderer, Projectiles[i]->ProjectileTexture, ProjectileFrame, &TempRect[1], (Projectiles[i]->angle) * 57.2958, NULL, SDL_FLIP_NONE);
+			SDL_RenderCopyExF(renderer, Projectiles[i]->ProjectileTexture, ProjectileFrame, &TempRect[2], (Projectiles[i]->angle) * 57.2958, NULL, SDL_FLIP_NONE);
 		}
-		SDL_RenderCopyEx(renderer, Projectiles[i]->ProjectileTexture, ProjectileFrame, &TempRect[0], (Projectiles[i]->angle) * 57.2958, NULL, SDL_FLIP_NONE);
+		SDL_RenderCopyExF(renderer, Projectiles[i]->ProjectileTexture, ProjectileFrame, &TempRect[0], (Projectiles[i]->angle) * 57.2958, NULL, SDL_FLIP_NONE);
 	}
 	if (Projectiles[i]->Position.x > LEVEL_WIDTH - Projectiles[i]->ProjectileSprite.w)
 	{
@@ -179,10 +175,10 @@ void DrawEnemyProjectiles(SDL_Rect* ProjectileFrame, int i)
 			TempRect[1].x -= LEVEL_WIDTH;
 			TempRect[1].y -= LEVEL_HEIGHT;
 			TempRect[2].y -= LEVEL_HEIGHT;
-			SDL_RenderCopyEx(renderer, Projectiles[i]->ProjectileTexture, ProjectileFrame, &TempRect[1], (Projectiles[i]->angle) * 57.2958, NULL, SDL_FLIP_NONE);
-			SDL_RenderCopyEx(renderer, Projectiles[i]->ProjectileTexture, ProjectileFrame, &TempRect[2], (Projectiles[i]->angle) * 57.2958, NULL, SDL_FLIP_NONE);
+			SDL_RenderCopyExF(renderer, Projectiles[i]->ProjectileTexture, ProjectileFrame, &TempRect[1], (Projectiles[i]->angle) * 57.2958, NULL, SDL_FLIP_NONE);
+			SDL_RenderCopyExF(renderer, Projectiles[i]->ProjectileTexture, ProjectileFrame, &TempRect[2], (Projectiles[i]->angle) * 57.2958, NULL, SDL_FLIP_NONE);
 		}
-		SDL_RenderCopyEx(renderer, Projectiles[i]->ProjectileTexture, ProjectileFrame, &TempRect[0], (Projectiles[i]->angle) * 57.2958, NULL, SDL_FLIP_NONE);
+		SDL_RenderCopyExF(renderer, Projectiles[i]->ProjectileTexture, ProjectileFrame, &TempRect[0], (Projectiles[i]->angle) * 57.2958, NULL, SDL_FLIP_NONE);
 	}
 	if (Projectiles[i]->Position.y - player1.SpriteSize < 0)
 	{
@@ -192,10 +188,10 @@ void DrawEnemyProjectiles(SDL_Rect* ProjectileFrame, int i)
 			TempRect[1].x -= LEVEL_WIDTH;
 			TempRect[1].y += LEVEL_HEIGHT;
 			TempRect[2].x -= LEVEL_WIDTH;
-			SDL_RenderCopyEx(renderer, Projectiles[i]->ProjectileTexture, ProjectileFrame, &TempRect[1], (Projectiles[i]->angle) * 57.2958, NULL, SDL_FLIP_NONE);
-			SDL_RenderCopyEx(renderer, Projectiles[i]->ProjectileTexture, ProjectileFrame, &TempRect[2], (Projectiles[i]->angle) * 57.2958, NULL, SDL_FLIP_NONE);
+			SDL_RenderCopyExF(renderer, Projectiles[i]->ProjectileTexture, ProjectileFrame, &TempRect[1], (Projectiles[i]->angle) * 57.2958, NULL, SDL_FLIP_NONE);
+			SDL_RenderCopyExF(renderer, Projectiles[i]->ProjectileTexture, ProjectileFrame, &TempRect[2], (Projectiles[i]->angle) * 57.2958, NULL, SDL_FLIP_NONE);
 		}
-		SDL_RenderCopyEx(renderer, Projectiles[i]->ProjectileTexture, ProjectileFrame, &TempRect[0], (Projectiles[i]->angle) * 57.2958, NULL, SDL_FLIP_NONE);
+		SDL_RenderCopyExF(renderer, Projectiles[i]->ProjectileTexture, ProjectileFrame, &TempRect[0], (Projectiles[i]->angle) * 57.2958, NULL, SDL_FLIP_NONE);
 	}
 	if (Projectiles[i]->Position.y > LEVEL_HEIGHT - Projectiles[i]->ProjectileSprite.h)
 	{
@@ -205,9 +201,9 @@ void DrawEnemyProjectiles(SDL_Rect* ProjectileFrame, int i)
 			TempRect[1].x += LEVEL_WIDTH;
 			TempRect[1].y -= LEVEL_HEIGHT;
 			TempRect[2].y -= LEVEL_HEIGHT;
-			SDL_RenderCopyEx(renderer, Projectiles[i]->ProjectileTexture, ProjectileFrame, &TempRect[1], (Projectiles[i]->angle) * 57.2958, NULL, SDL_FLIP_NONE);
-			SDL_RenderCopyEx(renderer, Projectiles[i]->ProjectileTexture, ProjectileFrame, &TempRect[2], (Projectiles[i]->angle) * 57.2958, NULL, SDL_FLIP_NONE);
+			SDL_RenderCopyExF(renderer, Projectiles[i]->ProjectileTexture, ProjectileFrame, &TempRect[1], (Projectiles[i]->angle) * 57.2958, NULL, SDL_FLIP_NONE);
+			SDL_RenderCopyExF(renderer, Projectiles[i]->ProjectileTexture, ProjectileFrame, &TempRect[2], (Projectiles[i]->angle) * 57.2958, NULL, SDL_FLIP_NONE);
 		}
-		SDL_RenderCopyEx(renderer, Projectiles[i]->ProjectileTexture, ProjectileFrame, &TempRect[0], (Projectiles[i]->angle) * 57.2958, NULL, SDL_FLIP_NONE);
+		SDL_RenderCopyExF(renderer, Projectiles[i]->ProjectileTexture, ProjectileFrame, &TempRect[0], (Projectiles[i]->angle) * 57.2958, NULL, SDL_FLIP_NONE);
 	}
 }

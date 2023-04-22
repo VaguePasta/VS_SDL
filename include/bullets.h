@@ -13,8 +13,7 @@ class bullet
         sprite BulletAnimation;
         SDL_Texture *bullettexture;
         SDL_FPoint origin;
-        SDL_Point BulletPosition;
-        SDL_FPoint BulletPositionFloat;
+        SDL_FPoint BulletPosition;
         int BulletSize;
         int BulletSpeed;
         int BulletRange;
@@ -22,8 +21,8 @@ class bullet
         int CurrentWeapon;
         float DistanceTraveled;
         float angle;
-        SDL_Rect Hitbox;
-        SDL_Rect BulletSprite;
+        SDL_FRect Hitbox;
+        SDL_FRect BulletSprite;
         ~bullet();
         bullet(int);
         bool Decay();
@@ -31,7 +30,7 @@ class bullet
         void Explosion(int,int);
 };
 extern std::vector <std::vector<int>> BulletSpritesList;
-void BulletDrawCorner(SDL_Rect[],SDL_Rect*,int);
+void BulletDrawCorner(SDL_FRect[],SDL_Rect*,int);
 void BulletDrawEdge(SDL_Rect*,int);
 void BulletExplosion(bullet*);
 #endif // BULLETS_H_INCLUDED
