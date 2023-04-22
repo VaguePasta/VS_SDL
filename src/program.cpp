@@ -40,12 +40,14 @@ void InitWindow()
 }
 void LoadSprites()
 {
+	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "nearest");
 	LoadBackgroundSpritesFromDisk();
 	LoadPlayerSpritesFromDisk();
 	LoadWeaponSpritesFromDisk();
 	LoadBulletSpritesFromDisk();
 	LoadEnemiesSpritesFromDisk();
 	LoadEnemiesProjectileSpritesFromDisk();
+	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
 	LoadFont();
 	LoadButtons();
 }

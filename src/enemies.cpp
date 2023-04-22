@@ -9,8 +9,7 @@
 #include <cstdlib>
 #include <cmath>
 #include "UI.h"
-using namespace std;
-vector<vector<vector<float>>> EnemiesInfo =   //{So thu tu, kich co, toc do, toc do danh, mau, gan-xa(0-1),dmg}, {So frame, toc do chuyen frame},{HitboxNoFlip},{HitboxFlip},{AttackBoxNoFlip},{AttackBoxFlip}
+std::vector<std::vector<std::vector<float>>> EnemiesInfo =   //{So thu tu, kich co, toc do, toc do danh, mau, gan-xa(0-1),dmg}, {So frame, toc do chuyen frame},{HitboxNoFlip},{HitboxFlip},{AttackBoxNoFlip},{AttackBoxFlip}
 {
 	{{0,228,5,2,250,0,20},{9,4},{6,8},{12,5},{5,4},{24,7},{80,100,80,80},{70,100,80,80},{90,30,130,170},{10,30,130,170}},    //1:Idle,2:Running,3:Attacking,4:Hurting,5:Dying
 	{{1,228,4,0.5,500,0,35},{5,7},{8,8},{9,8},{3,5},{6,13},{75,50,70,100},{85,50,70,100},{50,10,110,150},{28,10,110,150}},
@@ -18,7 +17,7 @@ vector<vector<vector<float>>> EnemiesInfo =   //{So thu tu, kich co, toc do, toc
 	{{3,228,6,0.5,200,1,25},{10,5},{8,6},{6,10},{3,6},{10,11},{80,80,80,75},{80,80,80,75},{130,-190,700,600},{-600,-190,700,600}},
 	{{4,400,4,0.2,220,1,50},{8,8},{8,8},{8,8},{3,6},{7,12},{171,190,44,78},{186,190,44,78},{260,-95,700,650},{-570,-95,700,650}},
 };
-vector<vector<float>> EnemyProjectilesInfo =   //STT, kich co_x, kich co_y, toc do, tam bay, sat thuong, co animation?,so frame,toc do chuyen frame
+std::vector<std::vector<float>> EnemyProjectilesInfo =   //STT, kich co_x, kich co_y, toc do, tam bay, sat thuong, co animation?,so frame,toc do chuyen frame
 {
 	{0,48,10,11,1000,25,0,0,0},
 	{1,192,192,0,0,50,1,14,5},

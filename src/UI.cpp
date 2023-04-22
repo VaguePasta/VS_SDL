@@ -119,6 +119,7 @@ void UpdateCurrentScore()
 	if (SCORE < 30) ScoreColor = { 0,192,0 };
 	else if (SCORE < 50) ScoreColor = { 255,255,0 };
 	else ScoreColor = { 255,0,0 };
+	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "nearest");
 	SDL_Surface* ScoreTemp = TTF_RenderText_Solid(GlobalFont, std::to_string(SCORE).c_str(), ScoreColor);
 	ScoreTexture = SDL_CreateTextureFromSurface(renderer, ScoreTemp);
 	CurrentScoreRect = { 1500 - ScoreTemp->w * 2,20,ScoreTemp->w * 4,ScoreTemp->h * 4 };
