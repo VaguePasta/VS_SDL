@@ -1,5 +1,4 @@
-#ifndef RENDER_H_INCLUDED
-#define RENDER_H_INCLUDED
+#pragma once
 #include <SDL.h>
 void combinetexture();
 void rendergame();
@@ -8,4 +7,3 @@ void DrawEffects();
 void DrawEnemies();
 void DrawUI();
 void DrawCursor();
-#endif

@@ -46,7 +46,7 @@ void CalculateWeaponAngle()
 {
 	player1.isAttacking = false;
 	if (MouseState & SDL_BUTTON(1))
-		if ((MousePosition.x + camera[0].CameraPosition.x - (player1.position.x + player1.SpriteSize / 2)) * (MousePosition.x + camera[0].CameraPosition.x - (player1.position.x + player1.SpriteSize / 2)) + (MousePosition.y + camera[0].CameraPosition.y - (player1.position.y + player1.SpriteSize / 2)) * (MousePosition.y + camera[0].CameraPosition.y - (player1.position.y + player1.SpriteSize / 2)) > 6400)
+		if ((MousePosition.x + camera[0].CameraPosition.x - (player1.position.x + player1.SpriteSize.x / 2)) * (MousePosition.x + camera[0].CameraPosition.x - (player1.position.x + player1.SpriteSize.x / 2)) + (MousePosition.y + camera[0].CameraPosition.y - (player1.position.y + player1.SpriteSize.y / 2)) * (MousePosition.y + camera[0].CameraPosition.y - (player1.position.y + player1.SpriteSize.y / 2)) > 6400)
 			player1.isAttacking = true;
 	if (!player1.isAttacking)
 	{
@@ -101,12 +101,12 @@ void PlayerAttacking()
 		if (!player1.isAttacking) break;
 		if (player1.flip == SDL_FLIP_HORIZONTAL)
 		{
-			player1.PlayerWeapon.angle = (atan2(player1.position.y + player1.SpriteSize / 2 - (MousePosition.y + camera[0].CameraPosition.y), player1.position.x + player1.SpriteSize / 2 - (MousePosition.x + camera[0].CameraPosition.x))) * 180.000 / 3.14159265;
+			player1.PlayerWeapon.angle = (atan2(player1.position.y + player1.SpriteSize.y / 2 - (MousePosition.y + camera[0].CameraPosition.y), player1.position.x + player1.SpriteSize.x/ 2 - (MousePosition.x + camera[0].CameraPosition.x))) * 180.000 / 3.14159265;
 			if (player1.PlayerWeapon.angle < -90 || player1.PlayerWeapon.angle>90) player1.flip = SDL_FLIP_NONE;
 		}
 		if (player1.flip == SDL_FLIP_NONE)
 		{
-			player1.PlayerWeapon.angle = (atan2(player1.position.y + player1.SpriteSize / 2 - (MousePosition.y + camera[0].CameraPosition.y), player1.position.x + player1.SpriteSize / 2 - (MousePosition.x + camera[0].CameraPosition.x))) * 180.000 / 3.14159265 - 180;
+			player1.PlayerWeapon.angle = (atan2(player1.position.y + player1.SpriteSize.y / 2 - (MousePosition.y + camera[0].CameraPosition.y), player1.position.x + player1.SpriteSize.x / 2 - (MousePosition.x + camera[0].CameraPosition.x))) * 180.000 / 3.14159265 - 180;
 			if (player1.PlayerWeapon.angle > -270 && player1.PlayerWeapon.angle < -90) player1.flip = SDL_FLIP_HORIZONTAL;
 		}
 		player1.BulletOrigin = CalculateOrigin();
@@ -123,15 +123,19 @@ void PlayerAttacking()
 		}
 		break;
 	case 3:
-		static bool* isDamaged = nullptr;
+		static bool* EnemyDamaged = nullptr;
+		static bool* ElementalDamaged = nullptr;
 		if (player1.isAttacking)
 		{
 			if (player1.PlayerWeapon.ShootingDelay.GetTime() >= 1000 / player1.PlayerWeapon.shootingspeed && !player1.MeleeAttacking)
 			{
 				Slash();
-				if (isDamaged != nullptr) delete[] isDamaged;
-				isDamaged = new bool[Current_max_enemies];
-				for (int i = 0; i < Current_max_enemies; i++) isDamaged[i] = false;
+				if (EnemyDamaged != nullptr) delete[] EnemyDamaged;
+				EnemyDamaged = new bool[Current_max_enemies];
+				for (int i = 0; i < Current_max_enemies; i++) EnemyDamaged[i] = false;
+				if (ElementalDamaged != nullptr) delete[] ElementalDamaged;
+				ElementalDamaged = new bool[Current_max_elementals];
+				for (int i = 0; i < Current_max_elementals; i++) ElementalDamaged[i] = false;
 			}
 		}
 		if (player1.MeleeAttacking)
@@ -152,14 +156,16 @@ void PlayerAttacking()
 						player1.PlayerWeapon.angle += 360;
 						SlashEffect.SpriteAngle += 360;
 					}
-					SlashDamage(isDamaged);
+					SlashDamage(EnemyDamaged,ElementalDamaged);
 				}
 			}
 			else if (!player1.MeleeAttacked)
 			{
 				player1.MeleeAttacked = true;
-				delete[] isDamaged;
-				isDamaged = nullptr;
+				delete[] EnemyDamaged;
+				EnemyDamaged = nullptr;
+				delete[] ElementalDamaged;
+				ElementalDamaged = nullptr;
 			}
 			if (player1.MeleeAttacked)
 			{
@@ -176,14 +182,18 @@ void PlayerCollisions(SDL_FPoint& TempPos)
 		player1.isHurt = false;
 		player1.Idle();
 	}
-	if (TempPos.x < -player1.SpriteSize) TempPos.x = LEVEL_WIDTH - player1.SpriteSize;
-	if (TempPos.y < -player1.SpriteSize) TempPos.y = LEVEL_HEIGHT - player1.SpriteSize;
+	if (TempPos.x < -player1.SpriteSize.x) TempPos.x = LEVEL_WIDTH - player1.SpriteSize.x;
+	if (TempPos.y < -player1.SpriteSize.y) TempPos.y = LEVEL_HEIGHT - player1.SpriteSize.y;
 	if (TempPos.x > LEVEL_WIDTH) TempPos.x = 0;
 	if (TempPos.y > LEVEL_HEIGHT) TempPos.y = 0;
+	SDL_FRect FutureHitbox = PlayerHitbox(player1.flip, TempPos);
 	for (int i = 0; i < Current_max_enemies; i++)
 	{
-		SDL_FRect FutureHitbox = PlayerHitbox(player1.flip, TempPos);
 		if (SDL_HasIntersectionF(&FutureHitbox, &enemy[i]->Hitbox)) TempPos = player1.position;
+	}
+	for (int i = 0; i < Current_max_elementals; i++)
+	{
+		if (SDL_HasIntersectionF(&FutureHitbox, &elemental[i]->Hitbox)) TempPos = player1.position;
 	}
 }
 void Moving()

@@ -6,6 +6,7 @@
 #include "texturerendering.h"
 #include "UI.h"
 #include "bullets.h"
+#include "elementalAI.h"
 #include <SDL_mixer.h>
 #include <SDL.h>
 #include <SDL_image.h>
@@ -134,8 +135,8 @@ void GunShoot(bool& Recoil, Timer& RecoilTimer, float& ShootAngle)
 	BulletOrigin = CalculateOrigin();
 	int x_weapon = (player1.flip == SDL_FLIP_NONE) ? (19) : (-19);
 	int y_weapon = 16;
-	float vec_x = (player1.position.x + player1.SpriteSize / 2 + x_weapon) - (MousePosition.x + camera[0].CameraPosition.x);
-	float vec_y = (player1.position.y + player1.SpriteSize / 2 + y_weapon) - (MousePosition.y + camera[0].CameraPosition.y);
+	float vec_x = (player1.position.x + player1.SpriteSize.x / 2 + x_weapon) - (MousePosition.x + camera[0].CameraPosition.x);
+	float vec_y = (player1.position.y + player1.SpriteSize.y / 2 + y_weapon) - (MousePosition.y + camera[0].CameraPosition.y);
 	ShootAngle = atan2(vec_y, vec_x) * 180.000 / 3.14159265 + 180;
 	for (int i = 0; i < Max_Bullets; i++)
 	{
@@ -165,8 +166,8 @@ void Slash()
 {
 	player1.MeleeAttacking = true;
 	player1.MeleeAttacked = false;
-	if (MousePosition.x + camera[0].CameraPosition.x < player1.position.x + player1.SpriteSize / 2) player1.flip = SDL_FLIP_HORIZONTAL; else player1.flip = SDL_FLIP_NONE;
-	player1.PlayerWeapon.angle = (atan2(player1.position.y + player1.SpriteSize / 2 - (MousePosition.y + camera[0].CameraPosition.y), player1.position.x + player1.SpriteSize / 2 - (MousePosition.x + camera[0].CameraPosition.x))) * 180.000 / 3.14159265 + 180;
+	if (MousePosition.x + camera[0].CameraPosition.x < player1.position.x + player1.SpriteSize.x / 2) player1.flip = SDL_FLIP_HORIZONTAL; else player1.flip = SDL_FLIP_NONE;
+	player1.PlayerWeapon.angle = (atan2(player1.position.y + player1.SpriteSize.y / 2 - (MousePosition.y + camera[0].CameraPosition.y), player1.position.x + player1.SpriteSize.x / 2 - (MousePosition.x + camera[0].CameraPosition.x))) * 180.000 / 3.14159265 + 180;
 	if (player1.flip == SDL_FLIP_NONE) player1.PlayerWeapon.angle -= 45;
 	else player1.PlayerWeapon.angle += 225;
 	SlashEffect.SpriteAngle = player1.PlayerWeapon.angle;
@@ -219,17 +220,17 @@ void SlashRecover()
 		SlashEffect.tempframe = 1;
 	}
 }
-void SlashDamage(bool isDamaged[])
+void SlashDamage(bool EnemyDamaged[],bool ElementalDamaged[])
 {
 	for (int i = 0; i < Current_max_enemies; i++)
 	{
 		if (enemy[i]->isSpawn && !enemy[i]->isDead)
 		{
 			SDL_FPoint PlayerCenter = player1.position; PlayerCenter.x += 50; PlayerCenter.y += 50;
-			SDL_FPoint EnemyCenter = enemy[i]->position; EnemyCenter.x += enemy[i]->SpriteSize / 2; EnemyCenter.y += enemy[i]->SpriteSize / 2;
+			SDL_FPoint EnemyCenter = enemy[i]->position; EnemyCenter.x += enemy[i]->SpriteSize.x / 2; EnemyCenter.y += enemy[i]->SpriteSize.y / 2;
 			float enemyAngle = AngleCalculation(EnemyCenter, PlayerCenter, &player1.flip);
 			float enemyDistance = DistanceCalculation(EnemyCenter, PlayerCenter);
-			if (abs(enemyAngle - player1.PlayerWeapon.angle) <= 5 && enemyDistance <= player1.PlayerWeapon.range && !isDamaged[i])
+			if (abs(enemyAngle - player1.PlayerWeapon.angle) <= 5 && enemyDistance <= player1.PlayerWeapon.range && !EnemyDamaged[i])
 			{
 				enemy[i]->Health -= player1.PlayerWeapon.damage;
 				if (enemy[i]->Health <= 0) enemy[i]->Death();
@@ -238,7 +239,30 @@ void SlashDamage(bool isDamaged[])
 					enemy[i]->isAttacking = false;
 					enemy[i]->Hurt();
 				}
-				isDamaged[i] = true;
+				EnemyDamaged[i] = true;
+			}
+		}
+	}
+	for (int i = 0; i < Current_max_elementals; i++)
+	{
+		if (elemental[i]->isSpawn && !elemental[i]->isDead)
+		{
+			SDL_FPoint PlayerCenter = player1.position; PlayerCenter.x += 50; PlayerCenter.y += 50;
+			float enemyAngle = AngleCalculation(elemental[i]->ElementalCenter, PlayerCenter, &player1.flip);
+			float enemyDistance = DistanceCalculation(elemental[i]->ElementalCenter, PlayerCenter);
+			if (abs(enemyAngle - player1.PlayerWeapon.angle) <= 5 && enemyDistance <= player1.PlayerWeapon.range && !ElementalDamaged[i])
+			{
+				ElementalBlockMelee(elemental[i]);
+				if (!elemental[i]->isDefending && !elemental[i]->isDodging)
+				{
+					elemental[i]->Health -= player1.PlayerWeapon.damage;
+					if (elemental[i]->Health <= 0) elemental[i]->Death();
+					else
+					{
+						elemental[i]->Hurt();
+					}
+					ElementalDamaged[i] = true;
+				}
 			}
 		}
 	}

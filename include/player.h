@@ -1,5 +1,4 @@
-#ifndef PLAYER_H_INCLUDED
-#define PLAYER_H_INCLUDED
+#pragma once
 #include <SDL.h>
 #include <vector>
 #include "sprites.h"
@@ -44,4 +43,3 @@ void TrailDrawing();
 void PlayerDrawCorner(SDL_FRect[],SDL_FRect[],SDL_FRect[]);
 void PlayerDraw(SDL_FRect,SDL_FRect,SDL_FRect);
 void PlayerDrawEdge(SDL_FRect);
-#endif // PLAYER_H_INCLUDED

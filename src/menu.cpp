@@ -282,6 +282,11 @@ void Menu_Button()
 		delete Projectiles[i];
 		Projectiles[i] = new EnemyProjectiles();
 	}
+	for (int i = 0; i < Current_max_elementals; i++)
+	{
+		delete elemental[i];
+		elemental[i] = new Elementals();
+	}
 	SDL_DestroyTexture(GameBackground);
 	Drawbackground();
 	player1.Init(0, 0);
@@ -301,6 +306,13 @@ void Back_Button()
 			enemy[i]->Cooldown.Unpause();
 			enemy[i]->MovingCounter.Unpause();
 		}
+	for (int i = 0; i < Current_max_elementals; i++)
+	{
+		if (elemental[i]->isSpawn)
+		{
+			elemental[i]->Cooldown.Unpause();
+		}
+	}
 	FPSCounter.Unpause();
 	GetTime = SDL_GetPerformanceCounter() *freq;
 }

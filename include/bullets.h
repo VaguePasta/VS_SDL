@@ -1,5 +1,4 @@
-#ifndef BULLETS_H_INCLUDED
-#define BULLETS_H_INCLUDED
+#pragma once
 #include "sprites.h"
 #include <vector>
 SDL_FPoint CalculateOrigin();
@@ -33,4 +32,3 @@ extern std::vector <std::vector<int>> BulletSpritesList;
 void BulletDrawCorner(SDL_FRect[],SDL_Rect*,int);
 void BulletDrawEdge(SDL_Rect*,int);
 void BulletExplosion(bullet*);
-#endif // BULLETS_H_INCLUDED

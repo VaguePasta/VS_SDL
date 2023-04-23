@@ -2,6 +2,7 @@
 #include "sounds.h"
 #include "player.h"
 #include "enemies.h"
+#include "elementals.h"
 #include "weapons.h"
 #include "global.h"
 #include "gameobjects.h"
@@ -46,6 +47,7 @@ void LoadSprites()
 	LoadWeaponSpritesFromDisk();
 	LoadBulletSpritesFromDisk();
 	LoadEnemiesSpritesFromDisk();
+	LoadElementalSpritesFromDisk();
 	LoadEnemiesProjectileSpritesFromDisk();
 	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
 	LoadFont();
@@ -62,6 +64,10 @@ void InitObjects()
 	{
 		enemy.push_back(new Enemies());
 		Projectiles.push_back(new EnemyProjectiles());
+	}
+	for (int i = 0; i < Current_max_elementals; i++)
+	{
+		elemental.push_back(new Elementals());
 	}
 	HealthBar.Init("resources/UI/bars/HealthBarBorder.PNG", "resources/UI/bars/HealthBar.PNG", 100);
 	ShieldHealthBar.Init("resources/UI/bars/ShieldHealthBarBorder.PNG", "resources/UI/bars/ShieldHealthBar.PNG", 500);
@@ -84,7 +90,7 @@ void InitObjects()
 	SlashEffect.texture = EffectSprites[1];
 	SDL_QueryTexture(SlashEffect.texture, NULL, NULL, &SlashEffect.texturesize.x, &SlashEffect.texturesize.y);
 	SlashEffect.framecalc();
-	SlashEffect.SpriteSize = 300;
+	SlashEffect.SpriteSize = { 300,300 };
 }
 void GameProcessing()
 {
@@ -153,6 +159,11 @@ void Pause()
 			{
 				enemy[i]->Cooldown.Pause();
 				enemy[i]->MovingCounter.Pause();
+			}
+		for (int i = 0; i < Current_max_elementals; i++)
+			if (elemental[i]->isSpawn)
+			{
+				elemental[i]->Cooldown.Pause();
 			}
 		FPSCounter.Pause();
 		PauseDelay.Reset();

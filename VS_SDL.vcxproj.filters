@@ -78,6 +78,12 @@
     <ClInclude Include="include\weapons.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\elementals.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\elementalAI.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\background.cpp">
@@ -144,6 +150,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\weapons.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\elementals.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\elementalAI.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

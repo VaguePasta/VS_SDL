@@ -33,5 +33,5 @@ void sprite::animation()
 		if (CurrentSprite > NumOfSprites - 1) CurrentSprite = 0;
 		AnimationDelay = 0;
 	}
-	SpriteBox = { position.x,position.y,float(SpriteSize),float(SpriteSize) };
+	SpriteBox = { position.x,position.y,SpriteSize.x,SpriteSize.y};
 }

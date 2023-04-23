@@ -1,5 +1,4 @@
-#ifndef INPUTPROCESSING_H_INCLUDED
-#define INPUTPROCESSING_H_INCLUDED
+#pragma once
 #include <SDL.h>
 void inputprocessing();
 void CalculateWeaponAngle();
@@ -8,4 +7,3 @@ void PlayerCollisions();
 void Moving(bool &Moved);
 void GetMouseClick();
 SDL_FPoint CalculateTarget();
-#endif // INPUTPROCESSING_H_INCLUDED

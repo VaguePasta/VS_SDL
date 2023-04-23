@@ -154,10 +154,10 @@ void DrawEnemyProjectiles(SDL_Rect* ProjectileFrame, int i)
 	TempRect[0] = Projectiles[i]->ProjectileSprite;
 	TempRect[1] = Projectiles[i]->ProjectileSprite;
 	TempRect[2] = Projectiles[i]->ProjectileSprite;
-	if (Projectiles[i]->Position.x - player1.SpriteSize < 0)
+	if (Projectiles[i]->Position.x - player1.SpriteSize.x < 0)
 	{
 		TempRect[0].x += LEVEL_WIDTH;
-		if (Projectiles[i]->Position.y - player1.SpriteSize < 0)
+		if (Projectiles[i]->Position.y - player1.SpriteSize.y < 0)
 		{
 			TempRect[1].x += LEVEL_WIDTH;
 			TempRect[1].y += LEVEL_HEIGHT;
@@ -180,7 +180,7 @@ void DrawEnemyProjectiles(SDL_Rect* ProjectileFrame, int i)
 		}
 		SDL_RenderCopyExF(renderer, Projectiles[i]->ProjectileTexture, ProjectileFrame, &TempRect[0], (Projectiles[i]->angle) * 57.2958, NULL, SDL_FLIP_NONE);
 	}
-	if (Projectiles[i]->Position.y - player1.SpriteSize < 0)
+	if (Projectiles[i]->Position.y - player1.SpriteSize.y < 0)
 	{
 		TempRect[0].y += LEVEL_HEIGHT;
 		if (Projectiles[i]->Position.x > LEVEL_WIDTH - Projectiles[i]->ProjectileSprite.w)
@@ -196,7 +196,7 @@ void DrawEnemyProjectiles(SDL_Rect* ProjectileFrame, int i)
 	if (Projectiles[i]->Position.y > LEVEL_HEIGHT - Projectiles[i]->ProjectileSprite.h)
 	{
 		TempRect[0].y -= LEVEL_HEIGHT;
-		if (Projectiles[i]->Position.x - player1.SpriteSize < 0)
+		if (Projectiles[i]->Position.x - player1.SpriteSize.x < 0)
 		{
 			TempRect[1].x += LEVEL_WIDTH;
 			TempRect[1].y -= LEVEL_HEIGHT;

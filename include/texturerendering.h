@@ -1,5 +1,4 @@
-#ifndef TEXTURERENDERING_H_INCLUDED
-#define TEXTURERENDERING_H_INCLUDED
+#pragma once
 #include <SDL.h>
 class Camera
 {
@@ -15,4 +14,3 @@ class Camera
 extern Camera camera[];
 void ClearTexture (SDL_Texture *Texture);
 void WrapCamera();
-#endif // TEXTURERENDERING_H_INCLUDED

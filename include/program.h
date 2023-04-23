@@ -1,5 +1,4 @@
-#ifndef PROGRAM_H_INCLUDED
-#define PROGRAM_H_INCLUDED
+#pragma once
 void init();
 void LoadSprites();
 void InitObjects();
@@ -8,4 +7,3 @@ void InitWindow();
 void GameLoop();
 void GameProcessing();
 void Pause();
-#endif // PROGRAM_H_INCLUDED

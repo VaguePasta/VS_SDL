@@ -1,5 +1,4 @@
-#ifndef WEAPON_H_INCLUDED
-#define WEAPON_H_INCLUDED
+#pragma once
 #include <SDL.h>
 #include <SDL_mixer.h>
 #include <vector>
@@ -28,4 +27,3 @@ class weapon
         ~weapon();
 };
 extern std::vector <std::vector<float>> WeaponSpritesList;
-#endif // WEAPON_H_INCLUDED

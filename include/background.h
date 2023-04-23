@@ -1,7 +1,5 @@
-#ifndef BACKGROUND_H_LOADED
-#define BACKGROUND_H_LOADED
+#pragma once
 #include <string>
 #include <SDL.h>
 void LoadBackgroundSpritesFromDisk();
 void Drawbackground();
-#endif // BACKGROUND_H_LOADED

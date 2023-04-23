@@ -86,6 +86,15 @@ void DrawEnemies()
 			}
 		}
 	}
+	for (int i = 0; i < Current_max_elementals; i++)
+	{
+		if (elemental[i]->isSpawn)
+		{
+			elemental[i]->animation();
+			SDL_RenderCopyExF(renderer, elemental[i]->texture, &elemental[i]->frame, &elemental[i]->SpriteBox, 0, NULL, elemental[i]->flip);
+			ElementalDrawEdge(i);
+		}
+	}
 }
 void DrawUI()
 {

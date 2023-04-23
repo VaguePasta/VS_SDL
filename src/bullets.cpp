@@ -10,8 +10,8 @@ SDL_FPoint CalculateOrigin()
 	SDL_FPoint BulletOrigin;
 	int x_weapon = (player1.flip == SDL_FLIP_NONE) ? (19) : (-19);
 	int y_weapon = 16;
-	BulletOrigin.x = player1.position.x + player1.SpriteSize / 2 + x_weapon;
-	BulletOrigin.y = player1.position.y + player1.SpriteSize / 2 + y_weapon;
+	BulletOrigin.x = player1.position.x + player1.SpriteSize.x / 2 + x_weapon;
+	BulletOrigin.y = player1.position.y + player1.SpriteSize.y / 2 + y_weapon;
 	if (BulletOrigin.x < 0) BulletOrigin.x += LEVEL_WIDTH;
 	if (BulletOrigin.y < 0) BulletOrigin.y += LEVEL_HEIGHT;
 	if (BulletOrigin.x > LEVEL_WIDTH) BulletOrigin.x -= LEVEL_WIDTH;
@@ -101,6 +101,15 @@ void BulletExplosion(bullet* CurrentBullet)
 		{
 			if (enemy[j]->Health <= 0) enemy[j]->Death();
 			else if (!enemy[j]->isAttacking) enemy[j]->Hurt();
+		}
+	}
+	for (int j = 0; j < Current_max_elementals; j++) if (SDL_HasIntersectionF(&elemental[j]->Hitbox, &DamageSite))
+	{
+		elemental[j]->Health -= CurrentBullet->Damage;
+		if (!elemental[j]->isDead)
+		{
+			if (elemental[j]->Health <= 0) elemental[j]->Death();
+			else if (!elemental[j]->isAttacking) elemental[j]->Hurt();
 		}
 	}
 	CurrentBullet->Explosion(8, 8);

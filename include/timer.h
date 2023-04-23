@@ -1,5 +1,4 @@
-#ifndef TIMER_H_INCLUDED
-#define TIMER_H_INCLUDED
+#pragma once
 #include <SDL.h>
 class Timer
 {
@@ -18,4 +17,3 @@ class Timer
         Timer(bool);
         ~Timer();
 };
-#endif // TIMER_H_INCLUDED

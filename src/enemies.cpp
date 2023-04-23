@@ -74,17 +74,18 @@ void Enemies::LoadTexture(int CurrentState)
 	framespeed = EnemiesInfo[CurrentEnemyType][CurrentState][1];
 	SDL_QueryTexture(texture, NULL, NULL, &texturesize.x, &texturesize.y);
 	framecalc();
-	SpriteSize = EnemiesInfo[CurrentEnemyType][0][1];
+	SpriteSize.x = EnemiesInfo[CurrentEnemyType][0][1];
+	SpriteSize.y = EnemiesInfo[CurrentEnemyType][0][1];
 	if (!isSpawn)
 	{
 		Health = EnemiesInfo[CurrentEnemyType][0][4];
 		Damage = EnemiesInfo[CurrentEnemyType][0][6];
 		speed = EnemiesInfo[CurrentEnemyType][0][2];
 		AttackSpeed = EnemiesInfo[CurrentEnemyType][0][3];
-		CalCulateBoxes();
+		CalculateBoxes();
 	}
 }
-void Enemies::CalCulateBoxes()
+void Enemies::CalculateBoxes()
 {
 	if (flip == SDL_FLIP_NONE)
 	{

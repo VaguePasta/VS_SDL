@@ -15,7 +15,7 @@ void EnemyLogics()
 	{
 		if (!player1.isDead)
 		{
-			if (enemy[i]->isSpawn && !enemy[i]->isDead) enemy[i]->CalCulateBoxes();
+			if (enemy[i]->isSpawn && !enemy[i]->isDead) enemy[i]->CalculateBoxes();
 			EnemyPathfinding(enemy[i]);
 			EnemyAttacking(enemy[i]);
 		}
@@ -23,7 +23,7 @@ void EnemyLogics()
 		{
 			enemy[i]->Idle();
 		}
-		EnemyBulletCollision(enemy[i]);
+		if (enemy[i]->isSpawn && !enemy[i]->isDead) EnemyBulletCollision(enemy[i]);
 	}
 	EnemyProjectilesProcessing();
 }
@@ -31,8 +31,8 @@ void EnemyPathfinding(Enemies* enemy)
 {
 	if (enemy->isSpawn && !enemy->isDead)
 	{
-		SDL_FPoint PlayerCenter = { player1.position.x + player1.SpriteSize / 2,player1.position.y + player1.SpriteSize / 2 };
-		SDL_FPoint EnemyCenter = { enemy->position.x + enemy->SpriteSize / 2,enemy->position.y + enemy->SpriteSize / 2 };
+		SDL_FPoint PlayerCenter = { player1.position.x + player1.SpriteSize.x / 2,player1.position.y + player1.SpriteSize.y / 2 };
+		SDL_FPoint EnemyCenter = { enemy->position.x + enemy->SpriteSize.x / 2,enemy->position.y + enemy->SpriteSize.y / 2 };
 		if (abs(PlayerCenter.x - EnemyCenter.x) > LEVEL_WIDTH / 2)
 		{
 			if (PlayerCenter.x < LEVEL_WIDTH / 2)
@@ -60,12 +60,12 @@ void EnemyPathfinding(Enemies* enemy)
 		if (PlayerCenter.x < EnemyCenter.x - 5 && enemy->flip == SDL_FLIP_NONE)
 		{
 			enemy->flip = SDL_FLIP_HORIZONTAL;
-			enemy->CalCulateBoxes();
+			enemy->CalculateBoxes();
 		}
 		else if (PlayerCenter.x > EnemyCenter.x + 5 && enemy->flip == SDL_FLIP_HORIZONTAL)
 		{
 			enemy->flip = SDL_FLIP_NONE;
-			enemy->CalCulateBoxes();
+			enemy->CalculateBoxes();
 		}
 		if (enemy->isAttacking) return;
 		if (!enemy->isHurt && !SDL_HasIntersectionF(&Hitbox, &enemy->AttackBox))
@@ -78,17 +78,17 @@ void EnemyPathfinding(Enemies* enemy)
 				SDL_FPoint Target = { (PlayerCenter.x - EnemyCenter.x < 0) ? (PlayerCenter.x + 700) : (PlayerCenter.x - 700),PlayerCenter.y };
 				EnemyMoving(enemy, EnemyCenter, Target);
 			}
-			enemy->position.x = EnemyCenter.x - enemy->SpriteSize / 2;
-			enemy->position.y = EnemyCenter.y - enemy->SpriteSize / 2;
-			if (enemy->position.x < -enemy->SpriteSize) enemy->position.x = LEVEL_WIDTH - enemy->SpriteSize;
-			if (enemy->position.y < -enemy->SpriteSize) enemy->position.y = LEVEL_HEIGHT - enemy->SpriteSize;
+			enemy->position.x = EnemyCenter.x - enemy->SpriteSize.x / 2;
+			enemy->position.y = EnemyCenter.y - enemy->SpriteSize.y / 2;
+			if (enemy->position.x < -enemy->SpriteSize.x) enemy->position.x = LEVEL_WIDTH - enemy->SpriteSize.x;
+			if (enemy->position.y < -enemy->SpriteSize.y) enemy->position.y = LEVEL_HEIGHT - enemy->SpriteSize.y;
 			if (enemy->position.x > LEVEL_WIDTH) enemy->position.x = 0;
 			if (enemy->position.y > LEVEL_HEIGHT) enemy->position.y = 0;
-			enemy->CalCulateBoxes();
+			enemy->CalculateBoxes();
 			if (SDL_HasIntersectionF(&enemy->Hitbox, &Hitbox))
 			{
 				enemy->position = TempPos;
-				enemy->CalCulateBoxes();
+				enemy->CalculateBoxes();
 			}
 			enemy->MovingCounter.Restart();
 		}
@@ -111,8 +111,8 @@ void EnemyMoving(Enemies* enemy, SDL_FPoint& EnemyCenter, SDL_FPoint& Target)
 void EnemyAttacking(Enemies* enemy)
 {
 	if (!enemy->isSpawn || enemy->isDead) return;
-	SDL_FPoint PlayerCenter = { player1.position.x + player1.SpriteSize / 2,player1.position.y + player1.SpriteSize / 2 };
-	SDL_FPoint EnemyCenter = { enemy->position.x + enemy->SpriteSize / 2,enemy->position.y + enemy->SpriteSize / 2 };
+	SDL_FPoint PlayerCenter = { player1.position.x + player1.SpriteSize.x / 2,player1.position.y + player1.SpriteSize.y / 2 };
+	SDL_FPoint EnemyCenter = { enemy->position.x + enemy->SpriteSize.x / 2,enemy->position.y + enemy->SpriteSize.y / 2 };
 	if (abs(PlayerCenter.x - EnemyCenter.x) > LEVEL_WIDTH / 2)
 	{
 		if (PlayerCenter.x < LEVEL_WIDTH / 2)
@@ -157,16 +157,14 @@ void EnemyAttacking(Enemies* enemy)
 		case 0: case 2:
 			if (enemy->CurrentSprite >= enemy->NumOfSprites - 1 && SDL_HasIntersectionF(&enemy->AttackBox, &Hitbox))
 			{
-				if (player1.PlayerShield.isOn) player1.PlayerShield.ShieldDamage(enemy->Damage);
-				else player1.Hurt(enemy->Damage);
+				player1.Hurt(enemy->Damage);
 			}
 			break;
 		case 1:
 			if (enemy->CurrentSprite == 3 && SDL_HasIntersectionF(&enemy->AttackBox, &Hitbox))
 			{
 				enemy->CurrentSprite++;
-				if (player1.PlayerShield.isOn) player1.PlayerShield.ShieldDamage(enemy->Damage);
-				else player1.Hurt(enemy->Damage);
+				player1.Hurt(enemy->Damage);
 			}
 			break;
 		case 3: case 4:
@@ -206,11 +204,7 @@ void EnemyProjectilesProcessing()
 				if (SDL_HasIntersectionF(&Projectiles[i]->Hitbox, &player1.Hitbox))
 				{
 					Projectiles[i]->Decayed = true;
-					if (player1.PlayerShield.isOn) player1.PlayerShield.ShieldDamage(Projectiles[i]->damage);
-					else
-					{
-						player1.Hurt(Projectiles[i]->damage);
-					}
+					player1.Hurt(Projectiles[i]->damage);
 				}
 			}
 			else
@@ -229,11 +223,7 @@ void EnemyProjectilesProcessing()
 				{
 					if (SDL_HasIntersectionF(&Projectiles[i]->Hitbox, &player1.Hitbox))
 					{
-						if (player1.PlayerShield.isOn) player1.PlayerShield.ShieldDamage(Projectiles[i]->damage);
-						else
-						{
 							player1.Hurt(Projectiles[i]->damage);
-						}
 					}
 					Projectiles[i]->Projectile.CurrentSprite++;
 				}

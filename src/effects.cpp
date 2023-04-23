@@ -8,7 +8,7 @@ void SlashEffectDraw()
 	if (player1.flip == SDL_FLIP_NONE)
 	{
 		Center = { 111,108 };
-		if (player1.position.y + player1.SpriteSize / 2 < MousePosition.y + camera[0].CameraPosition.y)
+		if (player1.position.y + player1.SpriteSize.y / 2 < MousePosition.y + camera[0].CameraPosition.y)
 		{
 			SlashEffect.position.x = player1.position.x - 65;
 			SlashEffect.position.y = player1.position.y - 30;
@@ -22,7 +22,7 @@ void SlashEffectDraw()
 	else
 	{
 		Center = { 189,108 };
-		if (player1.position.y + player1.SpriteSize / 2 < MousePosition.y + camera[0].CameraPosition.y)
+		if (player1.position.y + player1.SpriteSize.y / 2 < MousePosition.y + camera[0].CameraPosition.y)
 		{
 			SlashEffect.position.x = player1.position.x - 135;
 			SlashEffect.position.y = player1.position.y - 30;
@@ -59,7 +59,7 @@ void SlashEffectDrawEdge(SDL_FPoint Center)
 	if (SlashEffect.SpriteBox.y < 0)
 	{
 		TempRect[0].y += LEVEL_HEIGHT;
-		if (SlashEffect.SpriteBox.x > LEVEL_WIDTH - SlashEffect.SpriteSize)
+		if (SlashEffect.SpriteBox.x > LEVEL_WIDTH - SlashEffect.SpriteSize.x)
 		{
 			TempRect[1].x -= LEVEL_WIDTH;
 			TempRect[1].y += LEVEL_HEIGHT;
@@ -69,10 +69,10 @@ void SlashEffectDrawEdge(SDL_FPoint Center)
 		}
 		SDL_RenderCopyExF(renderer, SlashEffect.texture, &SlashEffect.frame, &TempRect[0], SlashEffect.SpriteAngle, &Center, SlashEffect.flip);
 	}
-	if (SlashEffect.SpriteBox.x > LEVEL_WIDTH - SlashEffect.SpriteSize)
+	if (SlashEffect.SpriteBox.x > LEVEL_WIDTH - SlashEffect.SpriteSize.x)
 	{
 		TempRect[0].x -= LEVEL_WIDTH;
-		if (SlashEffect.SpriteBox.y > LEVEL_HEIGHT - SlashEffect.SpriteSize)
+		if (SlashEffect.SpriteBox.y > LEVEL_HEIGHT - SlashEffect.SpriteSize.y)
 		{
 			TempRect[1].x -= LEVEL_WIDTH;
 			TempRect[1].y -= LEVEL_HEIGHT;
@@ -82,7 +82,7 @@ void SlashEffectDrawEdge(SDL_FPoint Center)
 		}
 		SDL_RenderCopyExF(renderer, SlashEffect.texture, &SlashEffect.frame, &TempRect[0], SlashEffect.SpriteAngle, &Center, SlashEffect.flip);
 	}
-	if (SlashEffect.SpriteBox.y > LEVEL_HEIGHT - SlashEffect.SpriteSize)
+	if (SlashEffect.SpriteBox.y > LEVEL_HEIGHT - SlashEffect.SpriteSize.y)
 	{
 
 		TempRect[0].y -= LEVEL_HEIGHT;

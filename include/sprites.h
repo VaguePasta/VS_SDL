@@ -1,5 +1,4 @@
-#ifndef SPRITES_H_LOAD
-#define SPRITES_H_LOAD
+#pragma once
 #include <SDL.h>
 class sprite
 {
@@ -7,7 +6,7 @@ class sprite
         SDL_Texture *texture;
         int NumOfSprites;
         int CurrentSprite;
-        int SpriteSize;
+        SDL_FPoint SpriteSize;
         int tempframe;
         int framespeed;
         float AnimationDelay;
@@ -27,6 +26,7 @@ class sprite
 class objects
 {
     public:
+        float Damage;
         float speed;
         float Health;
         bool isDead;
@@ -37,4 +37,3 @@ class objects
         SDL_FRect Hitbox;
         int HitBoxSize;
 };
-#endif // SPRITES_H_LOAD

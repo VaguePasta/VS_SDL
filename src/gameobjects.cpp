@@ -5,6 +5,7 @@
 #include <SDL.h>
 #include <vector>
 std::vector <Enemies*> enemy;
+std::vector <Elementals*> elemental;
 std::vector <EnemyProjectiles*> Projectiles;
 player player1;
 sprite SlashEffect(21, 1);

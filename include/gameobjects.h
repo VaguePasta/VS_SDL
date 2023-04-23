@@ -1,12 +1,13 @@
-#ifndef GAMEOBJECTS_H_INCLUDED
-#define GAMEOBJECTS_H_INCLUDED
+#pragma once
 #include "enemies.h"
+#include "elementals.h"
 #include "player.h"
 #include "enemyprojectiles.h"
 #include "UI.h"
 #include <vector>
 #include <SDL.h>
 extern std::vector <Enemies*> enemy;
+extern std::vector <Elementals*> elemental;
 extern std::vector <EnemyProjectiles*> Projectiles;
 extern player player1;
 extern sprite SlashEffect;
@@ -34,4 +35,3 @@ class GameState
         ~GameState();
 };
 extern GameState gamestate;
-#endif // GAMEOBJECTS_H_INCLUDED

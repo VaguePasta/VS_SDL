@@ -1,5 +1,4 @@
-#ifndef UI_H_INCLUDED
-#define UI_H_INCLUDED
+#pragma once
 #include <SDL.h>
 #include <string>
 void LoadFont();
@@ -53,4 +52,3 @@ void DrawCurrentScore();
 void DrawLetter(SDL_Texture*,SDL_Point);
 void UpdateCurrentScore();
 void DrawFPS();
-#endif // UI_H_INCLUDED

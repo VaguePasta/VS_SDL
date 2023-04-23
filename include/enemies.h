@@ -1,5 +1,4 @@
-#ifndef ENEMIES_H_INCLUDED
-#define ENEMIES_H_INCLUDED
+#pragma once
 #include <SDL.h>
 #include <vector>
 #include "sprites.h"
@@ -11,7 +10,6 @@ void LoadEnemiesSpritesFromDisk();
 class Enemies:public sprite,public objects
 {
     public:
-        float Damage;
         bool isSpawn;
         bool isRanged;
         bool Decayed;
@@ -29,7 +27,7 @@ class Enemies:public sprite,public objects
         void Attack();
         void Run();
         void Idle();
-        void CalCulateBoxes();
+        void CalculateBoxes();
         void LoadTexture(int CurrentState);
 };
 void EnemyDrawCorner(SDL_FRect[],int);
@@ -55,4 +53,3 @@ template <class T> float DistanceCalculation(T pos1,T pos2)
     if (pos1.y-pos2.y>LEVEL_HEIGHT/2) (pos1.y<pos2.y)?(pos1.y+=LEVEL_HEIGHT):(pos1.y-=LEVEL_HEIGHT);
     return sqrt((pos1.x-pos2.x)*(pos1.x-pos2.x)+(pos1.y-pos2.y)*(pos1.y-pos2.y));
 }
-#endif // ENEMIES_H_INCLUDED

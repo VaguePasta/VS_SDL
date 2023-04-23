@@ -5,6 +5,8 @@
 #include "weapons.h"
 #include "global.h"
 #include "enemyAI.h"
+#include "elementals.h"
+#include "elementalAI.h"
 #include "gameobjects.h"
 #include "sounds.h"
 #include <cmath>
@@ -96,11 +98,53 @@ void UpdateUI()
 		DashIcon.Value = player1.DashCooldownTime / 1000 - player1.DashCooldown.GetTime() / 1000;
 	}
 }
+void SpawnAndDeadElementals()
+{
+	for (int i = 0; i < Current_max_elementals; i++)
+	{
+		if (!elemental[i]->isSpawn)
+		{
+			if (!player1.isDead) elemental[i]->Spawn(player1.position);
+		}
+		else if (!elemental[i]->isDead && elemental[i]->isHurt)
+		{
+			if (elemental[i]->CurrentSprite >= elemental[i]->NumOfSprites - 1)
+			{
+				elemental[i]->isHurt = false;
+			}
+		}
+		else if (elemental[i]->isDead)
+		{
+			if (!elemental[i]->Decayed)
+			{
+				if (elemental[i]->CurrentSprite >= elemental[i]->NumOfSprites - 1)
+				{
+					elemental[i]->Decayed = true;
+					elemental[i]->Cooldown.Restart();
+				}
+			}
+			if (elemental[i]->Decayed)
+			{
+				if (elemental[i]->Cooldown.GetTime() <= 2000)
+				{
+					elemental[i]->CurrentSprite = elemental[i]->NumOfSprites - 1;
+				}
+				else
+				{
+					delete elemental[i];
+					elemental[i] = new Elementals();
+				}
+			}
+		}
+	}
+}
 void GameLogic()
 {
 	SpawnAndDeadEnemies();
+	SpawnAndDeadElementals();
 	if (!player1.isDead) UpdateUI();
 	BulletUpdate();
 	EnemyLogics();
+	ElementalLogics();
 	FrameCount++;
 }

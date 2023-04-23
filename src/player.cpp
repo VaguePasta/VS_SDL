@@ -27,7 +27,7 @@ player::player() : PlayerWeapon(0)
 {
 	speed = 5;
 	HitBoxSize = 62;
-	SpriteSize = 100;
+	SpriteSize = { 100,100 };
 	DashCooldownTime = 3000;
 }
 void player::Init(int CurrentSet, int Using_Weapon)
@@ -69,8 +69,8 @@ void player::LoadTexture(int CurrentSet)
 	SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
 	SDL_QueryTexture(texture, NULL, NULL, &texturesize.x, &texturesize.y);
 	framecalc();
-	if (flip == SDL_FLIP_NONE) Hitbox = { float(position.x + 0.5 * (SpriteSize - HitBoxSize) + SpriteSize / 20) ,float(position.y + 0.5 * (SpriteSize - HitBoxSize) + SpriteSize / 20) ,float(HitBoxSize),float(HitBoxSize) };
-	else Hitbox = { float(position.x + 0.5 * (SpriteSize - HitBoxSize) - SpriteSize / 20),float(position.y + 0.5 * (SpriteSize - HitBoxSize) + SpriteSize / 20),float(HitBoxSize),float(HitBoxSize) };
+	if (flip == SDL_FLIP_NONE) Hitbox = { float(position.x + 0.5 * (SpriteSize.x - HitBoxSize) + SpriteSize.x / 20) ,float(position.y + 0.5 * (SpriteSize.y - HitBoxSize) + SpriteSize.y / 20) ,float(HitBoxSize),float(HitBoxSize) };
+	else Hitbox = { float(position.x + 0.5 * (SpriteSize.x - HitBoxSize) - SpriteSize.x / 20),float(position.y + 0.5 * (SpriteSize.y - HitBoxSize) + SpriteSize.y / 20),float(HitBoxSize),float(HitBoxSize) };
 }
 void player::Run()
 {
@@ -82,7 +82,8 @@ void player::Idle()
 }
 void player::Hurt(int Damage)
 {
-	Health -= Damage;
+	if (PlayerShield.isOn) PlayerShield.ShieldDamage(Damage);
+	else Health -= Damage;
 	if (!isHurt)
 	{
 		Mix_PlayChannel(-1, SoundEffects[4], 0);
@@ -191,7 +192,7 @@ void PlayerDrawEdge(SDL_FRect WeaponRect)
 		TempRect[0].y += LEVEL_HEIGHT;
 		TempWeaponRect[0].y += LEVEL_HEIGHT;
 		TempShieldRect[0].y += LEVEL_HEIGHT;
-		if (player1.position.x > LEVEL_WIDTH - player1.SpriteSize)
+		if (player1.position.x > LEVEL_WIDTH - player1.SpriteSize.x)
 		{
 			TempRect[1].x -= LEVEL_WIDTH; TempWeaponRect[1].x -= LEVEL_WIDTH; TempShieldRect[1].x -= LEVEL_WIDTH;
 			TempRect[1].y += LEVEL_HEIGHT; TempWeaponRect[1].y += LEVEL_HEIGHT; TempShieldRect[1].y += LEVEL_HEIGHT;
@@ -200,12 +201,12 @@ void PlayerDrawEdge(SDL_FRect WeaponRect)
 		}
 		PlayerDraw(TempRect[0], TempWeaponRect[0], TempShieldRect[0]);
 	}
-	if (player1.position.x > LEVEL_WIDTH - player1.SpriteSize)
+	if (player1.position.x > LEVEL_WIDTH - player1.SpriteSize.x)
 	{
 		TempRect[0].x -= LEVEL_WIDTH;
 		TempWeaponRect[0].x -= LEVEL_WIDTH;
 		TempShieldRect[0].x -= LEVEL_WIDTH;
-		if (player1.position.y > LEVEL_HEIGHT - player1.SpriteSize)
+		if (player1.position.y > LEVEL_HEIGHT - player1.SpriteSize.y)
 		{
 			TempRect[1].x -= LEVEL_WIDTH; TempWeaponRect[1].x -= LEVEL_WIDTH; TempShieldRect[1].x -= LEVEL_WIDTH;
 			TempRect[1].y -= LEVEL_HEIGHT; TempWeaponRect[1].y -= LEVEL_HEIGHT; TempShieldRect[1].y -= LEVEL_HEIGHT;
@@ -214,7 +215,7 @@ void PlayerDrawEdge(SDL_FRect WeaponRect)
 		}
 		PlayerDraw(TempRect[0], TempWeaponRect[0], TempShieldRect[0]);
 	}
-	if (player1.position.y > LEVEL_HEIGHT - player1.SpriteSize)
+	if (player1.position.y > LEVEL_HEIGHT - player1.SpriteSize.y)
 	{
 
 		TempRect[0].y -= LEVEL_HEIGHT;

@@ -1,5 +1,4 @@
-#ifndef ENEMYPROJECTILES_H_INCLUDED
-#define ENEMYPROJECTILES_H_INCLUDED
+#pragma once
 #include <SDL.h>
 #include "sprites.h"
 #include <vector>
@@ -33,4 +32,3 @@ class EnemyProjectiles
 };
 void LoadEnemiesProjectileSpritesFromDisk();
 void DrawEnemyProjectiles(SDL_Rect*,int);
-#endif // ENEMYPROJECTILES_H_INCLUDED

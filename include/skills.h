@@ -1,5 +1,4 @@
-#ifndef SKILLS_H_INCLUDED
-#define SKILLS_H_INCLUDED
+#pragma once
 #include <SDL.h>
 #include <vector>
 #include "timer.h"
@@ -31,5 +30,4 @@ void Sprint();
 void GunShoot(bool&, Timer&,float&);
 void Slash();
 void SlashRecover();
-void SlashDamage(bool[]);
-#endif // SKILLS_H_INCLUDED
+void SlashDamage(bool[], bool[]);

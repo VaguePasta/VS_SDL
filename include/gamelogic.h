@@ -1,7 +1,6 @@
-#ifndef GAMELOGIC_H_INCLUDED
-#define GAMELOGIC_H_INCLUDED
+#pragma once
 void GameLogic();
 void SpawnAndDeadEnemies();
+void SpawnAndDeadElementals();
 void BulletUpdate();
 void UpdateUI();
-#endif // GAMELOGIC_H_INCLUDED

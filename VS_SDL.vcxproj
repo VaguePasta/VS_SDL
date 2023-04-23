@@ -158,6 +158,8 @@
     <ClInclude Include="include\background.h" />
     <ClInclude Include="include\bullets.h" />
     <ClInclude Include="include\effects.h" />
+    <ClInclude Include="include\elementalAI.h" />
+    <ClInclude Include="include\elementals.h" />
     <ClInclude Include="include\enemies.h" />
     <ClInclude Include="include\enemyAI.h" />
     <ClInclude Include="include\enemyprojectiles.h" />
@@ -181,6 +183,8 @@
     <ClCompile Include="src\background.cpp" />
     <ClCompile Include="src\bullets.cpp" />
     <ClCompile Include="src\effects.cpp" />
+    <ClCompile Include="src\elementalAI.cpp" />
+    <ClCompile Include="src\elementals.cpp" />
     <ClCompile Include="src\enemies.cpp" />
     <ClCompile Include="src\enemyAI.cpp" />
     <ClCompile Include="src\enemyprojectiles.cpp" />

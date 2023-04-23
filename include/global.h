@@ -1,5 +1,4 @@
-#ifndef GLOBAL_H_INCLUDED
-#define GLOBAL_H_INCLUDED
+#pragma once
 #include <SDL.h>
 #include <SDL_ttf.h>
 #include <vector>
@@ -31,6 +30,7 @@ extern bool MouseRightDown;
 extern std::vector <std::vector<int>> PlayerSpritesInfo;
 extern SDL_Texture *PlayerSprites[];
 extern SDL_Texture *EnemySprites[][5];
+extern SDL_Texture* ElementalSprites[][10];
 extern SDL_Texture *WeaponSprites[];
 extern SDL_Texture *BulletSprites[];
 extern SDL_Texture *EnemyProjectileSprites[];
@@ -43,4 +43,4 @@ extern SDL_Texture *BackgroundSprites[];
 extern const int Max_Bullets;
 extern const Uint8 *Keyboard;
 extern int Current_max_enemies;
-#endif // GLOBAL_H_INCLUDED
+extern int Current_max_elementals;
