@@ -1,7 +1,7 @@
 #include "program.h"
 #include "sounds.h"
 #include "player.h"
-#include "enemies.h"
+#include "minions.h"
 #include "elementals.h"
 #include "weapons.h"
 #include "global.h"
@@ -46,9 +46,9 @@ void LoadSprites()
 	LoadPlayerSpritesFromDisk();
 	LoadWeaponSpritesFromDisk();
 	LoadBulletSpritesFromDisk();
-	LoadEnemiesSpritesFromDisk();
+	LoadMinionsSpritesFromDisk();
 	LoadElementalSpritesFromDisk();
-	LoadEnemiesProjectileSpritesFromDisk();
+	LoadMinionsProjectileSpritesFromDisk();
 	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
 	LoadFont();
 	LoadButtons();
@@ -60,10 +60,10 @@ void InitObjects()
 	CamTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_TARGET, LOGICAL_WIDTH, LOGICAL_HEIGHT);
 	SDL_SetTextureBlendMode(screentexture, SDL_BLENDMODE_BLEND);
 	Drawbackground();
-	for (int i = 0; i < Current_max_enemies; i++)
+	for (int i = 0; i < Current_max_minions; i++)
 	{
-		enemy.push_back(new Enemies());
-		Projectiles.push_back(new EnemyProjectiles());
+		minion.push_back(new Minions());
+		Projectiles.push_back(new MinionProjectiles());
 	}
 	for (int i = 0; i < Current_max_elementals; i++)
 	{
@@ -154,11 +154,11 @@ void Pause()
 		player1.DashCooldown.Pause();
 		player1.PlayerShield.Time.Pause();
 		player1.PlayerWeapon.ShootingDelay.Pause();
-		for (int i = 0; i < Current_max_enemies; i++)
-			if (enemy[i]->isSpawn)
+		for (int i = 0; i < Current_max_minions; i++)
+			if (minion[i]->isSpawn)
 			{
-				enemy[i]->Cooldown.Pause();
-				enemy[i]->MovingCounter.Pause();
+				minion[i]->Cooldown.Pause();
+				minion[i]->MovingCounter.Pause();
 			}
 		for (int i = 0; i < Current_max_elementals; i++)
 			if (elemental[i]->isSpawn)

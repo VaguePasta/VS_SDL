@@ -1,6 +1,6 @@
 #pragma once
 void GameLogic();
-void SpawnAndDeadEnemies();
+void SpawnAndDeadMinions();
 void SpawnAndDeadElementals();
 void BulletUpdate();
 void UpdateUI();

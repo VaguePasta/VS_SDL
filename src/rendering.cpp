@@ -15,7 +15,7 @@ void combinetexture()
 	SDL_SetRenderTarget(renderer, screentexture);
 	SDL_RenderClear(renderer);
 	SDL_RenderCopy(renderer, GameBackground, NULL, NULL);
-	DrawEnemies();
+	DrawMinions();
 	DrawPlayer();
 	DrawEffects();
 	SDL_SetRenderTarget(renderer, NULL);
@@ -64,25 +64,25 @@ void DrawEffects()
 		SlashEffectDraw();
 	}
 }
-void DrawEnemies()
+void DrawMinions()
 {
-	for (int i = 0; i < Current_max_enemies; i++)
+	for (int i = 0; i < Current_max_minions; i++)
 	{
-		if (enemy[i]->isSpawn)
+		if (minion[i]->isSpawn)
 		{
-			enemy[i]->animation();
-			SDL_RenderCopyExF(renderer, enemy[i]->texture, &enemy[i]->frame, &enemy[i]->SpriteBox, 0, NULL, enemy[i]->flip);
-			EnemyDrawEdge(i);
+			minion[i]->animation();
+			SDL_RenderCopyExF(renderer, minion[i]->texture, &minion[i]->frame, &minion[i]->SpriteBox, 0, NULL, minion[i]->flip);
+			MinionDrawEdge(i);
 		}
 		if (Projectiles[i]->isShot)
 		{
 			if (!Projectiles[i]->isAnimated)
 			{
-				DrawEnemyProjectiles(nullptr, i);
+				DrawMinionProjectiles(nullptr, i);
 			}
 			else
 			{
-				DrawEnemyProjectiles(&Projectiles[i]->Projectile.frame, i);
+				DrawMinionProjectiles(&Projectiles[i]->Projectile.frame, i);
 			}
 		}
 	}

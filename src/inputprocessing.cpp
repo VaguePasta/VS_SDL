@@ -123,16 +123,16 @@ void PlayerAttacking()
 		}
 		break;
 	case 3:
-		static bool* EnemyDamaged = nullptr;
+		static bool* MinionDamaged = nullptr;
 		static bool* ElementalDamaged = nullptr;
 		if (player1.isAttacking)
 		{
 			if (player1.PlayerWeapon.ShootingDelay.GetTime() >= 1000 / player1.PlayerWeapon.shootingspeed && !player1.MeleeAttacking)
 			{
 				Slash();
-				if (EnemyDamaged != nullptr) delete[] EnemyDamaged;
-				EnemyDamaged = new bool[Current_max_enemies];
-				for (int i = 0; i < Current_max_enemies; i++) EnemyDamaged[i] = false;
+				if (MinionDamaged != nullptr) delete[] MinionDamaged;
+				MinionDamaged = new bool[Current_max_minions];
+				for (int i = 0; i < Current_max_minions; i++) MinionDamaged[i] = false;
 				if (ElementalDamaged != nullptr) delete[] ElementalDamaged;
 				ElementalDamaged = new bool[Current_max_elementals];
 				for (int i = 0; i < Current_max_elementals; i++) ElementalDamaged[i] = false;
@@ -156,14 +156,14 @@ void PlayerAttacking()
 						player1.PlayerWeapon.angle += 360;
 						SlashEffect.SpriteAngle += 360;
 					}
-					SlashDamage(EnemyDamaged,ElementalDamaged);
+					SlashDamage(MinionDamaged,ElementalDamaged);
 				}
 			}
 			else if (!player1.MeleeAttacked)
 			{
 				player1.MeleeAttacked = true;
-				delete[] EnemyDamaged;
-				EnemyDamaged = nullptr;
+				delete[] MinionDamaged;
+				MinionDamaged = nullptr;
 				delete[] ElementalDamaged;
 				ElementalDamaged = nullptr;
 			}
@@ -187,9 +187,9 @@ void PlayerCollisions(SDL_FPoint& TempPos)
 	if (TempPos.x > LEVEL_WIDTH) TempPos.x = 0;
 	if (TempPos.y > LEVEL_HEIGHT) TempPos.y = 0;
 	SDL_FRect FutureHitbox = PlayerHitbox(player1.flip, TempPos);
-	for (int i = 0; i < Current_max_enemies; i++)
+	for (int i = 0; i < Current_max_minions; i++)
 	{
-		if (SDL_HasIntersectionF(&FutureHitbox, &enemy[i]->Hitbox)) TempPos = player1.position;
+		if (SDL_HasIntersectionF(&FutureHitbox, &minion[i]->Hitbox)) TempPos = player1.position;
 	}
 	for (int i = 0; i < Current_max_elementals; i++)
 	{

@@ -5,9 +5,9 @@
 #include "timer.h"
 #include "global.h"
 #include <cmath>
-extern std::vector<std::vector<std::vector<float>>> EnemiesInfo;
-void LoadEnemiesSpritesFromDisk();
-class Enemies:public sprite,public objects
+extern std::vector<std::vector<std::vector<float>>> MinionsInfo;
+void LoadMinionsSpritesFromDisk();
+class Minions:public sprite,public objects
 {
     public:
         bool isSpawn;
@@ -16,11 +16,11 @@ class Enemies:public sprite,public objects
         Timer Cooldown;
         Timer MovingCounter;
         float AttackSpeed;
-        int CurrentEnemyType;
+        int CurrentMinionType;
         int ShootingSlot;
         SDL_FRect AttackBox;
-        Enemies();
-        ~Enemies();
+        Minions();
+        ~Minions();
         void Death();
         void Hurt();
         void Spawn(SDL_FPoint PlayerPosition);
@@ -30,8 +30,8 @@ class Enemies:public sprite,public objects
         void CalculateBoxes();
         void LoadTexture(int CurrentState);
 };
-void EnemyDrawCorner(SDL_FRect[],int);
-void EnemyDrawEdge(int);
+void MinionDrawCorner(SDL_FRect[],int);
+void MinionDrawEdge(int);
 template <class T> float AngleCalculation(T pos1,T origin,SDL_RendererFlip *flip)
 {
     if (abs(pos1.x-origin.x)>LEVEL_WIDTH/2) (pos1.x<origin.x)?(pos1.x+=LEVEL_WIDTH):(pos1.x-=LEVEL_WIDTH);

@@ -7,23 +7,23 @@
 #include <SDL_image.h>
 #include <cmath>
 using namespace std;
-void LoadEnemiesProjectileSpritesFromDisk()
+void LoadMinionsProjectileSpritesFromDisk()
 {
-	EnemyProjectileSprites[0] = IMG_LoadTexture(renderer, "resources/enemyprojectiles/Arrow.PNG");
-	EnemyProjectileSprites[1] = IMG_LoadTexture(renderer, "resources/enemyprojectiles/FireBomb.PNG");
-	EnemyProjectileSprites[2] = IMG_LoadTexture(renderer, "resources/enemyprojectiles/DarkBolt.PNG");
+	MinionProjectileSprites[0] = IMG_LoadTexture(renderer, "resources/enemyprojectiles/Arrow.PNG");
+	MinionProjectileSprites[1] = IMG_LoadTexture(renderer, "resources/enemyprojectiles/FireBomb.PNG");
+	MinionProjectileSprites[2] = IMG_LoadTexture(renderer, "resources/enemyprojectiles/DarkBolt.PNG");
 }
-EnemyProjectiles::EnemyProjectiles()
+MinionProjectiles::MinionProjectiles()
 {
 	isShot = false;
 	Decayed = false;
 }
-EnemyProjectiles::~EnemyProjectiles()
+MinionProjectiles::~MinionProjectiles()
 {
 }
-void EnemyProjectiles::ChooseType(int CurrentEnemy)
+void MinionProjectiles::ChooseType(int CurrentMinion)
 {
-	switch (CurrentEnemy)
+	switch (CurrentMinion)
 	{
 	case 3:
 		type = 0;
@@ -33,19 +33,19 @@ void EnemyProjectiles::ChooseType(int CurrentEnemy)
 		break;
 	}
 }
-void EnemyProjectiles::Shoot()
+void MinionProjectiles::Shoot()
 {
 	isShot = true;
-	ProjectileTexture = EnemyProjectileSprites[type];
-	ProjectileSize.x = EnemyProjectilesInfo[type][1];
-	ProjectileSize.y = EnemyProjectilesInfo[type][2];
-	isAnimated = EnemyProjectilesInfo[type][6];
-	damage = EnemyProjectilesInfo[type][5];
+	ProjectileTexture = MinionProjectileSprites[type];
+	ProjectileSize.x = MinionProjectilesInfo[type][1];
+	ProjectileSize.y = MinionProjectilesInfo[type][2];
+	isAnimated = MinionProjectilesInfo[type][6];
+	damage = MinionProjectilesInfo[type][5];
 	if (isAnimated)
 	{
 		Projectile.CurrentSprite = 0;
-		Projectile.NumOfSprites = EnemyProjectilesInfo[type][7];
-		Projectile.framespeed = EnemyProjectilesInfo[type][8];
+		Projectile.NumOfSprites = MinionProjectilesInfo[type][7];
+		Projectile.framespeed = MinionProjectilesInfo[type][8];
 		Projectile.texture = ProjectileTexture;
 		Projectile.tempframe = 1;
 		SDL_QueryTexture(Projectile.texture, NULL, NULL, &Projectile.texturesize.x, &Projectile.texturesize.y);
@@ -55,9 +55,9 @@ void EnemyProjectiles::Shoot()
 	{
 	case 0:
 		distancetraveled = 0;
-		speed = EnemyProjectilesInfo[type][3];
-		range = EnemyProjectilesInfo[type][4];
-		damage = EnemyProjectilesInfo[type][5];
+		speed = MinionProjectilesInfo[type][3];
+		range = MinionProjectilesInfo[type][4];
+		damage = MinionProjectilesInfo[type][5];
 		angle = atan2(Target.y - Origin.y, Target.x - Origin.x);
 		Position.x = Origin.x;
 		Position.y = Origin.y;
@@ -71,7 +71,7 @@ void EnemyProjectiles::Shoot()
 		Position.y = Target.y;
 		Hitbox = { Position.x - 96,Position.y - 96,192,192 };
 		angle = 0;
-		damage = EnemyProjectilesInfo[type][5];
+		damage = MinionProjectilesInfo[type][5];
 		ProjectileSprite = { Position.x - 96,Position.y - 96,192,192 };
 		Mix_PlayChannel(-1, SoundEffects[8], 0);
 		break;
@@ -84,13 +84,13 @@ void EnemyProjectiles::Shoot()
 		Position.y = Target.y;
 		Hitbox = { Position.x - 35,Position.y - 25,60,60 };
 		angle = 0;
-		damage = EnemyProjectilesInfo[type][5];
+		damage = MinionProjectilesInfo[type][5];
 		ProjectileSprite = { Position.x - 64,Position.y - 130,128,176 };
 		Mix_PlayChannel(-1, SoundEffects[9], 0);
 		break;
 	}
 }
-void EnemyProjectiles::Update()
+void MinionProjectiles::Update()
 {
 	if (type == 0)
 	{
@@ -138,7 +138,7 @@ void EnemyProjectiles::Update()
 		if (Projectile.CurrentSprite == 4) Projectile.framespeed = 11;
 	}
 }
-void EnemyProjectiles::Decay()
+void MinionProjectiles::Decay()
 {
 	if (!isAnimated)
 	{
@@ -147,7 +147,7 @@ void EnemyProjectiles::Decay()
 	}
 	else if (Projectile.CurrentSprite >= Projectile.NumOfSprites - 1) Decayed = true;
 }
-void DrawEnemyProjectiles(SDL_Rect* ProjectileFrame, int i)
+void DrawMinionProjectiles(SDL_Rect* ProjectileFrame, int i)
 {
 	SDL_RenderCopyExF(renderer, Projectiles[i]->ProjectileTexture, ProjectileFrame, &Projectiles[i]->ProjectileSprite, (Projectiles[i]->angle) * 57.2958, NULL, SDL_FLIP_NONE);
 	SDL_FRect TempRect[3];

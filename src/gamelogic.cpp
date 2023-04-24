@@ -1,6 +1,6 @@
 #include <SDL.h>
 #include <SDL_mixer.h>
-#include "enemies.h"
+#include "minions.h"
 #include "player.h"
 #include "weapons.h"
 #include "global.h"
@@ -35,49 +35,49 @@ void BulletUpdate()
 		}
 	}
 }
-void SpawnAndDeadEnemies()
+void SpawnAndDeadMinions()
 {
-	for (int i = 0; i < Current_max_enemies; i++)
+	for (int i = 0; i < Current_max_minions; i++)
 	{
-		if (!enemy[i]->isSpawn)
+		if (!minion[i]->isSpawn)
 		{
-			if (!player1.isDead) enemy[i]->Spawn(player1.position);
+			if (!player1.isDead) minion[i]->Spawn(player1.position);
 		}
-		else if (!enemy[i]->isDead && enemy[i]->isHurt)
+		else if (!minion[i]->isDead && minion[i]->isHurt)
 		{
-			if (enemy[i]->CurrentSprite >= enemy[i]->NumOfSprites - 1)
+			if (minion[i]->CurrentSprite >= minion[i]->NumOfSprites - 1)
 			{
-				enemy[i]->isHurt = false;
+				minion[i]->isHurt = false;
 			}
 		}
-		else if (enemy[i]->isDead)
+		else if (minion[i]->isDead)
 		{
-			if (!enemy[i]->Decayed)
+			if (!minion[i]->Decayed)
 			{
-				if (enemy[i]->CurrentSprite >= enemy[i]->NumOfSprites - 1)
+				if (minion[i]->CurrentSprite >= minion[i]->NumOfSprites - 1)
 				{
-					enemy[i]->Decayed = true;
-					enemy[i]->Cooldown.Restart();
+					minion[i]->Decayed = true;
+					minion[i]->Cooldown.Restart();
 				}
 			}
-			if (enemy[i]->Decayed)
+			if (minion[i]->Decayed)
 			{
-				if (enemy[i]->Cooldown.GetTime() <= 2000)
+				if (minion[i]->Cooldown.GetTime() <= 2000)
 				{
-					enemy[i]->CurrentSprite = enemy[i]->NumOfSprites - 1;
-					enemy[i]->MovingCounter.Reset();
+					minion[i]->CurrentSprite = minion[i]->NumOfSprites - 1;
+					minion[i]->MovingCounter.Reset();
 				}
 				else
 				{
-					delete enemy[i];
-					enemy[i] = new Enemies();
+					delete minion[i];
+					minion[i] = new Minions();
 				}
 			}
 		}
-		if (enemy[i]->isSpawn && enemy[i]->MovingCounter.GetTime() >= 6000)
+		if (minion[i]->isSpawn && minion[i]->MovingCounter.GetTime() >= 6000)
 		{
-			delete enemy[i];
-			enemy[i] = new Enemies();
+			delete minion[i];
+			minion[i] = new Minions();
 		}
 	}
 }
@@ -140,11 +140,11 @@ void SpawnAndDeadElementals()
 }
 void GameLogic()
 {
-	SpawnAndDeadEnemies();
+	SpawnAndDeadMinions();
 	SpawnAndDeadElementals();
 	if (!player1.isDead) UpdateUI();
 	BulletUpdate();
-	EnemyLogics();
+	MinionLogics();
 	ElementalLogics();
 	FrameCount++;
 }

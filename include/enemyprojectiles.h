@@ -2,8 +2,8 @@
 #include <SDL.h>
 #include "sprites.h"
 #include <vector>
-extern std::vector<std::vector<float>> EnemyProjectilesInfo;
-class EnemyProjectiles
+extern std::vector<std::vector<float>> MinionProjectilesInfo;
+class MinionProjectiles
 {
     public:
         int type;
@@ -23,12 +23,12 @@ class EnemyProjectiles
         SDL_FPoint Position;
         SDL_FRect Hitbox;
         SDL_FRect ProjectileSprite;
-        EnemyProjectiles();
-        ~EnemyProjectiles();
+        MinionProjectiles();
+        ~MinionProjectiles();
         void Shoot();
         void Update();
         void Decay();
         void ChooseType(int);
 };
-void LoadEnemiesProjectileSpritesFromDisk();
-void DrawEnemyProjectiles(SDL_Rect*,int);
+void LoadMinionsProjectileSpritesFromDisk();
+void DrawMinionProjectiles(SDL_Rect*,int);

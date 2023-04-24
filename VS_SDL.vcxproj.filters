@@ -24,7 +24,7 @@
     <ClInclude Include="include\effects.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\enemies.h">
+    <ClInclude Include="include\minions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\enemyAI.h">
@@ -95,7 +95,7 @@
     <ClCompile Include="src\effects.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\enemies.cpp">
+    <ClCompile Include="src\minions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\enemyAI.cpp">

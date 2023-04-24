@@ -160,7 +160,7 @@
     <ClInclude Include="include\effects.h" />
     <ClInclude Include="include\elementalAI.h" />
     <ClInclude Include="include\elementals.h" />
-    <ClInclude Include="include\enemies.h" />
+    <ClInclude Include="include\minions.h" />
     <ClInclude Include="include\enemyAI.h" />
     <ClInclude Include="include\enemyprojectiles.h" />
     <ClInclude Include="include\gamelogic.h" />
@@ -185,7 +185,7 @@
     <ClCompile Include="src\effects.cpp" />
     <ClCompile Include="src\elementalAI.cpp" />
     <ClCompile Include="src\elementals.cpp" />
-    <ClCompile Include="src\enemies.cpp" />
+    <ClCompile Include="src\minions.cpp" />
     <ClCompile Include="src\enemyAI.cpp" />
     <ClCompile Include="src\enemyprojectiles.cpp" />
     <ClCompile Include="src\gamelogic.cpp" />

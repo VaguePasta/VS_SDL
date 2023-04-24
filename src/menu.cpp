@@ -275,12 +275,12 @@ void Menu_Button()
 		delete player1.PlayerWeapon.bullets[i];
 		player1.PlayerWeapon.bullets[i] = nullptr;
 	}
-	for (int i = 0; i < Current_max_enemies; i++)
+	for (int i = 0; i < Current_max_minions; i++)
 	{
-		delete enemy[i];
-		enemy[i] = new Enemies();
+		delete minion[i];
+		minion[i] = new Minions();
 		delete Projectiles[i];
-		Projectiles[i] = new EnemyProjectiles();
+		Projectiles[i] = new MinionProjectiles();
 	}
 	for (int i = 0; i < Current_max_elementals; i++)
 	{
@@ -300,11 +300,11 @@ void Back_Button()
 	player1.DashCooldown.Unpause();
 	player1.PlayerShield.Time.Unpause();
 	player1.PlayerWeapon.ShootingDelay.Unpause();
-	for (int i = 0; i < Current_max_enemies; i++)
-		if (enemy[i]->isSpawn)
+	for (int i = 0; i < Current_max_minions; i++)
+		if (minion[i]->isSpawn)
 		{
-			enemy[i]->Cooldown.Unpause();
-			enemy[i]->MovingCounter.Unpause();
+			minion[i]->Cooldown.Unpause();
+			minion[i]->MovingCounter.Unpause();
 		}
 	for (int i = 0; i < Current_max_elementals; i++)
 	{

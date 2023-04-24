@@ -2,38 +2,38 @@
 #include <cmath>
 #include "global.h"
 #include "timer.h"
-#include "enemies.h"
+#include "minions.h"
 #include "player.h"
 #include "enemyAI.h"
 #include "gameobjects.h"
 #include "enemyprojectiles.h"
 #include "sounds.h"
 using namespace std;
-void EnemyLogics()
+void MinionLogics()
 {
-	for (int i = 0; i < Current_max_enemies; i++)
+	for (int i = 0; i < Current_max_minions; i++)
 	{
 		if (!player1.isDead)
 		{
-			if (enemy[i]->isSpawn && !enemy[i]->isDead) enemy[i]->CalculateBoxes();
-			EnemyPathfinding(enemy[i]);
-			EnemyAttacking(enemy[i]);
+			if (minion[i]->isSpawn && !minion[i]->isDead) minion[i]->CalculateBoxes();
+			MinionPathfinding(minion[i]);
+			MinionAttacking(minion[i]);
 		}
-		else if (enemy[i]->isSpawn && !enemy[i]->isDead && !enemy[i]->isIdling)
+		else if (minion[i]->isSpawn && !minion[i]->isDead && !minion[i]->isIdling)
 		{
-			enemy[i]->Idle();
+			minion[i]->Idle();
 		}
-		if (enemy[i]->isSpawn && !enemy[i]->isDead) EnemyBulletCollision(enemy[i]);
+		if (minion[i]->isSpawn && !minion[i]->isDead) MinionBulletCollision(minion[i]);
 	}
-	EnemyProjectilesProcessing();
+	MinionProjectilesProcessing();
 }
-void EnemyPathfinding(Enemies* enemy)
+void MinionPathfinding(Minions* minion)
 {
-	if (enemy->isSpawn && !enemy->isDead)
+	if (minion->isSpawn && !minion->isDead)
 	{
 		SDL_FPoint PlayerCenter = { player1.position.x + player1.SpriteSize.x / 2,player1.position.y + player1.SpriteSize.y / 2 };
-		SDL_FPoint EnemyCenter = { enemy->position.x + enemy->SpriteSize.x / 2,enemy->position.y + enemy->SpriteSize.y / 2 };
-		if (abs(PlayerCenter.x - EnemyCenter.x) > LEVEL_WIDTH / 2)
+		SDL_FPoint MinionCenter = { minion->position.x + minion->SpriteSize.x / 2,minion->position.y + minion->SpriteSize.y / 2 };
+		if (abs(PlayerCenter.x - MinionCenter.x) > LEVEL_WIDTH / 2)
 		{
 			if (PlayerCenter.x < LEVEL_WIDTH / 2)
 			{
@@ -44,7 +44,7 @@ void EnemyPathfinding(Enemies* enemy)
 				PlayerCenter.x -= LEVEL_WIDTH;
 			}
 		}
-		if (abs(PlayerCenter.y - EnemyCenter.y) > LEVEL_HEIGHT / 2)
+		if (abs(PlayerCenter.y - MinionCenter.y) > LEVEL_HEIGHT / 2)
 		{
 			if (PlayerCenter.y < LEVEL_HEIGHT / 2)
 			{
@@ -57,63 +57,63 @@ void EnemyPathfinding(Enemies* enemy)
 		}
 		SDL_FPoint Pos = { PlayerCenter.x - 50,PlayerCenter.y - 50 };
 		SDL_FRect Hitbox = PlayerHitbox(player1.flip, Pos);
-		if (PlayerCenter.x < EnemyCenter.x - 5 && enemy->flip == SDL_FLIP_NONE)
+		if (PlayerCenter.x < MinionCenter.x - 5 && minion->flip == SDL_FLIP_NONE)
 		{
-			enemy->flip = SDL_FLIP_HORIZONTAL;
-			enemy->CalculateBoxes();
+			minion->flip = SDL_FLIP_HORIZONTAL;
+			minion->CalculateBoxes();
 		}
-		else if (PlayerCenter.x > EnemyCenter.x + 5 && enemy->flip == SDL_FLIP_HORIZONTAL)
+		else if (PlayerCenter.x > MinionCenter.x + 5 && minion->flip == SDL_FLIP_HORIZONTAL)
 		{
-			enemy->flip = SDL_FLIP_NONE;
-			enemy->CalculateBoxes();
+			minion->flip = SDL_FLIP_NONE;
+			minion->CalculateBoxes();
 		}
-		if (enemy->isAttacking) return;
-		if (!enemy->isHurt && !SDL_HasIntersectionF(&Hitbox, &enemy->AttackBox))
+		if (minion->isAttacking) return;
+		if (!minion->isHurt && !SDL_HasIntersectionF(&Hitbox, &minion->AttackBox))
 		{
-			if (!enemy->isMoving) enemy->Run();
-			SDL_FPoint TempPos = enemy->position;
-			if (!enemy->isRanged) EnemyMoving(enemy, EnemyCenter, PlayerCenter);
+			if (!minion->isMoving) minion->Run();
+			SDL_FPoint TempPos = minion->position;
+			if (!minion->isRanged) MinionMoving(minion, MinionCenter, PlayerCenter);
 			else
 			{
-				SDL_FPoint Target = { (PlayerCenter.x - EnemyCenter.x < 0) ? (PlayerCenter.x + 700) : (PlayerCenter.x - 700),PlayerCenter.y };
-				EnemyMoving(enemy, EnemyCenter, Target);
+				SDL_FPoint Target = { (PlayerCenter.x - MinionCenter.x < 0) ? (PlayerCenter.x + 700) : (PlayerCenter.x - 700),PlayerCenter.y };
+				MinionMoving(minion, MinionCenter, Target);
 			}
-			enemy->position.x = EnemyCenter.x - enemy->SpriteSize.x / 2;
-			enemy->position.y = EnemyCenter.y - enemy->SpriteSize.y / 2;
-			if (enemy->position.x < -enemy->SpriteSize.x) enemy->position.x = LEVEL_WIDTH - enemy->SpriteSize.x;
-			if (enemy->position.y < -enemy->SpriteSize.y) enemy->position.y = LEVEL_HEIGHT - enemy->SpriteSize.y;
-			if (enemy->position.x > LEVEL_WIDTH) enemy->position.x = 0;
-			if (enemy->position.y > LEVEL_HEIGHT) enemy->position.y = 0;
-			enemy->CalculateBoxes();
-			if (SDL_HasIntersectionF(&enemy->Hitbox, &Hitbox))
+			minion->position.x = MinionCenter.x - minion->SpriteSize.x / 2;
+			minion->position.y = MinionCenter.y - minion->SpriteSize.y / 2;
+			if (minion->position.x < -minion->SpriteSize.x) minion->position.x = LEVEL_WIDTH - minion->SpriteSize.x;
+			if (minion->position.y < -minion->SpriteSize.y) minion->position.y = LEVEL_HEIGHT - minion->SpriteSize.y;
+			if (minion->position.x > LEVEL_WIDTH) minion->position.x = 0;
+			if (minion->position.y > LEVEL_HEIGHT) minion->position.y = 0;
+			minion->CalculateBoxes();
+			if (SDL_HasIntersectionF(&minion->Hitbox, &Hitbox))
 			{
-				enemy->position = TempPos;
-				enemy->CalculateBoxes();
+				minion->position = TempPos;
+				minion->CalculateBoxes();
 			}
-			enemy->MovingCounter.Restart();
+			minion->MovingCounter.Restart();
 		}
 		else
 		{
-			enemy->isMoving = false;
+			minion->isMoving = false;
 		}
 	}
 }
-void EnemyMoving(Enemies* enemy, SDL_FPoint& EnemyCenter, SDL_FPoint& Target)
+void MinionMoving(Minions* minion, SDL_FPoint& MinionCenter, SDL_FPoint& Target)
 {
-	if (EnemyCenter.x != Target.x && EnemyCenter.y != Target.y)
+	if (MinionCenter.x != Target.x && MinionCenter.y != Target.y)
 	{
-		EnemyCenter.x += enemy->speed * DeltaTime * ((Target.x - EnemyCenter.x < 0) ? (-0.707) : (0.707));
-		EnemyCenter.y += enemy->speed * DeltaTime * ((Target.y - EnemyCenter.y < 0) ? (-0.707) : (0.707));
+		MinionCenter.x += minion->speed * DeltaTime * ((Target.x - MinionCenter.x < 0) ? (-0.707) : (0.707));
+		MinionCenter.y += minion->speed * DeltaTime * ((Target.y - MinionCenter.y < 0) ? (-0.707) : (0.707));
 	}
-	else if (EnemyCenter.x != Target.x) EnemyCenter.x += enemy->speed * DeltaTime * ((Target.x - EnemyCenter.x < 0) ? (-1) : (1));
-	else if (EnemyCenter.y != Target.y) EnemyCenter.y += enemy->speed * DeltaTime * ((Target.y - EnemyCenter.y < 0) ? (-1) : (1));
+	else if (MinionCenter.x != Target.x) MinionCenter.x += minion->speed * DeltaTime * ((Target.x - MinionCenter.x < 0) ? (-1) : (1));
+	else if (MinionCenter.y != Target.y) MinionCenter.y += minion->speed * DeltaTime * ((Target.y - MinionCenter.y < 0) ? (-1) : (1));
 }
-void EnemyAttacking(Enemies* enemy)
+void MinionAttacking(Minions* minion)
 {
-	if (!enemy->isSpawn || enemy->isDead) return;
+	if (!minion->isSpawn || minion->isDead) return;
 	SDL_FPoint PlayerCenter = { player1.position.x + player1.SpriteSize.x / 2,player1.position.y + player1.SpriteSize.y / 2 };
-	SDL_FPoint EnemyCenter = { enemy->position.x + enemy->SpriteSize.x / 2,enemy->position.y + enemy->SpriteSize.y / 2 };
-	if (abs(PlayerCenter.x - EnemyCenter.x) > LEVEL_WIDTH / 2)
+	SDL_FPoint MinionCenter = { minion->position.x + minion->SpriteSize.x / 2,minion->position.y + minion->SpriteSize.y / 2 };
+	if (abs(PlayerCenter.x - MinionCenter.x) > LEVEL_WIDTH / 2)
 	{
 		if (PlayerCenter.x < LEVEL_WIDTH / 2)
 		{
@@ -124,7 +124,7 @@ void EnemyAttacking(Enemies* enemy)
 			PlayerCenter.x -= LEVEL_WIDTH;
 		}
 	}
-	if (abs(PlayerCenter.y - EnemyCenter.y) > LEVEL_HEIGHT / 2)
+	if (abs(PlayerCenter.y - MinionCenter.y) > LEVEL_HEIGHT / 2)
 	{
 		if (PlayerCenter.y < LEVEL_HEIGHT / 2)
 		{
@@ -137,63 +137,63 @@ void EnemyAttacking(Enemies* enemy)
 	}
 	SDL_FPoint Pos = { PlayerCenter.x - 50,PlayerCenter.y - 50 };
 	SDL_FRect Hitbox = PlayerHitbox(player1.flip, Pos);
-	if (!enemy->isAttacking && SDL_HasIntersectionF(&Hitbox, &enemy->AttackBox))
+	if (!minion->isAttacking && SDL_HasIntersectionF(&Hitbox, &minion->AttackBox))
 	{
-		if (enemy->Cooldown.GetTime() > 1000 / enemy->AttackSpeed)
+		if (minion->Cooldown.GetTime() > 1000 / minion->AttackSpeed)
 		{
-			enemy->Attack();
+			minion->Attack();
 			return;
 		}
-		else if (!enemy->isIdling && !enemy->isHurt)
+		else if (!minion->isIdling && !minion->isHurt)
 		{
-			enemy->Idle();
+			minion->Idle();
 			return;
 		}
 	}
-	if (enemy->isAttacking)
+	if (minion->isAttacking)
 	{
-		switch (enemy->CurrentEnemyType)
+		switch (minion->CurrentMinionType)
 		{
 		case 0: case 2:
-			if (enemy->CurrentSprite >= enemy->NumOfSprites - 1 && SDL_HasIntersectionF(&enemy->AttackBox, &Hitbox))
+			if (minion->CurrentSprite >= minion->NumOfSprites - 1 && SDL_HasIntersectionF(&minion->AttackBox, &Hitbox))
 			{
-				player1.Hurt(enemy->Damage);
+				player1.Hurt(minion->Damage);
 			}
 			break;
 		case 1:
-			if (enemy->CurrentSprite == 3 && SDL_HasIntersectionF(&enemy->AttackBox, &Hitbox))
+			if (minion->CurrentSprite == 3 && SDL_HasIntersectionF(&minion->AttackBox, &Hitbox))
 			{
-				enemy->CurrentSprite++;
-				player1.Hurt(enemy->Damage);
+				minion->CurrentSprite++;
+				player1.Hurt(minion->Damage);
 			}
 			break;
 		case 3: case 4:
-			if (enemy->CurrentEnemyType == 3 && enemy->CurrentSprite == 2)
+			if (minion->CurrentMinionType == 3 && minion->CurrentSprite == 2)
 			{
 				Mix_PlayChannel(-1, SoundEffects[10], 0);
-				enemy->CurrentSprite++;
+				minion->CurrentSprite++;
 			}
-			if (enemy->CurrentSprite >= enemy->NumOfSprites - 1)
-				for (int i = 0; i < Current_max_enemies; i++) if (!Projectiles[i]->isShot)
+			if (minion->CurrentSprite >= minion->NumOfSprites - 1)
+				for (int i = 0; i < Current_max_minions; i++) if (!Projectiles[i]->isShot)
 				{
-					Projectiles[i]->Origin = EnemyCenter;
-					Projectiles[i]->ChooseType(enemy->CurrentEnemyType);
-					Projectiles[i]->Target = EnemyAiming(PlayerCenter, EnemyCenter, enemy->CurrentEnemyType, Projectiles[i]->type);
+					Projectiles[i]->Origin = MinionCenter;
+					Projectiles[i]->ChooseType(minion->CurrentMinionType);
+					Projectiles[i]->Target = MinionAiming(PlayerCenter, MinionCenter, minion->CurrentMinionType, Projectiles[i]->type);
 					Projectiles[i]->Shoot();
 					break;
 				}
 			break;
 		}
-		if (enemy->CurrentSprite >= enemy->NumOfSprites - 1)
+		if (minion->CurrentSprite >= minion->NumOfSprites - 1)
 		{
-			enemy->isAttacking = false;
-			enemy->Idle();
+			minion->isAttacking = false;
+			minion->Idle();
 		}
 	}
 }
-void EnemyProjectilesProcessing()
+void MinionProjectilesProcessing()
 {
-	for (int i = 0; i < Current_max_enemies; i++) if (Projectiles[i]->isShot)
+	for (int i = 0; i < Current_max_minions; i++) if (Projectiles[i]->isShot)
 	{
 		Projectiles[i]->Update();
 		Projectiles[i]->Decay();
@@ -232,16 +232,16 @@ void EnemyProjectilesProcessing()
 		if (Projectiles[i]->Decayed)
 		{
 			delete Projectiles[i];
-			Projectiles[i] = new EnemyProjectiles();
+			Projectiles[i] = new MinionProjectiles();
 		}
 	}
 }
-SDL_FPoint EnemyAiming(SDL_FPoint& PlayerCenter, SDL_FPoint& EnemyCenter, int CurrentEnemyType, int ProjectileType)
+SDL_FPoint MinionAiming(SDL_FPoint& PlayerCenter, SDL_FPoint& MinionCenter, int CurrentMinionType, int ProjectileType)
 {
 	if (SCORE < 50) return PlayerCenter;
-	float Distance = DistanceCalculation(PlayerCenter,EnemyCenter);
+	float Distance = DistanceCalculation(PlayerCenter,MinionCenter);
 	float ScaleDistance;
-	switch (CurrentEnemyType)
+	switch (CurrentMinionType)
 	{
 	case 3:
 		ScaleDistance = Distance * 0.45;
@@ -254,19 +254,19 @@ SDL_FPoint EnemyAiming(SDL_FPoint& PlayerCenter, SDL_FPoint& EnemyCenter, int Cu
 	SDL_FPoint Target = { PlayerCenter.x + player1.Direction.x * ScaleDistance,PlayerCenter.y + player1.Direction.y * ScaleDistance };
 	return Target;
 }
-void EnemyBulletCollision(Enemies* enemy)
+void MinionBulletCollision(Minions* minion)
 {
 	for (int i=0;i<Max_Bullets;i++) if (player1.PlayerWeapon.bullets[i]->isShot && !player1.PlayerWeapon.bullets[i]->Decayed)
 	{
-		if (SDL_HasIntersectionF(&player1.PlayerWeapon.bullets[i]->Hitbox, &enemy->Hitbox))
+		if (SDL_HasIntersectionF(&player1.PlayerWeapon.bullets[i]->Hitbox, &minion->Hitbox))
 		{
 			if (player1.PlayerWeapon.bullets[i]->CurrentWeapon != 2)
 			{
-				enemy->Health -= player1.PlayerWeapon.bullets[i]->Damage;
-				if (!enemy->isDead)
+				minion->Health -= player1.PlayerWeapon.bullets[i]->Damage;
+				if (!minion->isDead)
 				{
-					if (enemy->Health <= 0) enemy->Death();
-					else if (!enemy->isAttacking) enemy->Hurt();
+					if (minion->Health <= 0) minion->Death();
+					else if (!minion->isAttacking) minion->Hurt();
 				}
 				delete player1.PlayerWeapon.bullets[i];
 				player1.PlayerWeapon.bullets[i] = new bullet(player1.CurrentWeapon);

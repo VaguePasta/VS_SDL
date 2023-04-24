@@ -1,14 +1,14 @@
 #pragma once
-#include "enemies.h"
+#include "minions.h"
 #include "elementals.h"
 #include "player.h"
 #include "enemyprojectiles.h"
 #include "UI.h"
 #include <vector>
 #include <SDL.h>
-extern std::vector <Enemies*> enemy;
+extern std::vector <Minions*> minion;
 extern std::vector <Elementals*> elemental;
-extern std::vector <EnemyProjectiles*> Projectiles;
+extern std::vector <MinionProjectiles*> Projectiles;
 extern player player1;
 extern sprite SlashEffect;
 extern Bars HealthBar;

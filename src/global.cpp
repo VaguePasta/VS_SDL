@@ -1,6 +1,7 @@
 #include "global.h"
 #include <SDL.h>
 #include <SDL_ttf.h>
+#include <cmath>
 int SCREEN_WIDTH = 0;
 int SCREEN_HEIGHT = 0;
 const int LOGICAL_WIDTH = 1600;
@@ -29,9 +30,9 @@ bool MouseRightDown;
 SDL_Texture* PlayerSprites[4];
 SDL_Texture* WeaponSprites[4];
 SDL_Texture* BulletSprites[3];
-SDL_Texture* EnemySprites[5][5];
+SDL_Texture* MinionSprites[5][5];
 SDL_Texture* ElementalSprites[4][10];
-SDL_Texture* EnemyProjectileSprites[3];
+SDL_Texture* MinionProjectileSprites[3];
 SDL_Texture* SkillTextures[1];
 SDL_Texture* ButtonSprites[9];
 SDL_Texture* EffectSprites[2];
@@ -39,5 +40,6 @@ SDL_Texture* Cursor[1];
 SDL_Texture* GameBackground;
 SDL_Texture* BackgroundSprites[4];
 const int Max_Bullets = 40;
-int Current_max_enemies =18;
-int Current_max_elementals = 4;
+int Current_max_enemies = 25;
+int Current_max_elementals = std::ceil(Current_max_enemies / 10);
+int Current_max_minions = Current_max_enemies - Current_max_elementals;

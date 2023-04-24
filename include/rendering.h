@@ -4,6 +4,6 @@ void combinetexture();
 void rendergame();
 void DrawPlayer();
 void DrawEffects();
-void DrawEnemies();
+void DrawMinions();
 void DrawUI();
 void DrawCursor();

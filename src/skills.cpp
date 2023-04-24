@@ -1,6 +1,6 @@
 #include "skills.h"
 #include "global.h"
-#include "enemies.h"
+#include "minions.h"
 #include "gameobjects.h"
 #include "sounds.h"
 #include "texturerendering.h"
@@ -220,26 +220,26 @@ void SlashRecover()
 		SlashEffect.tempframe = 1;
 	}
 }
-void SlashDamage(bool EnemyDamaged[],bool ElementalDamaged[])
+void SlashDamage(bool MinionDamaged[],bool ElementalDamaged[])
 {
-	for (int i = 0; i < Current_max_enemies; i++)
+	for (int i = 0; i < Current_max_minions; i++)
 	{
-		if (enemy[i]->isSpawn && !enemy[i]->isDead)
+		if (minion[i]->isSpawn && !minion[i]->isDead)
 		{
 			SDL_FPoint PlayerCenter = player1.position; PlayerCenter.x += 50; PlayerCenter.y += 50;
-			SDL_FPoint EnemyCenter = enemy[i]->position; EnemyCenter.x += enemy[i]->SpriteSize.x / 2; EnemyCenter.y += enemy[i]->SpriteSize.y / 2;
-			float enemyAngle = AngleCalculation(EnemyCenter, PlayerCenter, &player1.flip);
-			float enemyDistance = DistanceCalculation(EnemyCenter, PlayerCenter);
-			if (abs(enemyAngle - player1.PlayerWeapon.angle) <= 5 && enemyDistance <= player1.PlayerWeapon.range && !EnemyDamaged[i])
+			SDL_FPoint MinionCenter = minion[i]->position; MinionCenter.x += minion[i]->SpriteSize.x / 2; MinionCenter.y += minion[i]->SpriteSize.y / 2;
+			float enemyAngle = AngleCalculation(MinionCenter, PlayerCenter, &player1.flip);
+			float enemyDistance = DistanceCalculation(MinionCenter, PlayerCenter);
+			if (abs(enemyAngle - player1.PlayerWeapon.angle) <= 5 && enemyDistance <= player1.PlayerWeapon.range && !MinionDamaged[i])
 			{
-				enemy[i]->Health -= player1.PlayerWeapon.damage;
-				if (enemy[i]->Health <= 0) enemy[i]->Death();
+				minion[i]->Health -= player1.PlayerWeapon.damage;
+				if (minion[i]->Health <= 0) minion[i]->Death();
 				else
 				{
-					enemy[i]->isAttacking = false;
-					enemy[i]->Hurt();
+					minion[i]->isAttacking = false;
+					minion[i]->Hurt();
 				}
-				EnemyDamaged[i] = true;
+				MinionDamaged[i] = true;
 			}
 		}
 	}

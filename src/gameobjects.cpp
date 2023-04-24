@@ -1,12 +1,12 @@
 #include "gameobjects.h"
-#include "enemies.h"
+#include "minions.h"
 #include "player.h"
 #include "UI.h"
 #include <SDL.h>
 #include <vector>
-std::vector <Enemies*> enemy;
+std::vector <Minions*> minion;
 std::vector <Elementals*> elemental;
-std::vector <EnemyProjectiles*> Projectiles;
+std::vector <MinionProjectiles*> Projectiles;
 player player1;
 sprite SlashEffect(21, 1);
 Bars HealthBar;

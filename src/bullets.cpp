@@ -94,13 +94,13 @@ void BulletExplosion(bullet* CurrentBullet)
 {
 	CurrentBullet->Decayed = true;
 	SDL_FRect DamageSite = { CurrentBullet->BulletPosition.x - 120,CurrentBullet->BulletPosition.y - 120,240,240 };
-	for (int j = 0; j < Current_max_enemies; j++) if (SDL_HasIntersectionF(&enemy[j]->Hitbox, &DamageSite))
+	for (int j = 0; j < Current_max_minions; j++) if (SDL_HasIntersectionF(&minion[j]->Hitbox, &DamageSite))
 	{
-		enemy[j]->Health -= CurrentBullet->Damage;
-		if (!enemy[j]->isDead)
+		minion[j]->Health -= CurrentBullet->Damage;
+		if (!minion[j]->isDead)
 		{
-			if (enemy[j]->Health <= 0) enemy[j]->Death();
-			else if (!enemy[j]->isAttacking) enemy[j]->Hurt();
+			if (minion[j]->Health <= 0) minion[j]->Death();
+			else if (!minion[j]->isAttacking) minion[j]->Hurt();
 		}
 	}
 	for (int j = 0; j < Current_max_elementals; j++) if (SDL_HasIntersectionF(&elemental[j]->Hitbox, &DamageSite))

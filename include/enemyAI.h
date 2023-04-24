@@ -1,8 +1,8 @@
 #pragma once
-void EnemyLogics();
-void EnemyAttacking(Enemies *enemy);
-void EnemyPathfinding(Enemies *enemy);
-void EnemyMoving(Enemies*,SDL_FPoint&,SDL_FPoint&);
-void EnemyBulletCollision(Enemies*);
-void EnemyProjectilesProcessing();
-SDL_FPoint EnemyAiming(SDL_FPoint&,SDL_FPoint&,int,int);
+void MinionLogics();
+void MinionAttacking(Minions*minion);
+void MinionPathfinding(Minions*minion);
+void MinionMoving(Minions*,SDL_FPoint&,SDL_FPoint&);
+void MinionBulletCollision(Minions*);
+void MinionProjectilesProcessing();
+SDL_FPoint MinionAiming(SDL_FPoint&,SDL_FPoint&,int,int);
