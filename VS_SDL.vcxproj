@@ -130,6 +130,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalOptions>/vmg /vmv %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -161,7 +162,7 @@
     <ClInclude Include="include\elementalAI.h" />
     <ClInclude Include="include\elementals.h" />
     <ClInclude Include="include\minions.h" />
-    <ClInclude Include="include\enemyAI.h" />
+    <ClInclude Include="include\minionAI.h" />
     <ClInclude Include="include\enemyprojectiles.h" />
     <ClInclude Include="include\gamelogic.h" />
     <ClInclude Include="include\gameobjects.h" />
@@ -186,7 +187,7 @@
     <ClCompile Include="src\elementalAI.cpp" />
     <ClCompile Include="src\elementals.cpp" />
     <ClCompile Include="src\minions.cpp" />
-    <ClCompile Include="src\enemyAI.cpp" />
+    <ClCompile Include="src\minionAI.cpp" />
     <ClCompile Include="src\enemyprojectiles.cpp" />
     <ClCompile Include="src\gamelogic.cpp" />
     <ClCompile Include="src\gameobjects.cpp" />

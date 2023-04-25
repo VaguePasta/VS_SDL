@@ -15,8 +15,8 @@ void combinetexture()
 	SDL_SetRenderTarget(renderer, screentexture);
 	SDL_RenderClear(renderer);
 	SDL_RenderCopy(renderer, GameBackground, NULL, NULL);
-	DrawMinions();
 	DrawPlayer();
+	DrawMinions();
 	DrawEffects();
 	SDL_SetRenderTarget(renderer, NULL);
 }
@@ -33,31 +33,23 @@ void rendergame()
 }
 void DrawPlayer()
 {
-	player1.animation();
 	if (!player1.Dashing)
 	{
-		SDL_FRect WeaponRect = {player1.position.x + player1.PlayerWeapon.Position.x,player1.position.y + player1.PlayerWeapon.Position.y,1.0*player1.PlayerWeapon.WeaponSize / 12,1.0*player1.PlayerWeapon.WeaponSize / 12 };
-		PlayerDrawEdge(WeaponRect);
-		PlayerDraw(player1.SpriteBox, WeaponRect, player1.PlayerShield.ShieldHitBox);
+		player1.draw();
+		player1.PlayerWeapon.flip = player1.flip;
+		if (!player1.isDead)
+		{
+			player1.PlayerWeapon.draw();
+		}
+		if (player1.PlayerShield.isOn) player1.PlayerShield.draw();
 	}
-	else TrailDrawing();
 }
 void DrawEffects()
 {
 	for (int i = 0; i < Max_Bullets; i++)
 		if (player1.PlayerWeapon.bullets[i]->isShot && player1.PlayerWeapon.bullets[i]->DistanceTraveled > 30)
 		{
-			if (!player1.PlayerWeapon.bullets[i]->isAnimated)
-			{
-				SDL_RenderCopyExF(renderer, player1.PlayerWeapon.bullets[i]->bullettexture, NULL, &(player1.PlayerWeapon.bullets[i]->BulletSprite), player1.PlayerWeapon.bullets[i]->angle, NULL, SDL_FLIP_NONE);
-				BulletDrawEdge(nullptr, i);
-			}
-			else
-			{
-				player1.PlayerWeapon.bullets[i]->BulletAnimation.animation();
-				SDL_RenderCopyExF(renderer, player1.PlayerWeapon.bullets[i]->bullettexture, &player1.PlayerWeapon.bullets[i]->BulletAnimation.frame, &player1.PlayerWeapon.bullets[i]->BulletSprite, player1.PlayerWeapon.bullets[i]->angle, NULL, SDL_FLIP_NONE);
-				BulletDrawEdge(&player1.PlayerWeapon.bullets[i]->BulletAnimation.frame, i);
-			}
+			player1.PlayerWeapon.bullets[i]->draw();
 		}
 	if (player1.MeleeAttacking && !player1.MeleeAttacked)
 	{
@@ -70,29 +62,21 @@ void DrawMinions()
 	{
 		if (minion[i]->isSpawn)
 		{
-			minion[i]->animation();
-			SDL_RenderCopyExF(renderer, minion[i]->texture, &minion[i]->frame, &minion[i]->SpriteBox, 0, NULL, minion[i]->flip);
-			MinionDrawEdge(i);
-		}
-		if (Projectiles[i]->isShot)
-		{
-			if (!Projectiles[i]->isAnimated)
-			{
-				DrawMinionProjectiles(nullptr, i);
-			}
-			else
-			{
-				DrawMinionProjectiles(&Projectiles[i]->Projectile.frame, i);
-			}
+			minion[i]->draw();
 		}
 	}
 	for (int i = 0; i < Current_max_elementals; i++)
 	{
 		if (elemental[i]->isSpawn)
 		{
-			elemental[i]->animation();
-			SDL_RenderCopyExF(renderer, elemental[i]->texture, &elemental[i]->frame, &elemental[i]->SpriteBox, 0, NULL, elemental[i]->flip);
-			ElementalDrawEdge(i);
+			elemental[i]->draw();
+		}
+	}
+	for (int i = 0; i < Current_max_enemies; i++)
+	{
+		if (Projectiles[i]->isShot && Projectiles[i]->Arrived)
+		{
+			Projectiles[i]->draw();
 		}
 	}
 }

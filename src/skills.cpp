@@ -13,11 +13,9 @@
 #include <cmath>
 Shield::Shield()
 {
-	ShieldTexture = NULL;
-	Size.x = 100;
-	Size.y = 100;
-	Position.x = 0;
-	Position.y = 0;
+	texture = NULL;
+	SpriteSize = { 100,100 };
+	position = { 0,0 };
 	Health = 500;
 	isOn = false;
 	Damaged = false;
@@ -25,37 +23,37 @@ Shield::Shield()
 	Cooldown = 2000;
 	LiveTime = 2000;
 	Time.Restart();
+	delete frame;
+	frame = nullptr;
 }
 Shield::~Shield() {};
 void Shield::ActivateShield(SDL_FPoint PlayerPosition)
 {
-	if (ShieldTexture == NULL) ShieldTexture = IMG_LoadTexture(renderer, "resources/skills/Shield.PNG");
+	if (texture == NULL) texture = IMG_LoadTexture(renderer, "resources/skills/Shield.PNG");
 	if (!ShieldIcon.isOnCooldown)
 	{
 		isOn = true;
 		Health = 500;
-		Position.x = PlayerPosition.x;
-		Position.y = PlayerPosition.y;
-		ShieldHitBox = { PlayerPosition.x,PlayerPosition.y,float(Size.x),float(Size.y) };
+		position = PlayerPosition;
+		hitbox = { PlayerPosition.x,PlayerPosition.y,SpriteSize.x,SpriteSize.y };
 		isOn = true;
 		Time.Restart();
 	}
 }
 void Shield::DecayShield()
 {
-	ShieldHitBox = { player1.position.x,player1.position.y,float(Size.x),float(Size.y) };
+	position = player1.position;
 	if (!Damaged && DamageDelay >= 10)
 	{
-		SDL_SetTextureColorMod(ShieldTexture, 255, 255, 255);
+		SDL_SetTextureColorMod(texture, 255, 255, 255);
 		DamageDelay = 0;
 	}
 	if (Damaged) Damaged = false;
 	DamageDelay++;
 	if (isOn && (Time.GetTime() >= LiveTime || Health <= 0))
 	{
-		Position.x = 0;
-		Position.y = 0;
-		ShieldHitBox = { 0,0,0,0 };
+		position = { 0,0 };
+		hitbox = { 0,0,0,0 };
 		isOn = false;
 		ShieldIcon.isOnCooldown = true;
 		Time.Restart();
@@ -66,7 +64,7 @@ void Shield::ShieldDamage(int damage)
 	Damaged = true;
 	DamageDelay = 0;
 	Health -= damage;
-	SDL_SetTextureColorMod(ShieldTexture, 255, 0, 0);
+	SDL_SetTextureColorMod(texture, 255, 0, 0);
 }
 void PlayerDash(SDL_FPoint& TempPos)
 {
@@ -85,6 +83,7 @@ void PlayerDash(SDL_FPoint& TempPos)
 		{
 			TempPos.x += 10 * DashDirection.x * DeltaTime;
 			TempPos.y += 10 * DashDirection.y * DeltaTime;
+			player1.isParalysed = false;
 		}
 	}
 	else
@@ -95,6 +94,7 @@ void PlayerDash(SDL_FPoint& TempPos)
 			{
 				Mix_PlayChannel(-1, SoundEffects[7], 0);
 				player1.Dashing = true;
+				player1.isParalysed = false;
 				DashPosition = player1.position;
 				DashDirection = player1.Direction;
 				player1.DashCooldown.Restart();
@@ -102,17 +102,13 @@ void PlayerDash(SDL_FPoint& TempPos)
 		}
 	}
 }
-void TrailDrawing()
-{
-	player1.Hitbox = { 0,0,0,0 };
-}
 void Sprint()
 {
 	int KeyHold = SDL_GetModState();
 	KeyHold = KeyHold & KMOD_LSHIFT;
 	player1.isSprinting = false;
 	static bool Holding = false;
-	if (KeyHold == KMOD_LSHIFT && !player1.isAttacking)
+	if (KeyHold == KMOD_LSHIFT && !player1.isAttacking )
 	{
 		if (player1.Stamina > 0 && Holding)
 		{
@@ -144,8 +140,8 @@ void GunShoot(bool& Recoil, Timer& RecoilTimer, float& ShootAngle)
 		{
 			player1.PlayerWeapon.bullets[i]->isShot = true;
 			player1.PlayerWeapon.bullets[i]->origin = BulletOrigin;
-			player1.PlayerWeapon.bullets[i]->BulletPosition.x = BulletOrigin.x - player1.PlayerWeapon.bullets[i]->BulletSize / 2;
-			player1.PlayerWeapon.bullets[i]->BulletPosition.y = BulletOrigin.y - player1.PlayerWeapon.bullets[i]->BulletSize / 2;
+			player1.PlayerWeapon.bullets[i]->position.x = BulletOrigin.x - player1.PlayerWeapon.bullets[i]->SpriteSize.x / 2;
+			player1.PlayerWeapon.bullets[i]->position.y = BulletOrigin.y - player1.PlayerWeapon.bullets[i]->SpriteSize.y / 2;
 			player1.PlayerWeapon.bullets[i]->Damage = player1.PlayerWeapon.damage;
 			player1.PlayerWeapon.bullets[i]->angle = ShootAngle;
 			player1.PlayerWeapon.bullets[i]->BulletSpeed = player1.PlayerWeapon.bulletspeed;
@@ -170,7 +166,7 @@ void Slash()
 	player1.PlayerWeapon.angle = (atan2(player1.position.y + player1.SpriteSize.y / 2 - (MousePosition.y + camera[0].CameraPosition.y), player1.position.x + player1.SpriteSize.x / 2 - (MousePosition.x + camera[0].CameraPosition.x))) * 180.000 / 3.14159265 + 180;
 	if (player1.flip == SDL_FLIP_NONE) player1.PlayerWeapon.angle -= 45;
 	else player1.PlayerWeapon.angle += 225;
-	SlashEffect.SpriteAngle = player1.PlayerWeapon.angle;
+	SlashEffect.angle = player1.PlayerWeapon.angle;
 	SlashEffect.flip = player1.flip;
 	Mix_PlayChannel(-1, player1.PlayerWeapon.GunSound, 0);
 }
@@ -222,48 +218,8 @@ void SlashRecover()
 }
 void SlashDamage(bool MinionDamaged[],bool ElementalDamaged[])
 {
-	for (int i = 0; i < Current_max_minions; i++)
-	{
-		if (minion[i]->isSpawn && !minion[i]->isDead)
-		{
-			SDL_FPoint PlayerCenter = player1.position; PlayerCenter.x += 50; PlayerCenter.y += 50;
-			SDL_FPoint MinionCenter = minion[i]->position; MinionCenter.x += minion[i]->SpriteSize.x / 2; MinionCenter.y += minion[i]->SpriteSize.y / 2;
-			float enemyAngle = AngleCalculation(MinionCenter, PlayerCenter, &player1.flip);
-			float enemyDistance = DistanceCalculation(MinionCenter, PlayerCenter);
-			if (abs(enemyAngle - player1.PlayerWeapon.angle) <= 5 && enemyDistance <= player1.PlayerWeapon.range && !MinionDamaged[i])
-			{
-				minion[i]->Health -= player1.PlayerWeapon.damage;
-				if (minion[i]->Health <= 0) minion[i]->Death();
-				else
-				{
-					minion[i]->isAttacking = false;
-					minion[i]->Hurt();
-				}
-				MinionDamaged[i] = true;
-			}
-		}
-	}
-	for (int i = 0; i < Current_max_elementals; i++)
-	{
-		if (elemental[i]->isSpawn && !elemental[i]->isDead)
-		{
-			SDL_FPoint PlayerCenter = player1.position; PlayerCenter.x += 50; PlayerCenter.y += 50;
-			float enemyAngle = AngleCalculation(elemental[i]->ElementalCenter, PlayerCenter, &player1.flip);
-			float enemyDistance = DistanceCalculation(elemental[i]->ElementalCenter, PlayerCenter);
-			if (abs(enemyAngle - player1.PlayerWeapon.angle) <= 5 && enemyDistance <= player1.PlayerWeapon.range && !ElementalDamaged[i])
-			{
-				ElementalBlockMelee(elemental[i]);
-				if (!elemental[i]->isDefending && !elemental[i]->isDodging)
-				{
-					elemental[i]->Health -= player1.PlayerWeapon.damage;
-					if (elemental[i]->Health <= 0) elemental[i]->Death();
-					else
-					{
-						elemental[i]->Hurt();
-					}
-					ElementalDamaged[i] = true;
-				}
-			}
-		}
-	}
+	for (int i = 0; i < Current_max_minions; i++) if (minion[i]->isSpawn && !minion[i]->isDead)
+			MinionSlashDamage(minion[i], MinionDamaged[i]);
+	for (int i = 0; i < Current_max_elementals; i++) if (elemental[i]->isSpawn && !elemental[i]->isDead)
+		ElementalSlashDamage(elemental[i],ElementalDamaged[i]);
 }

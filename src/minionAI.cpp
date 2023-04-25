@@ -4,7 +4,7 @@
 #include "timer.h"
 #include "minions.h"
 #include "player.h"
-#include "enemyAI.h"
+#include "minionAI.h"
 #include "gameobjects.h"
 #include "enemyprojectiles.h"
 #include "sounds.h"
@@ -25,7 +25,6 @@ void MinionLogics()
 		}
 		if (minion[i]->isSpawn && !minion[i]->isDead) MinionBulletCollision(minion[i]);
 	}
-	MinionProjectilesProcessing();
 }
 void MinionPathfinding(Minions* minion)
 {
@@ -56,7 +55,7 @@ void MinionPathfinding(Minions* minion)
 			}
 		}
 		SDL_FPoint Pos = { PlayerCenter.x - 50,PlayerCenter.y - 50 };
-		SDL_FRect Hitbox = PlayerHitbox(player1.flip, Pos);
+		SDL_FRect hitbox = Playerhitbox(player1.flip, Pos);
 		if (PlayerCenter.x < MinionCenter.x - 5 && minion->flip == SDL_FLIP_NONE)
 		{
 			minion->flip = SDL_FLIP_HORIZONTAL;
@@ -68,7 +67,7 @@ void MinionPathfinding(Minions* minion)
 			minion->CalculateBoxes();
 		}
 		if (minion->isAttacking) return;
-		if (!minion->isHurt && !SDL_HasIntersectionF(&Hitbox, &minion->AttackBox))
+		if (!minion->isHurt && !SDL_HasIntersectionF(&hitbox, &minion->AttackBox))
 		{
 			if (!minion->isMoving) minion->Run();
 			SDL_FPoint TempPos = minion->position;
@@ -85,12 +84,11 @@ void MinionPathfinding(Minions* minion)
 			if (minion->position.x > LEVEL_WIDTH) minion->position.x = 0;
 			if (minion->position.y > LEVEL_HEIGHT) minion->position.y = 0;
 			minion->CalculateBoxes();
-			if (SDL_HasIntersectionF(&minion->Hitbox, &Hitbox))
+			if (SDL_HasIntersectionF(&minion->hitbox, &hitbox))
 			{
 				minion->position = TempPos;
 				minion->CalculateBoxes();
 			}
-			minion->MovingCounter.Restart();
 		}
 		else
 		{
@@ -136,8 +134,8 @@ void MinionAttacking(Minions* minion)
 		}
 	}
 	SDL_FPoint Pos = { PlayerCenter.x - 50,PlayerCenter.y - 50 };
-	SDL_FRect Hitbox = PlayerHitbox(player1.flip, Pos);
-	if (!minion->isAttacking && SDL_HasIntersectionF(&Hitbox, &minion->AttackBox))
+	SDL_FRect hitbox = Playerhitbox(player1.flip, Pos);
+	if (!minion->isAttacking && SDL_HasIntersectionF(&hitbox, &minion->AttackBox))
 	{
 		if (minion->Cooldown.GetTime() > 1000 / minion->AttackSpeed)
 		{
@@ -155,13 +153,13 @@ void MinionAttacking(Minions* minion)
 		switch (minion->CurrentMinionType)
 		{
 		case 0: case 2:
-			if (minion->CurrentSprite >= minion->NumOfSprites - 1 && SDL_HasIntersectionF(&minion->AttackBox, &Hitbox))
+			if (minion->CurrentSprite >= minion->NumOfSprites - 1 && SDL_HasIntersectionF(&minion->AttackBox, &hitbox))
 			{
 				player1.Hurt(minion->Damage);
 			}
 			break;
 		case 1:
-			if (minion->CurrentSprite == 3 && SDL_HasIntersectionF(&minion->AttackBox, &Hitbox))
+			if (minion->CurrentSprite == 3 && SDL_HasIntersectionF(&minion->AttackBox, &hitbox))
 			{
 				minion->CurrentSprite++;
 				player1.Hurt(minion->Damage);
@@ -174,7 +172,7 @@ void MinionAttacking(Minions* minion)
 				minion->CurrentSprite++;
 			}
 			if (minion->CurrentSprite >= minion->NumOfSprites - 1)
-				for (int i = 0; i < Current_max_minions; i++) if (!Projectiles[i]->isShot)
+				for (int i = 0; i < Current_max_enemies; i++) if (!Projectiles[i]->isShot)
 				{
 					Projectiles[i]->Origin = MinionCenter;
 					Projectiles[i]->ChooseType(minion->CurrentMinionType);
@@ -188,51 +186,6 @@ void MinionAttacking(Minions* minion)
 		{
 			minion->isAttacking = false;
 			minion->Idle();
-		}
-	}
-}
-void MinionProjectilesProcessing()
-{
-	for (int i = 0; i < Current_max_minions; i++) if (Projectiles[i]->isShot)
-	{
-		Projectiles[i]->Update();
-		Projectiles[i]->Decay();
-		if (!Projectiles[i]->Decayed)
-		{
-			if (!Projectiles[i]->isAnimated)
-			{
-				if (SDL_HasIntersectionF(&Projectiles[i]->Hitbox, &player1.Hitbox))
-				{
-					Projectiles[i]->Decayed = true;
-					player1.Hurt(Projectiles[i]->damage);
-				}
-			}
-			else
-			{
-				int DamageFrame;
-				switch (Projectiles[i]->type)
-				{
-				case 1:
-					DamageFrame = 10;
-					break;
-				case 2:
-					DamageFrame = 4;
-					break;
-				}
-				if (Projectiles[i]->Projectile.CurrentSprite == DamageFrame)
-				{
-					if (SDL_HasIntersectionF(&Projectiles[i]->Hitbox, &player1.Hitbox))
-					{
-							player1.Hurt(Projectiles[i]->damage);
-					}
-					Projectiles[i]->Projectile.CurrentSprite++;
-				}
-			}
-		}
-		if (Projectiles[i]->Decayed)
-		{
-			delete Projectiles[i];
-			Projectiles[i] = new MinionProjectiles();
 		}
 	}
 }
@@ -258,7 +211,7 @@ void MinionBulletCollision(Minions* minion)
 {
 	for (int i=0;i<Max_Bullets;i++) if (player1.PlayerWeapon.bullets[i]->isShot && !player1.PlayerWeapon.bullets[i]->Decayed)
 	{
-		if (SDL_HasIntersectionF(&player1.PlayerWeapon.bullets[i]->Hitbox, &minion->Hitbox))
+		if (SDL_HasIntersectionF(&player1.PlayerWeapon.bullets[i]->hitbox, &minion->hitbox))
 		{
 			if (player1.PlayerWeapon.bullets[i]->CurrentWeapon != 2)
 			{

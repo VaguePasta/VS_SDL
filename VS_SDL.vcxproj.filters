@@ -27,7 +27,7 @@
     <ClInclude Include="include\minions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\enemyAI.h">
+    <ClInclude Include="include\minionAI.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\enemyprojectiles.h">
@@ -98,7 +98,7 @@
     <ClCompile Include="src\minions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\enemyAI.cpp">
+    <ClCompile Include="src\minionAI.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\enemyprojectiles.cpp">

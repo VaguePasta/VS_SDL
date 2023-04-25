@@ -4,7 +4,7 @@
 #include "player.h"
 #include "weapons.h"
 #include "global.h"
-#include "enemyAI.h"
+#include "minionAI.h"
 #include "elementals.h"
 #include "elementalAI.h"
 #include "gameobjects.h"
@@ -28,7 +28,7 @@ void BulletUpdate()
                 player1.PlayerWeapon.bullets[i]->Update();
             }
 		}
-		else if (player1.PlayerWeapon.bullets[i]->BulletAnimation.CurrentSprite >= player1.PlayerWeapon.bullets[i]->BulletAnimation.NumOfSprites - 1)
+		else if (player1.PlayerWeapon.bullets[i]->CurrentSprite >= player1.PlayerWeapon.bullets[i]->NumOfSprites - 1)
 		{
 			delete player1.PlayerWeapon.bullets[i];
 			player1.PlayerWeapon.bullets[i] = new bullet(player1.CurrentWeapon);
@@ -65,7 +65,6 @@ void SpawnAndDeadMinions()
 				if (minion[i]->Cooldown.GetTime() <= 2000)
 				{
 					minion[i]->CurrentSprite = minion[i]->NumOfSprites - 1;
-					minion[i]->MovingCounter.Reset();
 				}
 				else
 				{
@@ -73,11 +72,6 @@ void SpawnAndDeadMinions()
 					minion[i] = new Minions();
 				}
 			}
-		}
-		if (minion[i]->isSpawn && minion[i]->MovingCounter.GetTime() >= 6000)
-		{
-			delete minion[i];
-			minion[i] = new Minions();
 		}
 	}
 }
@@ -146,5 +140,6 @@ void GameLogic()
 	BulletUpdate();
 	MinionLogics();
 	ElementalLogics();
+	EnemyProjectilesProcessing();
 	FrameCount++;
 }

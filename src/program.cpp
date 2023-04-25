@@ -48,7 +48,7 @@ void LoadSprites()
 	LoadBulletSpritesFromDisk();
 	LoadMinionsSpritesFromDisk();
 	LoadElementalSpritesFromDisk();
-	LoadMinionsProjectileSpritesFromDisk();
+	LoadEnemyProjectileSpritesFromDisk();
 	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
 	LoadFont();
 	LoadButtons();
@@ -63,11 +63,14 @@ void InitObjects()
 	for (int i = 0; i < Current_max_minions; i++)
 	{
 		minion.push_back(new Minions());
-		Projectiles.push_back(new MinionProjectiles());
 	}
 	for (int i = 0; i < Current_max_elementals; i++)
 	{
 		elemental.push_back(new Elementals());
+	}
+	for (int i = 0; i < Current_max_enemies; i++)
+	{
+		Projectiles.push_back(new EnemyProjectiles());
 	}
 	HealthBar.Init("resources/UI/bars/HealthBarBorder.PNG", "resources/UI/bars/HealthBar.PNG", 100);
 	ShieldHealthBar.Init("resources/UI/bars/ShieldHealthBarBorder.PNG", "resources/UI/bars/ShieldHealthBar.PNG", 500);
@@ -158,7 +161,6 @@ void Pause()
 			if (minion[i]->isSpawn)
 			{
 				minion[i]->Cooldown.Pause();
-				minion[i]->MovingCounter.Pause();
 			}
 		for (int i = 0; i < Current_max_elementals; i++)
 			if (elemental[i]->isSpawn)

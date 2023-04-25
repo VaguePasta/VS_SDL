@@ -14,6 +14,7 @@ class player:public sprite,public objects
         SDL_FPoint BulletOrigin;
         float Stamina;
         bool Dashing;
+        bool isParalysed;
         bool isSprinting;
         Uint32 DashCooldownTime;
         int CurrentWeapon;
@@ -31,15 +32,11 @@ class player:public sprite,public objects
 };
 void LoadPlayerSpritesFromDisk();
 void PlayerShield();
-template <class T> SDL_FRect PlayerHitbox(SDL_RendererFlip flip,T Position)
+template <class T> SDL_FRect Playerhitbox(SDL_RendererFlip flip,T Position)
 {
-    SDL_FRect Hitbox;
-    if (flip==SDL_FLIP_NONE) Hitbox={Position.x+24,Position.y+22,62,62};
-    else Hitbox = {Position.x+14,Position.y+22,62,62};
-    return Hitbox;
+    SDL_FRect hitbox;
+    if (flip==SDL_FLIP_NONE) hitbox={Position.x+24,Position.y+22,62,62};
+    else hitbox = {Position.x+14,Position.y+22,62,62};
+    return hitbox;
 }
 void PlayerDash(SDL_FPoint &TempPos);
-void TrailDrawing();
-void PlayerDrawCorner(SDL_FRect[],SDL_FRect[],SDL_FRect[]);
-void PlayerDraw(SDL_FRect,SDL_FRect,SDL_FRect);
-void PlayerDrawEdge(SDL_FRect);

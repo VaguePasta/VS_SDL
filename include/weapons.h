@@ -7,18 +7,13 @@
 #include "sprites.h"
 #include "bullets.h"
 void LoadWeaponSpritesFromDisk();
-class weapon
+class weapon:public sprite
 {
     public:
         int damage;
-        SDL_Texture *weapontexture;
-        SDL_FPoint Position;
-        SDL_FPoint *Center;
-        float angle;
         float range;
         float bulletspeed;
         float shootingspeed;
-        int WeaponSize;
         Timer ShootingDelay;
         Mix_Chunk *GunSound;
         weapon(int CurrentWeapon);

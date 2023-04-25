@@ -6,7 +6,7 @@
 #include <vector>
 std::vector <Minions*> minion;
 std::vector <Elementals*> elemental;
-std::vector <MinionProjectiles*> Projectiles;
+std::vector <EnemyProjectiles*> Projectiles;
 player player1;
 sprite SlashEffect(21, 1);
 Bars HealthBar;

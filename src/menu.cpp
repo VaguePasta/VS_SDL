@@ -279,13 +279,16 @@ void Menu_Button()
 	{
 		delete minion[i];
 		minion[i] = new Minions();
-		delete Projectiles[i];
-		Projectiles[i] = new MinionProjectiles();
 	}
 	for (int i = 0; i < Current_max_elementals; i++)
 	{
 		delete elemental[i];
 		elemental[i] = new Elementals();
+	}
+	for (int i = 0; i < Current_max_enemies; i++)
+	{
+		delete Projectiles[i];
+		Projectiles[i] = new EnemyProjectiles();
 	}
 	SDL_DestroyTexture(GameBackground);
 	Drawbackground();
@@ -304,7 +307,6 @@ void Back_Button()
 		if (minion[i]->isSpawn)
 		{
 			minion[i]->Cooldown.Unpause();
-			minion[i]->MovingCounter.Unpause();
 		}
 	for (int i = 0; i < Current_max_elementals; i++)
 	{

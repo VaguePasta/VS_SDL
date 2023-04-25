@@ -9,19 +9,13 @@
 #include <cstdlib>
 #include <cmath>
 #include "UI.h"
-std::vector<std::vector<std::vector<float>>> MinionsInfo =   //{So thu tu, kich co, toc do, toc do danh, mau, gan-xa(0-1),dmg}, {So frame, toc do chuyen frame},{HitboxNoFlip},{HitboxFlip},{AttackBoxNoFlip},{AttackBoxFlip}
+std::vector<std::vector<std::vector<float>>> MinionsInfo =   //{So thu tu, kich co, toc do, toc do danh, mau, gan-xa(0-1),dmg}, {So frame, toc do chuyen frame},{hitboxNoFlip},{hitboxFlip},{AttackBoxNoFlip},{AttackBoxFlip}
 {
 	{{0,228,5,2,250,0,20},{9,4},{6,8},{12,5},{5,4},{24,7},{80,100,80,80},{70,100,80,80},{90,30,130,170},{10,30,130,170}},    //1:Idle,2:Running,3:Attacking,4:Hurting,5:Dying
 	{{1,228,4,0.5,500,0,35},{5,7},{8,8},{9,8},{3,5},{6,13},{75,50,70,100},{85,50,70,100},{50,10,110,150},{28,10,110,150}},
 	{{2,228,5,2,300,0,15},{10,5},{8,7},{9,5},{3,6},{11,11},{100,85,55,65},{75,85,55,65},{125,75,80,85},{25,75,80,85}},
 	{{3,228,6,0.5,200,1,25},{10,5},{8,6},{6,10},{3,6},{10,11},{80,80,80,75},{80,80,80,75},{130,-190,700,600},{-600,-190,700,600}},
 	{{4,400,4,0.2,220,1,50},{8,8},{8,8},{8,8},{3,6},{7,12},{171,190,44,78},{186,190,44,78},{260,-95,700,650},{-570,-95,700,650}},
-};
-std::vector<std::vector<float>> MinionProjectilesInfo =   //STT, kich co_x, kich co_y, toc do, tam bay, sat thuong, co animation?,so frame,toc do chuyen frame
-{
-	{0,48,10,11,1000,25,0,0,0},
-	{1,192,192,0,0,50,1,14,5},
-	{2,128,176,0,0,50,1,11,7},
 };
 void LoadMinionsSpritesFromDisk()
 {
@@ -53,7 +47,12 @@ void LoadMinionsSpritesFromDisk()
 }
 Minions::Minions()
 {
-	CurrentMinionType = rand() % 5;
+	int Random = rand() % 10 + 1;
+	if (Random <= 7)
+	{
+		CurrentMinionType = rand() % 3;
+	}
+	else CurrentMinionType = rand() % 2 + 3;
 	isSpawn = false;
 	isHurt = false;
 	isDead = false;
@@ -89,18 +88,18 @@ void Minions::CalculateBoxes()
 {
 	if (flip == SDL_FLIP_NONE)
 	{
-		Hitbox = { position.x + MinionsInfo[CurrentMinionType][6][0],position.y + MinionsInfo[CurrentMinionType][6][1],MinionsInfo[CurrentMinionType][6][2],MinionsInfo[CurrentMinionType][6][3] };
+		hitbox = { position.x + MinionsInfo[CurrentMinionType][6][0],position.y + MinionsInfo[CurrentMinionType][6][1],MinionsInfo[CurrentMinionType][6][2],MinionsInfo[CurrentMinionType][6][3] };
 		AttackBox = { position.x + MinionsInfo[CurrentMinionType][8][0],position.y + MinionsInfo[CurrentMinionType][8][1],MinionsInfo[CurrentMinionType][8][2],MinionsInfo[CurrentMinionType][8][3] };
 	}
 	if (flip == SDL_FLIP_HORIZONTAL)
 	{
-		Hitbox = { position.x + MinionsInfo[CurrentMinionType][7][0],position.y + MinionsInfo[CurrentMinionType][7][1],MinionsInfo[CurrentMinionType][7][2],MinionsInfo[CurrentMinionType][7][3] };
+		hitbox = { position.x + MinionsInfo[CurrentMinionType][7][0],position.y + MinionsInfo[CurrentMinionType][7][1],MinionsInfo[CurrentMinionType][7][2],MinionsInfo[CurrentMinionType][7][3] };
 		AttackBox = { position.x + MinionsInfo[CurrentMinionType][9][0],position.y + MinionsInfo[CurrentMinionType][9][1],MinionsInfo[CurrentMinionType][9][2],MinionsInfo[CurrentMinionType][9][3] };
 	}
-	if (Hitbox.x<0 && player1.BulletOrigin.x>LEVEL_WIDTH / 2) Hitbox.x += LEVEL_WIDTH;
-	else if (Hitbox.x + Hitbox.w > LEVEL_WIDTH && player1.BulletOrigin.x < LEVEL_WIDTH / 2) Hitbox.x -= LEVEL_WIDTH;
-	if (Hitbox.y + Hitbox.h > LEVEL_HEIGHT && player1.BulletOrigin.y < LEVEL_HEIGHT / 2) Hitbox.y -= LEVEL_HEIGHT;
-	else if (Hitbox.y<0 && player1.BulletOrigin.y>LEVEL_HEIGHT / 2) Hitbox.y += LEVEL_HEIGHT;
+	if (hitbox.x<0 && player1.BulletOrigin.x>LEVEL_WIDTH / 2) hitbox.x += LEVEL_WIDTH;
+	else if (hitbox.x + hitbox.w > LEVEL_WIDTH && player1.BulletOrigin.x < LEVEL_WIDTH / 2) hitbox.x -= LEVEL_WIDTH;
+	if (hitbox.y + hitbox.h > LEVEL_HEIGHT && player1.BulletOrigin.y < LEVEL_HEIGHT / 2) hitbox.y -= LEVEL_HEIGHT;
+	else if (hitbox.y<0 && player1.BulletOrigin.y>LEVEL_HEIGHT / 2) hitbox.y += LEVEL_HEIGHT;
 }
 void Minions::Death()
 {
@@ -111,9 +110,8 @@ void Minions::Death()
 	isIdling = false;
 	isHurt = false;
 	LoadTexture(5);
-	Hitbox = { 0,0,0,0 };
+	hitbox = { 0,0,0,0 };
 	AttackBox = { 0,0,0,0 };
-	MovingCounter.Restart();
 	UpdateCurrentScore();
 }
 void Minions::Hurt()
@@ -121,7 +119,6 @@ void Minions::Hurt()
 	isHurt = true;
 	isIdling = false;
 	LoadTexture(4);
-	MovingCounter.Restart();
 }
 void Minions::Spawn(SDL_FPoint PlayerPosition)
 {
@@ -134,7 +131,6 @@ void Minions::Spawn(SDL_FPoint PlayerPosition)
 	LoadTexture(1);
 	Cooldown.Start();
 	isSpawn = true;
-	MovingCounter.Start();
 }
 void Minions::Attack()
 {
@@ -143,7 +139,6 @@ void Minions::Attack()
 	isAttacking = true;
 	Cooldown.Restart();
 	LoadTexture(3);
-	MovingCounter.Restart();
 }
 void Minions::Run()
 {
@@ -151,7 +146,6 @@ void Minions::Run()
 	isAttacking = false;
 	isMoving = true;
 	LoadTexture(2);
-	MovingCounter.Restart();
 }
 void Minions::Idle()
 {
@@ -159,65 +153,22 @@ void Minions::Idle()
 	isMoving = false;
 	isIdling = true;
 	LoadTexture(1);
-	MovingCounter.Restart();
 }
-void MinionDrawCorner(SDL_FRect TempRect[], int i)
+void MinionSlashDamage(Minions* minion, bool &MinionDamaged)
 {
-	SDL_RenderCopyExF(renderer, minion[i]->texture, &minion[i]->frame, &TempRect[1], 0, NULL, minion[i]->flip);
-	SDL_RenderCopyExF(renderer, minion[i]->texture, &minion[i]->frame, &TempRect[2], 0, NULL, minion[i]->flip);
-}
-void MinionDrawEdge(int i)
-{
-	SDL_FRect TempRect[3];
-	TempRect[0] = minion[i]->SpriteBox;
-	TempRect[1] = minion[i]->SpriteBox;
-	TempRect[2] = minion[i]->SpriteBox;
-	if (minion[i]->position.x < 0)
+	SDL_FPoint PlayerCenter = player1.position; PlayerCenter.x += 50; PlayerCenter.y += 50;
+	SDL_FPoint MinionCenter = minion->position; MinionCenter.x += minion->SpriteSize.x / 2; MinionCenter.y += minion->SpriteSize.y / 2;
+	float enemyAngle = AngleCalculation(MinionCenter, PlayerCenter, &player1.flip);
+	float enemyDistance = DistanceCalculation(MinionCenter, PlayerCenter);
+	if (abs(enemyAngle - player1.PlayerWeapon.angle) <= 5 && enemyDistance <= player1.PlayerWeapon.range && !MinionDamaged)
 	{
-		TempRect[0].x += LEVEL_WIDTH;
-		if (minion[i]->position.y < 0)
+		minion->Health -= player1.PlayerWeapon.damage;
+		if (minion->Health <= 0) minion->Death();
+		else
 		{
-			TempRect[1].x += LEVEL_WIDTH;
-			TempRect[1].y += LEVEL_HEIGHT;
-			TempRect[2].y += LEVEL_HEIGHT;
-			MinionDrawCorner(TempRect, i);
+			minion->isAttacking = false;
+			minion->Hurt();
 		}
-		SDL_RenderCopyExF(renderer, minion[i]->texture, &minion[i]->frame, &TempRect[0], 0, NULL, minion[i]->flip);
-	}
-	if (minion[i]->position.y < 0)
-	{
-		TempRect[0].y += LEVEL_HEIGHT;
-		if (minion[i]->position.x > LEVEL_WIDTH - minion[i]->SpriteBox.w)
-		{
-			TempRect[1].x -= LEVEL_WIDTH;
-			TempRect[1].y += LEVEL_HEIGHT;
-			TempRect[2].x -= LEVEL_WIDTH;
-			MinionDrawCorner(TempRect, i);
-		}
-		SDL_RenderCopyExF(renderer, minion[i]->texture, &minion[i]->frame, &TempRect[0], 0, NULL, minion[i]->flip);
-	}
-	if (minion[i]->position.x > LEVEL_WIDTH - minion[i]->SpriteBox.w)
-	{
-		TempRect[0].x -= LEVEL_WIDTH;
-		if (minion[i]->position.y > LEVEL_HEIGHT - minion[i]->SpriteBox.h)
-		{
-			TempRect[1].x -= LEVEL_WIDTH;
-			TempRect[1].y -= LEVEL_HEIGHT;
-			TempRect[2].y -= LEVEL_HEIGHT;
-			MinionDrawCorner(TempRect, i);
-		}
-		SDL_RenderCopyExF(renderer, minion[i]->texture, &minion[i]->frame, &TempRect[0], 0, NULL, minion[i]->flip);
-	}
-	if (minion[i]->position.y > LEVEL_HEIGHT - minion[i]->SpriteBox.h)
-	{
-		TempRect[0].y -= LEVEL_HEIGHT;
-		if (minion[i]->position.x < 0)
-		{
-			TempRect[1].x += LEVEL_WIDTH;
-			TempRect[1].y -= LEVEL_HEIGHT;
-			TempRect[2].y -= LEVEL_HEIGHT;
-			MinionDrawCorner(TempRect, i);
-		}
-		SDL_RenderCopyExF(renderer, minion[i]->texture, &minion[i]->frame, &TempRect[0], 0, NULL, minion[i]->flip);
+		MinionDamaged = true;
 	}
 }

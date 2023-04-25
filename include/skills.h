@@ -3,22 +3,20 @@
 #include <vector>
 #include "timer.h"
 #include "UI.h"
+#include "sprites.h"
 extern std::vector <float> Shields;
-class Shield
+class Shield:public sprite
 {
     public:
-        SDL_Texture *ShieldTexture;
-        SDL_FPoint Position;
         Icons ShieldIcon;
         int Health;
-        SDL_Point Size;
         Timer Time;
         Uint32 Cooldown;
         int DamageDelay;
         Uint32 LiveTime;
         bool isOn;
         bool Damaged;
-        SDL_FRect ShieldHitBox;
+        SDL_FRect hitbox;
         Shield();
         ~Shield();
         void ActivateShield(SDL_FPoint);

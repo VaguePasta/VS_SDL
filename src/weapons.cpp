@@ -15,18 +15,19 @@ void LoadWeaponSpritesFromDisk()
 }
 std::vector <std::vector<float>> WeaponSpritesList =                //So thu tu, Kich co, Tam ban, Toc do dan, Toc do ban, sat thuong
 {
-	{0,1000,1200,12,8,33},
-	{1,1000,1200,14,10,22},
-	{2,1200,1800,10,0.5,400},
-	{3,1200,200,0,2,200},
+	{0,83.3,1200,12,8,33},
+	{1,83.3,1200,14,10,22},
+	{2,100,1800,10,0.5,400},
+	{3,100,200,0,2,200},
 };
 weapon::weapon(int CurrentWeapon)
 {
-	weapontexture = WeaponSprites[CurrentWeapon];
-	SDL_SetTextureBlendMode(weapontexture, SDL_BLENDMODE_BLEND);
+	texture = WeaponSprites[CurrentWeapon];
+	SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
 	ShootingDelay.Start();
 	for (int i = 0; i < Max_Bullets; i++) bullets.push_back(NULL);
-	Center = new SDL_FPoint;
+	delete frame;
+	frame = nullptr;
 }
 void weapon::LoadWeapon(int CurrentWeapon)
 {
@@ -45,7 +46,7 @@ void weapon::LoadWeapon(int CurrentWeapon)
 			}
 		}
 		delete Center;
-		Center = NULL;
+		Center = nullptr;
 		GunSound = SoundEffects[CurrentWeapon];
 	}
 	else
@@ -54,9 +55,9 @@ void weapon::LoadWeapon(int CurrentWeapon)
 		delete Center;
 		Center = new SDL_FPoint;
 	}
-	weapontexture = WeaponSprites[CurrentWeapon];
-	SDL_SetTextureBlendMode(weapontexture, SDL_BLENDMODE_BLEND);
-	WeaponSize = WeaponSpritesList[CurrentWeapon][1];
+	texture = WeaponSprites[CurrentWeapon];
+	SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
+	SpriteSize = { WeaponSpritesList[CurrentWeapon][1],WeaponSpritesList[CurrentWeapon][1] };
 	range = WeaponSpritesList[CurrentWeapon][2];
 	bulletspeed = WeaponSpritesList[CurrentWeapon][3];
 	shootingspeed = WeaponSpritesList[CurrentWeapon][4];

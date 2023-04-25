@@ -22,6 +22,7 @@ class Elementals :public sprite, public objects
 		Elementals();
 		~Elementals();
 		void Spawn(SDL_FPoint PlayerPosition);
+		void ChooseAttack();
 		void Attack();
 		void Run();
 		void Dodge();

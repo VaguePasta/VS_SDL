@@ -64,30 +64,31 @@ void CalculateWeaponAngle()
 }
 void WeaponPosition()
 {
+	player1.PlayerWeapon.position = player1.position;
 	if (player1.CurrentWeapon == 2)
 	{
-		player1.PlayerWeapon.Position.x = (player1.flip == SDL_FLIP_NONE) ? (15) : (-10);
-		player1.PlayerWeapon.Position.y = 25;
+		player1.PlayerWeapon.position.x += (player1.flip == SDL_FLIP_NONE) ? (15) : (-10);
+		player1.PlayerWeapon.position.y += 25;
 	}
 	else if (player1.CurrentWeapon == 3)
 	{
 		if (player1.flip == SDL_FLIP_NONE)
 		{
-			player1.PlayerWeapon.Position.x = 35;
-			player1.PlayerWeapon.Position.y = 23;
-			*player1.PlayerWeapon.Center = { 2,30 };
+			player1.PlayerWeapon.position.x += 35;
+			player1.PlayerWeapon.position.y += 23;
+			*player1.PlayerWeapon.Center = { 2, 30 };
 		}
 		else
 		{
-			player1.PlayerWeapon.Position.x = -36;
-			player1.PlayerWeapon.Position.y = 23;
-			*player1.PlayerWeapon.Center = { 98,30 };
+			player1.PlayerWeapon.position.x += -36;
+			player1.PlayerWeapon.position.y += 23;
+			*player1.PlayerWeapon.Center = { 98, 30 };
 		}
 	}
 	else
 	{
-		player1.PlayerWeapon.Position.x = (player1.flip == SDL_FLIP_NONE) ? (20) : (-5);
-		player1.PlayerWeapon.Position.y = 33;
+		player1.PlayerWeapon.position.x += (player1.flip == SDL_FLIP_NONE) ? (20) : (-5);
+		player1.PlayerWeapon.position.y += 33;
 	}
 }
 void PlayerAttacking()
@@ -113,8 +114,8 @@ void PlayerAttacking()
 		GunShoot(Recoil, RecoilTimer, ShootAngle);
 		if (Recoil)
 		{
-			player1.PlayerWeapon.Position.x += -5 * cos(ShootAngle * 0.017);
-			player1.PlayerWeapon.Position.y += -5 * sin(ShootAngle * 0.017);
+			player1.PlayerWeapon.position.x += -5 * cos(ShootAngle * 0.017);
+			player1.PlayerWeapon.position.y += -5 * sin(ShootAngle * 0.017);
 			if (RecoilTimer.GetTime() >= 30)
 			{
 				Recoil = false;
@@ -140,7 +141,7 @@ void PlayerAttacking()
 		}
 		if (player1.MeleeAttacking)
 		{
-			if (abs(SlashEffect.SpriteAngle - player1.PlayerWeapon.angle) <= 90)
+			if (abs(SlashEffect.angle - player1.PlayerWeapon.angle) <= 90)
 			{
 				if (!player1.MeleeAttacked)
 				{
@@ -149,12 +150,12 @@ void PlayerAttacking()
 					if (player1.PlayerWeapon.angle > 360)
 					{
 						player1.PlayerWeapon.angle -= 360;
-						SlashEffect.SpriteAngle -= 360;
+						SlashEffect.angle -= 360;
 					}
 					else if (player1.PlayerWeapon.angle < 0)
 					{
 						player1.PlayerWeapon.angle += 360;
-						SlashEffect.SpriteAngle += 360;
+						SlashEffect.angle += 360;
 					}
 					SlashDamage(MinionDamaged,ElementalDamaged);
 				}
@@ -186,14 +187,14 @@ void PlayerCollisions(SDL_FPoint& TempPos)
 	if (TempPos.y < -player1.SpriteSize.y) TempPos.y = LEVEL_HEIGHT - player1.SpriteSize.y;
 	if (TempPos.x > LEVEL_WIDTH) TempPos.x = 0;
 	if (TempPos.y > LEVEL_HEIGHT) TempPos.y = 0;
-	SDL_FRect FutureHitbox = PlayerHitbox(player1.flip, TempPos);
+	SDL_FRect Futurehitbox = Playerhitbox(player1.flip, TempPos);
 	for (int i = 0; i < Current_max_minions; i++)
 	{
-		if (SDL_HasIntersectionF(&FutureHitbox, &minion[i]->Hitbox)) TempPos = player1.position;
+		if (SDL_HasIntersectionF(&Futurehitbox, &minion[i]->hitbox)) TempPos = player1.position;
 	}
 	for (int i = 0; i < Current_max_elementals; i++)
 	{
-		if (SDL_HasIntersectionF(&FutureHitbox, &elemental[i]->Hitbox)) TempPos = player1.position;
+		if (SDL_HasIntersectionF(&Futurehitbox, &elemental[i]->hitbox)) TempPos = player1.position;
 	}
 }
 void Moving()
@@ -211,7 +212,7 @@ void Moving()
 	if (!player1.isHurt)
 	{
 		PlayerDash(TempPos);
-		if (!player1.Dashing)
+		if (!player1.Dashing && !player1.isParalysed)
 		{
 			TempPos.x += player1.Direction.x * player1.speed * DeltaTime;
 			TempPos.y += player1.Direction.y * player1.speed * DeltaTime;
@@ -235,7 +236,7 @@ void Moving()
 	}
 	PlayerCollisions(TempPos);
 	player1.position = TempPos;
-	player1.Hitbox = PlayerHitbox(player1.flip, player1.position);
+	player1.hitbox = Playerhitbox(player1.flip, player1.position);
 }
 void Skills()
 {
@@ -245,8 +246,8 @@ void inputprocessing()
 {
 	Moving();
 	ChangeWeapon();
-	WeaponPosition();
-	CalculateWeaponAngle();
+	WeaponPosition(); 
+	CalculateWeaponAngle(); 
 	PlayerAttacking();
 	Skills();
 }

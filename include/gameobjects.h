@@ -8,7 +8,7 @@
 #include <SDL.h>
 extern std::vector <Minions*> minion;
 extern std::vector <Elementals*> elemental;
-extern std::vector <MinionProjectiles*> Projectiles;
+extern std::vector <EnemyProjectiles*> Projectiles;
 extern player player1;
 extern sprite SlashEffect;
 extern Bars HealthBar;

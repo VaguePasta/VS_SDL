@@ -43,6 +43,7 @@ void player::Init(int CurrentSet, int Using_Weapon)
 	Health = 100;
 	Stamina = 100;
 	isMoving = false;
+	isParalysed = false;
 	isDead = false;
 	isSprinting = false;
 	MeleeAttacking = false;
@@ -69,8 +70,8 @@ void player::LoadTexture(int CurrentSet)
 	SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
 	SDL_QueryTexture(texture, NULL, NULL, &texturesize.x, &texturesize.y);
 	framecalc();
-	if (flip == SDL_FLIP_NONE) Hitbox = { float(position.x + 0.5 * (SpriteSize.x - HitBoxSize) + SpriteSize.x / 20) ,float(position.y + 0.5 * (SpriteSize.y - HitBoxSize) + SpriteSize.y / 20) ,float(HitBoxSize),float(HitBoxSize) };
-	else Hitbox = { float(position.x + 0.5 * (SpriteSize.x - HitBoxSize) - SpriteSize.x / 20),float(position.y + 0.5 * (SpriteSize.y - HitBoxSize) + SpriteSize.y / 20),float(HitBoxSize),float(HitBoxSize) };
+	if (flip == SDL_FLIP_NONE) hitbox = { float(position.x + 0.5 * (SpriteSize.x - HitBoxSize) + SpriteSize.x / 20) ,float(position.y + 0.5 * (SpriteSize.y - HitBoxSize) + SpriteSize.y / 20) ,float(HitBoxSize),float(HitBoxSize) };
+	else hitbox = { float(position.x + 0.5 * (SpriteSize.x - HitBoxSize) - SpriteSize.x / 20),float(position.y + 0.5 * (SpriteSize.y - HitBoxSize) + SpriteSize.y / 20),float(HitBoxSize),float(HitBoxSize) };
 }
 void player::Run()
 {
@@ -82,8 +83,14 @@ void player::Idle()
 }
 void player::Hurt(int Damage)
 {
-	if (PlayerShield.isOn) PlayerShield.ShieldDamage(Damage);
+	if (Dashing) return;
+	if (PlayerShield.isOn)
+	{
+		PlayerShield.ShieldDamage(Damage);
+		return;
+	}
 	else Health -= Damage;
+	if (Health <= 0) return;
 	if (!isHurt)
 	{
 		Mix_PlayChannel(-1, SoundEffects[4], 0);
@@ -100,7 +107,7 @@ void player::Death()
 	MeleeAttacking = false;
 	if (BackgroundMusicIsPlaying) Mix_HaltChannel(BackgroundMusicChannel);
 	LoadTexture(3);
-	Hitbox = { 0,0,0,0 };
+	hitbox = { 0,0,0,0 };
 }
 void PlayerShield()
 {
@@ -131,103 +138,4 @@ void player::PlayerDirection()
 	float TempX = Direction.x;
 	Direction.x = Direction.x / sqrt(Direction.x * Direction.x + Direction.y * Direction.y);
 	Direction.y = Direction.y / sqrt(TempX * TempX + Direction.y * Direction.y);
-}
-void PlayerDrawCorner(SDL_FRect TempRect[], SDL_FRect TempWeaponRect[], SDL_FRect TempShieldRect[])
-{
-	SDL_RenderCopyExF(renderer, player1.texture, &player1.frame, &TempRect[1], 0, NULL, player1.flip);
-	SDL_RenderCopyExF(renderer, player1.texture, &player1.frame, &TempRect[2], 0, NULL, player1.flip);
-	if (!player1.isDead)
-	{
-		SDL_RenderCopyExF(renderer, player1.PlayerWeapon.weapontexture, NULL, &TempWeaponRect[1], player1.PlayerWeapon.angle, player1.PlayerWeapon.Center, player1.flip);
-		SDL_RenderCopyExF(renderer, player1.PlayerWeapon.weapontexture, NULL, &TempWeaponRect[2], player1.PlayerWeapon.angle, player1.PlayerWeapon.Center, player1.flip);
-	}
-	if (player1.PlayerShield.isOn)
-	{
-		SDL_RenderCopyF(renderer, player1.PlayerShield.ShieldTexture, NULL, &TempShieldRect[1]);
-		SDL_RenderCopyF(renderer, player1.PlayerShield.ShieldTexture, NULL, &TempShieldRect[2]);
-	}
-}
-void PlayerDraw(SDL_FRect TempRect, SDL_FRect TempWeaponRect, SDL_FRect TempShieldRect)
-{
-	SDL_RenderCopyExF(renderer, player1.texture, &player1.frame, &TempRect, 0, NULL, player1.flip);
-	if (!player1.isDead) SDL_RenderCopyExF(renderer, player1.PlayerWeapon.weapontexture, NULL, &TempWeaponRect, player1.PlayerWeapon.angle, player1.PlayerWeapon.Center, player1.flip);
-	if (player1.PlayerShield.isOn) SDL_RenderCopyF(renderer, player1.PlayerShield.ShieldTexture, NULL, &TempShieldRect);
-}
-void PlayerDrawEdge(SDL_FRect WeaponRect)
-{
-	SDL_FRect TempRect[3];
-	SDL_FRect TempWeaponRect[3];
-	SDL_FRect TempShieldRect[3];
-	TempRect[0] = player1.SpriteBox;
-	TempRect[1] = player1.SpriteBox;
-	TempRect[2] = player1.SpriteBox;
-	if (!player1.isDead)
-	{
-		TempWeaponRect[0] = WeaponRect;
-		TempWeaponRect[1] = WeaponRect;
-		TempWeaponRect[2] = WeaponRect;
-	}
-	if (player1.PlayerShield.isOn)
-	{
-		TempShieldRect[0] = player1.PlayerShield.ShieldHitBox;
-		TempShieldRect[1] = player1.PlayerShield.ShieldHitBox;
-		TempShieldRect[2] = player1.PlayerShield.ShieldHitBox;
-	}
-	if (player1.position.x < 0)
-	{
-		TempRect[0].x += LEVEL_WIDTH;
-		TempWeaponRect[0].x += LEVEL_WIDTH;
-		TempShieldRect[0].x += LEVEL_WIDTH;
-		if (player1.position.y < 0)
-		{
-			TempRect[1].x += LEVEL_WIDTH; TempWeaponRect[1].x += LEVEL_WIDTH; TempShieldRect[1].x += LEVEL_WIDTH;
-			TempRect[1].y += LEVEL_HEIGHT; TempWeaponRect[1].y += LEVEL_HEIGHT; TempShieldRect[1].y += LEVEL_HEIGHT;
-			TempRect[2].y += LEVEL_HEIGHT; TempWeaponRect[2].y += LEVEL_HEIGHT; TempShieldRect[2].y += LEVEL_HEIGHT;
-			PlayerDrawCorner(TempRect, TempWeaponRect, TempShieldRect);
-		}
-		PlayerDraw(TempRect[0], TempWeaponRect[0], TempShieldRect[0]);
-	}
-	if (player1.position.y < 0)
-	{
-		TempRect[0].y += LEVEL_HEIGHT;
-		TempWeaponRect[0].y += LEVEL_HEIGHT;
-		TempShieldRect[0].y += LEVEL_HEIGHT;
-		if (player1.position.x > LEVEL_WIDTH - player1.SpriteSize.x)
-		{
-			TempRect[1].x -= LEVEL_WIDTH; TempWeaponRect[1].x -= LEVEL_WIDTH; TempShieldRect[1].x -= LEVEL_WIDTH;
-			TempRect[1].y += LEVEL_HEIGHT; TempWeaponRect[1].y += LEVEL_HEIGHT; TempShieldRect[1].y += LEVEL_HEIGHT;
-			TempRect[2].x -= LEVEL_WIDTH; TempWeaponRect[2].x -= LEVEL_WIDTH; TempShieldRect[2].x -= LEVEL_WIDTH;
-			PlayerDrawCorner(TempRect, TempWeaponRect, TempShieldRect);
-		}
-		PlayerDraw(TempRect[0], TempWeaponRect[0], TempShieldRect[0]);
-	}
-	if (player1.position.x > LEVEL_WIDTH - player1.SpriteSize.x)
-	{
-		TempRect[0].x -= LEVEL_WIDTH;
-		TempWeaponRect[0].x -= LEVEL_WIDTH;
-		TempShieldRect[0].x -= LEVEL_WIDTH;
-		if (player1.position.y > LEVEL_HEIGHT - player1.SpriteSize.y)
-		{
-			TempRect[1].x -= LEVEL_WIDTH; TempWeaponRect[1].x -= LEVEL_WIDTH; TempShieldRect[1].x -= LEVEL_WIDTH;
-			TempRect[1].y -= LEVEL_HEIGHT; TempWeaponRect[1].y -= LEVEL_HEIGHT; TempShieldRect[1].y -= LEVEL_HEIGHT;
-			TempRect[2].y -= LEVEL_HEIGHT; TempWeaponRect[2].y -= LEVEL_HEIGHT; TempShieldRect[2].y -= LEVEL_HEIGHT;
-			PlayerDrawCorner(TempRect, TempWeaponRect, TempShieldRect);
-		}
-		PlayerDraw(TempRect[0], TempWeaponRect[0], TempShieldRect[0]);
-	}
-	if (player1.position.y > LEVEL_HEIGHT - player1.SpriteSize.y)
-	{
-
-		TempRect[0].y -= LEVEL_HEIGHT;
-		TempWeaponRect[0].y -= LEVEL_HEIGHT;
-		TempShieldRect[0].y -= LEVEL_HEIGHT;
-		if (player1.position.x < 0)
-		{
-			TempRect[1].x += LEVEL_WIDTH; TempWeaponRect[1].x += LEVEL_WIDTH; TempShieldRect[1].x += LEVEL_WIDTH;
-			TempRect[1].y -= LEVEL_HEIGHT; TempWeaponRect[1].y -= LEVEL_HEIGHT; TempShieldRect[1].y -= LEVEL_HEIGHT;
-			TempRect[2].y -= LEVEL_HEIGHT; TempWeaponRect[2].y -= LEVEL_HEIGHT; TempShieldRect[2].y -= LEVEL_HEIGHT;
-			PlayerDrawCorner(TempRect, TempWeaponRect, TempShieldRect);
-		}
-		PlayerDraw(TempRect[0], TempWeaponRect[0], TempShieldRect[0]);
-	}
 }

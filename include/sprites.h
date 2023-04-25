@@ -7,11 +7,12 @@ class sprite
         int NumOfSprites;
         int CurrentSprite;
         SDL_FPoint SpriteSize;
+        SDL_FPoint* Center;
+        float angle;
         int tempframe;
         int framespeed;
         float AnimationDelay;
-        float SpriteAngle;
-        SDL_Rect frame;
+        SDL_Rect* frame;
         SDL_FRect SpriteBox;
         sprite();
         sprite(int,int);
@@ -21,6 +22,8 @@ class sprite
         SDL_Point texturesize;
         SDL_RendererFlip flip;
         void animation();
+        void draw();
+        void draw_corner(SDL_FRect[]);
 
 };
 class objects
@@ -34,6 +37,6 @@ class objects
         bool isMoving;
         bool isIdling;
         bool isAttacking;
-        SDL_FRect Hitbox;
+        SDL_FRect hitbox;
         int HitBoxSize;
 };
