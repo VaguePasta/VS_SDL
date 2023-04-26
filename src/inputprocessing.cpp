@@ -18,27 +18,33 @@ SDL_FPoint CalculateTarget(Camera camera)
 }
 void ChangeWeapon()
 {
+	static Timer Delay(1);
+	if (Delay.GetTime() <= 1000) return;
 	if (!player1.isAttacking && !player1.MeleeAttacking)
 	{
 		if (Keyboard[SDL_SCANCODE_1] != 0 && player1.CurrentWeapon != 0)
 		{
 			player1.CurrentWeapon = 0;
 			player1.PlayerWeapon.LoadWeapon(player1.CurrentWeapon);
+			Delay.Restart();
 		}
 		else if (Keyboard[SDL_SCANCODE_2] != 0 && player1.CurrentWeapon != 1)
 		{
 			player1.CurrentWeapon = 1;
 			player1.PlayerWeapon.LoadWeapon(player1.CurrentWeapon);
+			Delay.Restart();
 		}
 		else if (Keyboard[SDL_SCANCODE_3] != 0 && player1.CurrentWeapon != 2)
 		{
 			player1.CurrentWeapon = 2;
 			player1.PlayerWeapon.LoadWeapon(player1.CurrentWeapon);
+			Delay.Restart();
 		}
 		else if (Keyboard[SDL_SCANCODE_4] != 0 && player1.CurrentWeapon != 3)
 		{
 			player1.CurrentWeapon = 3;
 			player1.PlayerWeapon.LoadWeapon(player1.CurrentWeapon);
+			Delay.Restart();
 		}
 	}
 }
@@ -185,16 +191,21 @@ void PlayerCollisions(SDL_FPoint& TempPos)
 	}
 	if (TempPos.x < -player1.SpriteSize.x) TempPos.x = LEVEL_WIDTH - player1.SpriteSize.x;
 	if (TempPos.y < -player1.SpriteSize.y) TempPos.y = LEVEL_HEIGHT - player1.SpriteSize.y;
-	if (TempPos.x > LEVEL_WIDTH) TempPos.x = 0;
-	if (TempPos.y > LEVEL_HEIGHT) TempPos.y = 0;
+	if (TempPos.x + player1.SpriteSize.x > LEVEL_WIDTH) TempPos.x -= LEVEL_WIDTH;
+	if (TempPos.y + player1.SpriteSize.y > LEVEL_HEIGHT) TempPos.y -= LEVEL_HEIGHT;
 	SDL_FRect Futurehitbox = Playerhitbox(player1.flip, TempPos);
-	for (int i = 0; i < Current_max_minions; i++)
+	if (!player1.Dashing)
 	{
-		if (SDL_HasIntersectionF(&Futurehitbox, &minion[i]->hitbox)) TempPos = player1.position;
-	}
-	for (int i = 0; i < Current_max_elementals; i++)
-	{
-		if (SDL_HasIntersectionF(&Futurehitbox, &elemental[i]->hitbox)) TempPos = player1.position;
+		for (int i = 0; i < Current_max_minions; i++)
+		{
+			if (SDL_HasIntersectionF(&player1.hitbox, &minion[i]->hitbox)) return;
+			else if (SDL_HasIntersectionF(&Futurehitbox, &minion[i]->hitbox)) TempPos = player1.position;
+		}
+		for (int i = 0; i < Current_max_elementals; i++)
+		{
+			if (SDL_HasIntersectionF(&player1.hitbox, &elemental[i]->hitbox)) return;
+			else if (SDL_HasIntersectionF(&Futurehitbox, &elemental[i]->hitbox)) TempPos = player1.position;
+		}
 	}
 }
 void Moving()

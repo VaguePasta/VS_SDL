@@ -154,21 +154,3 @@ void Minions::Idle()
 	isIdling = true;
 	LoadTexture(1);
 }
-void MinionSlashDamage(Minions* minion, bool &MinionDamaged)
-{
-	SDL_FPoint PlayerCenter = player1.position; PlayerCenter.x += 50; PlayerCenter.y += 50;
-	SDL_FPoint MinionCenter = minion->position; MinionCenter.x += minion->SpriteSize.x / 2; MinionCenter.y += minion->SpriteSize.y / 2;
-	float enemyAngle = AngleCalculation(MinionCenter, PlayerCenter, &player1.flip);
-	float enemyDistance = DistanceCalculation(MinionCenter, PlayerCenter);
-	if (abs(enemyAngle - player1.PlayerWeapon.angle) <= 5 && enemyDistance <= player1.PlayerWeapon.range && !MinionDamaged)
-	{
-		minion->Health -= player1.PlayerWeapon.damage;
-		if (minion->Health <= 0) minion->Death();
-		else
-		{
-			minion->isAttacking = false;
-			minion->Hurt();
-		}
-		MinionDamaged = true;
-	}
-}

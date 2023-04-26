@@ -34,5 +34,3 @@ class Elementals :public sprite, public objects
 		void LoadTexture(int CurrentState);
 };
 extern std::vector <std::vector<std::vector<float>>> ElementalSpritesInfo;
-void ElementalDrawEdge(int i);
-void ElementalDrawCorner(SDL_Rect[], int);

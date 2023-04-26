@@ -29,9 +29,6 @@ class Minions:public sprite,public objects
         void CalculateBoxes();
         void LoadTexture(int CurrentState);
 };
-void MinionDrawCorner(SDL_FRect[],int);
-void MinionDrawEdge(int);
-void MinionSlashDamage(Minions* minion, bool &MinionDamaged);
 template <class T> float AngleCalculation(T pos1,T origin,SDL_RendererFlip *flip)
 {
     if (abs(pos1.x-origin.x)>LEVEL_WIDTH/2) (pos1.x<origin.x)?(pos1.x+=LEVEL_WIDTH):(pos1.x-=LEVEL_WIDTH);

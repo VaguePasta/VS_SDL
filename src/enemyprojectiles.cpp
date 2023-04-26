@@ -84,17 +84,10 @@ void EnemyProjectiles::Shoot()
 		position = Origin;
 		break;
 	case 1:
-		Target = { player1.position.x + 50,player1.position.y + 50 };
-		if (abs(Target.x - Origin.x) > LEVEL_WIDTH / 2)
-		{
-			if (Target.x < Origin.x) Origin.x -= LEVEL_WIDTH;
-			else Origin.x += LEVEL_WIDTH;
-		}
-		if (abs(Target.y - Origin.y) > LEVEL_HEIGHT / 2)
-		{
-			if (Target.y < Origin.y) Origin.y -= LEVEL_HEIGHT;
-			else Origin.y += LEVEL_HEIGHT;
-		}
+		if (Target.x < -192) Target.x += LEVEL_WIDTH;
+		else if (Target.x > LEVEL_WIDTH - 192) Target.x -= LEVEL_WIDTH;
+		if (Target.y < -192) Target.y += LEVEL_HEIGHT;
+		else if (Target.y > LEVEL_HEIGHT - 192) Target.y -= LEVEL_HEIGHT;
 		position = Target;
 		hitbox = { position.x - 96,position.y - 96,192,192 };
 		angle = 0;
@@ -105,17 +98,10 @@ void EnemyProjectiles::Shoot()
 		Mix_PlayChannel(-1, SoundEffects[8], 0);
 		break;
 	case 2:
-		Target = { player1.position.x + 50,player1.position.y + 50 };
-		if (abs(Target.x - Origin.x) > LEVEL_WIDTH / 2)
-		{
-			if (Target.x < Origin.x) Origin.x -= LEVEL_WIDTH;
-			else Origin.x += LEVEL_WIDTH;
-		}
-		if (abs(Target.y - Origin.y) > LEVEL_HEIGHT / 2)
-		{
-			if (Target.y < Origin.y) Origin.y -= LEVEL_HEIGHT;
-			else Origin.y += LEVEL_HEIGHT;
-		}
+		if (Target.x < -60) Target.x += LEVEL_WIDTH;
+		else if (Target.x > LEVEL_WIDTH -60) Target.x -= LEVEL_WIDTH;
+		if (Target.y < -60) Target.y += LEVEL_HEIGHT;
+		else if (Target.y > LEVEL_HEIGHT -60) Target.y -= LEVEL_HEIGHT;
 		position = Target;
 		hitbox = { position.x - 35,position.y - 25,60,60 };
 		angle = 0;
@@ -126,16 +112,6 @@ void EnemyProjectiles::Shoot()
 		Mix_PlayChannel(-1, SoundEffects[9], 0);
 		break;
 	case 4:
-		if (abs(Target.x - Origin.x) > LEVEL_WIDTH / 2)
-		{
-			if (Target.x < Origin.x) Origin.x -= LEVEL_WIDTH;
-			else Origin.x += LEVEL_WIDTH;
-		}
-		if (abs(Target.y - Origin.y) > LEVEL_HEIGHT / 2)
-		{
-			if (Target.y < Origin.y) Origin.y -= LEVEL_HEIGHT;
-			else Origin.y += LEVEL_HEIGHT;
-		}
 		position = Target;
 		hitbox = { position.x , position.y - 64, 128, 128 };
 		angle = 0;
@@ -145,16 +121,10 @@ void EnemyProjectiles::Shoot()
 		SpriteSize = { 512,256 };
 		break;
 	case 5:
-		if (abs(Target.x - Origin.x) > LEVEL_WIDTH / 2)
-		{
-			if (Target.x < Origin.x) Origin.x -= LEVEL_WIDTH;
-			else Origin.x += LEVEL_WIDTH;
-		}
-		if (abs(Target.y - Origin.y) > LEVEL_HEIGHT / 2)
-		{
-			if (Target.y < Origin.y) Origin.y -= LEVEL_HEIGHT;
-			else Origin.y += LEVEL_HEIGHT;
-		}
+		if (Target.x < -150) Target.x += LEVEL_WIDTH;
+		else if (Target.x > LEVEL_WIDTH - 150) Target.x -= LEVEL_WIDTH;
+		if (Target.y < -60) Target.y += LEVEL_HEIGHT;
+		else if (Target.y > LEVEL_HEIGHT - 60) Target.y -= LEVEL_HEIGHT;
 		position = Target;
 		hitbox = { position.x - 80, position.y - 10,150,60 };
 		angle = 0;
@@ -202,22 +172,22 @@ void EnemyProjectiles::Update()
 		if (position.x < -SpriteSize.x)
 		{
 			Origin.x += LEVEL_WIDTH;
-			position.x = LEVEL_WIDTH;
+			position.x += LEVEL_WIDTH;
 		}
-		if (position.x > LEVEL_WIDTH)
+		if (position.x > LEVEL_WIDTH - SpriteSize.x)
 		{
 			Origin.x -= LEVEL_WIDTH;
-			position.x = 0;
+			position.x -= LEVEL_WIDTH;
 		}
 		if (position.y < -SpriteSize.y)
 		{
 			Origin.y += LEVEL_HEIGHT;
-			position.y = LEVEL_HEIGHT;
+			position.y += LEVEL_HEIGHT;
 		}
-		if (position.y > LEVEL_HEIGHT)
+		if (position.y > LEVEL_HEIGHT - SpriteSize.y)
 		{
 			Origin.y -= LEVEL_HEIGHT;
-			position.y = 0;
+			position.y -= LEVEL_HEIGHT;
 		}
 		SpriteBox = { position.x,position.y,float(SpriteSize.x),float(SpriteSize.y) };
 		if (angle >= 90)
@@ -320,7 +290,7 @@ void EnemyProjectilesProcessing()
 			case 5:
 				static int Current;
 				if (Projectiles[i]->CurrentSprite == 1) Current = 0;
-				if (!SDL_HasIntersectionF(&Projectiles[i]->hitbox, &player1.hitbox)) return;
+				if (!SDL_HasIntersectionF(&Projectiles[i]->hitbox, &player1.hitbox)) break;
 				if (Current != Projectiles[i]->CurrentSprite && Projectiles[i]->CurrentSprite >= 1 && Projectiles[i]->CurrentSprite <= 9 && Projectiles[i]->CurrentSprite % 2 == 0)
 				{
 					player1.Hurt(10);
@@ -328,14 +298,14 @@ void EnemyProjectilesProcessing()
 				}
 				break;
 			case 6:
-				static int CurrentLaser;
-				if (Projectiles[i]->CurrentSprite == 0) CurrentLaser = -1;
-				if (!SDL_HasIntersectionF(&Projectiles[i]->hitbox, &player1.hitbox)) return;
-				else if (CurrentLaser != Projectiles[i]->CurrentSprite && Projectiles[i]->CurrentSprite % 2 == 0)
+				static bool Check = false;
+				if (Projectiles[i]->CurrentSprite == 3) Check = false;
+				if (SDL_HasIntersectionF(&Projectiles[i]->hitbox, &player1.hitbox) && Projectiles[i]->CurrentSprite == 0 && !Check)
 				{
-					player1.Hurt(40);
-					CurrentLaser = Projectiles[i]->CurrentSprite;
+					player1.Hurt(120);
+					Check = true;
 				}
+				break;
 			}
 		}
 		if (Projectiles[i]->Decayed)

@@ -64,7 +64,7 @@ void LoadElementalSpritesFromDisk()
 	ElementalSprites[5][5] = IMG_LoadTexture(renderer, "resources/elementals/LeafAttack3.PNG");
 	ElementalSprites[5][6] = IMG_LoadTexture(renderer, "resources/elementals/LeafSP.PNG");
 	ElementalSprites[5][7] = IMG_LoadTexture(renderer, "resources/elementals/LeafDefend.PNG");
-	ElementalSprites[5][8] = IMG_LoadTexture(renderer, "resources/elementals/MetalHurt.PNG");
+	ElementalSprites[5][8] = IMG_LoadTexture(renderer, "resources/elementals/LeafHurt.PNG");
 	ElementalSprites[5][9] = IMG_LoadTexture(renderer, "resources/elementals/LeafDeath.PNG");
 }
 std::vector <std::vector<std::vector<float>>> ElementalSpritesInfo    //{So thu tu, kich co, toc do, toc do danh, mau}, {So frame, toc do chuyen frame},{hitboxNoFlip},{hitboxFlip},{AttackBoxNoFlip},{AttackBoxFlip}

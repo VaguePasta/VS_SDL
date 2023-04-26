@@ -4,9 +4,9 @@
 #include <SDL_mixer.h>
 #include <string>
 #define NUM_OF_BACKGROUND_MUSIC 4
-#define NUM_OF_SOUNDTRACK 4
+#define NUM_OF_SOUNDTRACK 15
 Mix_Music* BackgroundMusic[NUM_OF_BACKGROUND_MUSIC];
-Mix_Chunk* SoundEffects[12];
+Mix_Chunk* SoundEffects[14];
 Mix_Chunk* BackgroundSoundtracks[NUM_OF_SOUNDTRACK];
 int PlayingChannel;
 int CurrentMusic = -1;
@@ -28,6 +28,8 @@ void LoadSounds()
 	SoundEffects[9] = Mix_LoadWAV("resources/sounds/effects/LightningSpell.WAV");
 	SoundEffects[10] = Mix_LoadWAV("resources/sounds/effects/Bowshot.mp3");
 	SoundEffects[11] = Mix_LoadWAV("resources/sounds/effects/Slash.mp3");
+	SoundEffects[12] = Mix_LoadWAV("resources/sounds/effects/SwordHitShield.mp3");
+	SoundEffects[13] = Mix_LoadWAV("resources/sounds/effects/SwordHit.mp3");
 	for (int i = 0; i < NUM_OF_SOUNDTRACK; i++) BackgroundSoundtracks[i] = Mix_LoadWAV(("resources/sounds/backgroundsoundtracks/Soundtrack" + std::to_string(i) + ".mp3").c_str());
 	Mix_AllocateChannels(32);
 }
@@ -43,9 +45,9 @@ void PlayMusic()
 		Mix_PlayMusic(BackgroundMusic[random], 1);
 		CurrentMusic = random;
 	}
-	if (!gamestate.pause && gamestate.start && !BackgroundMusicIsPlaying)
+	if (!gamestate.pause && gamestate.start && !BackgroundMusicIsPlaying &&!player1.isDead)
 	{
-		if (rand() % 10000 <= 5)
+		if (rand() % 10000 <= 4)
 		{
 			BackgroundMusicIsPlaying = true;
 			int random = BackGroundMusicPlaying;

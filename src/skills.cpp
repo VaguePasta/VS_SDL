@@ -1,6 +1,7 @@
 #include "skills.h"
 #include "global.h"
 #include "minions.h"
+#include "minionAI.h"
 #include "gameobjects.h"
 #include "sounds.h"
 #include "texturerendering.h"
@@ -69,7 +70,6 @@ void Shield::ShieldDamage(int damage)
 void PlayerDash(SDL_FPoint& TempPos)
 {
 	static SDL_FPoint DashPosition;
-	static SDL_FPoint DashDirection;
 	if (player1.Dashing)
 	{
 		if (player1.DashCooldown.GetTime() >= 300)
@@ -81,8 +81,8 @@ void PlayerDash(SDL_FPoint& TempPos)
 		}
 		else
 		{
-			TempPos.x += 10 * DashDirection.x * DeltaTime;
-			TempPos.y += 10 * DashDirection.y * DeltaTime;
+			TempPos.x += 10 * player1.DashDirection.x * DeltaTime;
+			TempPos.y += 10 * player1.DashDirection.y * DeltaTime;
 			player1.isParalysed = false;
 		}
 	}
@@ -96,7 +96,7 @@ void PlayerDash(SDL_FPoint& TempPos)
 				player1.Dashing = true;
 				player1.isParalysed = false;
 				DashPosition = player1.position;
-				DashDirection = player1.Direction;
+				player1.DashDirection = player1.Direction;
 				player1.DashCooldown.Restart();
 			}
 		}
@@ -153,7 +153,7 @@ void GunShoot(bool& Recoil, Timer& RecoilTimer, float& ShootAngle)
 				Recoil = true;
 			}
 			if (player1.CurrentWeapon == 2) PlayingChannel = Mix_PlayChannel(-1, player1.PlayerWeapon.GunSound, 0);
-			else Mix_PlayChannel(-1, player1.PlayerWeapon.GunSound, 0);
+			else PlayingChannel = Mix_PlayChannel(-1, player1.PlayerWeapon.GunSound, 0);
 			break;
 		}
 	}
@@ -168,7 +168,7 @@ void Slash()
 	else player1.PlayerWeapon.angle += 225;
 	SlashEffect.angle = player1.PlayerWeapon.angle;
 	SlashEffect.flip = player1.flip;
-	Mix_PlayChannel(-1, player1.PlayerWeapon.GunSound, 0);
+	PlayingChannel = Mix_PlayChannel(-1, player1.PlayerWeapon.GunSound, 0);
 }
 void SlashRecover()
 {

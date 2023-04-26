@@ -231,3 +231,23 @@ void MinionBulletCollision(Minions* minion)
 		}
 	}
 }
+void MinionSlashDamage(Minions* minion, bool& MinionDamaged)
+{
+	SDL_FPoint PlayerCenter = player1.position; PlayerCenter.x += 50; PlayerCenter.y += 50;
+	SDL_FPoint MinionCenter = minion->position; MinionCenter.x += minion->SpriteSize.x / 2; MinionCenter.y += minion->SpriteSize.y / 2;
+	float enemyAngle = AngleCalculation(MinionCenter, PlayerCenter, &player1.flip);
+	float enemyDistance = DistanceCalculation(MinionCenter, PlayerCenter);
+	if (abs(enemyAngle - player1.PlayerWeapon.angle) <= 5 && enemyDistance <= player1.PlayerWeapon.range && !MinionDamaged)
+	{
+		Mix_HaltChannel(PlayingChannel);
+		PlayingChannel = Mix_PlayChannel(-1, SoundEffects[13], 0);
+		minion->Health -= player1.PlayerWeapon.damage;
+		if (minion->Health <= 0) minion->Death();
+		else
+		{
+			minion->isAttacking = false;
+			minion->Hurt();
+		}
+		MinionDamaged = true;
+	}
+}

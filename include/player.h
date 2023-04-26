@@ -11,6 +11,7 @@ class player:public sprite,public objects
         Shield PlayerShield;
         Timer DashCooldown;
         SDL_FPoint Direction;
+        SDL_FPoint DashDirection;
         SDL_FPoint BulletOrigin;
         float Stamina;
         bool Dashing;

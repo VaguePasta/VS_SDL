@@ -3,6 +3,7 @@
 #include "global.h"
 #include "gameobjects.h"
 #include "player.h"
+#include "sounds.h"
 #include <cmath>
 void ElementalLogics()
 {
@@ -474,7 +475,14 @@ void ElementalAttacking(Elementals* elemental)
 			switch (elemental->AttackType)
 			{
 			case 3:
-				if (elemental->CurrentSprite == 5 && SDL_HasIntersectionF(&elemental->AttackBox, &player1.hitbox))
+				SDL_FRect AttackBox = elemental->AttackBox;
+				if (elemental->flip == SDL_FLIP_NONE) AttackBox.w = 170;
+				else
+				{
+					AttackBox.x += AttackBox.w - 170;
+					AttackBox.w = 170;
+				}
+				if (elemental->CurrentSprite == 5 && SDL_HasIntersectionF(&AttackBox, &player1.hitbox))
 				{
 					player1.Hurt(25);
 					elemental->CurrentSprite++;
@@ -594,8 +602,15 @@ void ElementalSlashDamage(Elementals* elemental, bool &ElementalDamaged)
 	if (abs(enemyAngle - player1.PlayerWeapon.angle) <= 5 && enemyDistance <= player1.PlayerWeapon.range && !ElementalDamaged)
 	{
 		ElementalBlockMelee(elemental);
+		if (elemental->isDefending)
+		{
+			Mix_HaltChannel(PlayingChannel);
+			PlayingChannel = Mix_PlayChannel(-1, SoundEffects[12], 0);
+		}
 		if (!elemental->isDefending && !elemental->isDodging)
 		{
+			Mix_HaltChannel(PlayingChannel);
+			PlayingChannel = Mix_PlayChannel(-1, SoundEffects[13], 0);
 			elemental->Health -= player1.PlayerWeapon.damage;
 			if (elemental->Health <= 0) elemental->Death();
 			else

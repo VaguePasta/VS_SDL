@@ -23,6 +23,4 @@ class bullet:public sprite
         void Explosion(int,int);
 };
 extern std::vector <std::vector<float>> BulletSpritesList;
-void BulletDrawCorner(SDL_FRect[],SDL_Rect*,int);
-void BulletDrawEdge(SDL_Rect*,int);
 void BulletExplosion(bullet*);
