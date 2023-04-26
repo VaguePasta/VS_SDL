@@ -65,7 +65,7 @@ void EnemyProjectiles::Shoot()
 		framespeed = EnemyProjectilesInfo[type][8];
 		texture = texture;
 		tempframe = 1;
-		SDL_QueryTexture(texture, NULL, NULL, &texturesize.x, &texturesize.y);
+		SDL_QueryTexture(texture, nullptr, nullptr, &texturesize.x, &texturesize.y);
 		framecalc();
 	}
 	else

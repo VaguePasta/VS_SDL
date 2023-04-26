@@ -32,8 +32,8 @@ void Drawbackground()
 				else if (random > 96 && random <= 98) floortype = 2;
 				else if (random > 98 && random <= 100) floortype = 2;
 			} while (floortype == previous && floortype != 0);
-			SDL_RenderCopy(renderer, BackgroundSprites[floortype], NULL, &dsrect);
+			SDL_RenderCopy(renderer, BackgroundSprites[floortype], nullptr, &dsrect);
 		}
 	SDL_SetTextureBlendMode(GameBackground, SDL_BLENDMODE_BLEND);
-	SDL_SetRenderTarget(renderer, NULL);
+	SDL_SetRenderTarget(renderer, nullptr);
 }

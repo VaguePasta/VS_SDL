@@ -14,18 +14,18 @@ void combinetexture()
 	camera[0].CameraCalculation();
 	SDL_SetRenderTarget(renderer, screentexture);
 	SDL_RenderClear(renderer);
-	SDL_RenderCopy(renderer, GameBackground, NULL, NULL);
+	SDL_RenderCopy(renderer, GameBackground, nullptr, nullptr);
 	DrawPlayer();
 	DrawMinions();
 	DrawEffects();
-	SDL_SetRenderTarget(renderer, NULL);
+	SDL_SetRenderTarget(renderer, nullptr);
 }
 void rendergame()
 {
 	if (!gamestate.pause && gamestate.start && !gamestate.game_is_over && !gamestate.settings)
 	{
 		WrapCamera();
-		SDL_RenderCopy(renderer, CamTexture, NULL, NULL);
+		SDL_RenderCopy(renderer, CamTexture, nullptr, nullptr);
 		if (!player1.isDead) DrawUI();
 	}
 	if (SDL_ShowCursor(SDL_QUERY) == SDL_DISABLE) DrawCursor();
@@ -93,5 +93,5 @@ void DrawUI()
 void DrawCursor()
 {
 	SDL_Rect MouseRect = { MousePosition.x - 30,MousePosition.y - 30,60,60 };
-	SDL_RenderCopy(renderer, Cursor[0], NULL, &MouseRect);
+	SDL_RenderCopy(renderer, Cursor[0], nullptr, &MouseRect);
 }

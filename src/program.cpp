@@ -55,7 +55,7 @@ void LoadSprites()
 }
 void InitObjects()
 {
-	srand(time(NULL));
+	srand(time(nullptr));
 	screentexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_TARGET, LEVEL_WIDTH, LEVEL_HEIGHT);
 	CamTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_TARGET, LOGICAL_WIDTH, LOGICAL_HEIGHT);
 	SDL_SetTextureBlendMode(screentexture, SDL_BLENDMODE_BLEND);
@@ -91,7 +91,7 @@ void InitObjects()
 	GameButtons[8].Init(8);
 	player1.Init(0, 0);
 	SlashEffect.texture = EffectSprites[1];
-	SDL_QueryTexture(SlashEffect.texture, NULL, NULL, &SlashEffect.texturesize.x, &SlashEffect.texturesize.y);
+	SDL_QueryTexture(SlashEffect.texture, nullptr, nullptr, &SlashEffect.texturesize.x, &SlashEffect.texturesize.y);
 	SlashEffect.framecalc();
 	SlashEffect.SpriteSize = { 300,300 };
 }

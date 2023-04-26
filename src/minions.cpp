@@ -71,7 +71,7 @@ void Minions::LoadTexture(int CurrentState)
 	CurrentSprite = 0;
 	NumOfSprites = MinionsInfo[CurrentMinionType][CurrentState][0];
 	framespeed = MinionsInfo[CurrentMinionType][CurrentState][1];
-	SDL_QueryTexture(texture, NULL, NULL, &texturesize.x, &texturesize.y);
+	SDL_QueryTexture(texture, nullptr, nullptr, &texturesize.x, &texturesize.y);
 	framecalc();
 	SpriteSize.x = MinionsInfo[CurrentMinionType][0][1];
 	SpriteSize.y = MinionsInfo[CurrentMinionType][0][1];

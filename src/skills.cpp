@@ -14,7 +14,7 @@
 #include <cmath>
 Shield::Shield()
 {
-	texture = NULL;
+	texture = nullptr;
 	SpriteSize = { 100,100 };
 	position = { 0,0 };
 	Health = 500;
@@ -30,7 +30,7 @@ Shield::Shield()
 Shield::~Shield() {};
 void Shield::ActivateShield(SDL_FPoint PlayerPosition)
 {
-	if (texture == NULL) texture = IMG_LoadTexture(renderer, "resources/skills/Shield.PNG");
+	if (texture == nullptr) texture = IMG_LoadTexture(renderer, "resources/skills/Shield.PNG");
 	if (!ShieldIcon.isOnCooldown)
 	{
 		isOn = true;

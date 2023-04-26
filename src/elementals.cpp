@@ -108,7 +108,7 @@ void Elementals::LoadTexture(int CurrentState)
 	framespeed = ElementalSpritesInfo[CurrentElementalType][CurrentState + 1][1];
 	tempframe = 1;
 	CurrentSprite = 0;
-	SDL_QueryTexture(texture, NULL, NULL, &texturesize.x, &texturesize.y);
+	SDL_QueryTexture(texture, nullptr, nullptr, &texturesize.x, &texturesize.y);
 	SpriteSize.x = ElementalSpritesInfo[CurrentElementalType][0][1]; 
 	SpriteSize.y = ElementalSpritesInfo[CurrentElementalType][0][2];
 	framecalc();

@@ -25,7 +25,7 @@ weapon::weapon(int CurrentWeapon)
 	texture = WeaponSprites[CurrentWeapon];
 	SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
 	ShootingDelay.Start();
-	for (int i = 0; i < Max_Bullets; i++) bullets.push_back(NULL);
+	for (int i = 0; i < Max_Bullets; i++) bullets.push_back(nullptr);
 	delete frame;
 	frame = nullptr;
 }
@@ -35,7 +35,7 @@ void weapon::LoadWeapon(int CurrentWeapon)
 	{
 		for (int i = 0; i < Max_Bullets; i++)
 		{
-			if (bullets[i] == NULL)
+			if (bullets[i] == nullptr)
 			{
 				bullets[i] = new bullet(CurrentWeapon);
 			}

@@ -19,7 +19,7 @@ void ClearTexture(SDL_Texture* Texture)
 {
 	SDL_SetRenderTarget(renderer, screentexture);
 	SDL_RenderClear(renderer);
-	SDL_SetRenderTarget(renderer, NULL);
+	SDL_SetRenderTarget(renderer, nullptr);
 }
 void Camera::CameraWrapping()
 {
@@ -204,7 +204,7 @@ void WrapCamera()
 	}
 	else
 	{
-		SDL_RenderCopy(renderer, screentexture, &camera[0].CameraRect, NULL);
+		SDL_RenderCopy(renderer, screentexture, &camera[0].CameraRect, nullptr);
 	}
-	SDL_SetRenderTarget(renderer, NULL);
+	SDL_SetRenderTarget(renderer, nullptr);
 }

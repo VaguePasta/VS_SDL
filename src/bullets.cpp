@@ -50,7 +50,7 @@ bullet::bullet(int Weapon)
 		tempframe = 1;
 		CurrentSprite = 0;
 		texture = BulletSprites[CurrentWeapon];
-		SDL_QueryTexture(texture, NULL, NULL, &texturesize.x, &texturesize.y);
+		SDL_QueryTexture(texture, nullptr, nullptr, &texturesize.x, &texturesize.y);
 		framecalc();
 	}
 	else
@@ -134,6 +134,6 @@ void bullet::Explosion(int NumOfFrame, int _framespeed)
 	SpriteSize = { 240,240 };
 	position.x -= 120;
 	position.y -= 120;
-	SDL_QueryTexture(texture, NULL, NULL, &texturesize.x, &texturesize.y);
+	SDL_QueryTexture(texture, nullptr, nullptr, &texturesize.x, &texturesize.y);
 	framecalc();
 }

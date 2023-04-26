@@ -68,7 +68,7 @@ void player::LoadTexture(int CurrentSet)
 	NumOfSprites = PlayerSpritesInfo[CurrentSet][1];
 	framespeed = PlayerSpritesInfo[CurrentSet][2];
 	SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
-	SDL_QueryTexture(texture, NULL, NULL, &texturesize.x, &texturesize.y);
+	SDL_QueryTexture(texture, nullptr, nullptr, &texturesize.x, &texturesize.y);
 	framecalc();
 	if (flip == SDL_FLIP_NONE) hitbox = { float(position.x + 0.5 * (SpriteSize.x - HitBoxSize) + SpriteSize.x / 20) ,float(position.y + 0.5 * (SpriteSize.y - HitBoxSize) + SpriteSize.y / 20) ,float(HitBoxSize),float(HitBoxSize) };
 	else hitbox = { float(position.x + 0.5 * (SpriteSize.x - HitBoxSize) - SpriteSize.x / 20),float(position.y + 0.5 * (SpriteSize.y - HitBoxSize) + SpriteSize.y / 20),float(HitBoxSize),float(HitBoxSize) };

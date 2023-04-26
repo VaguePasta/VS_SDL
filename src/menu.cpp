@@ -13,7 +13,7 @@ void StartMenu()
 {
 	if (gamestate.start) return;
 	SDL_ShowCursor(SDL_ENABLE);
-	SDL_SetRenderTarget(renderer, NULL);
+	SDL_SetRenderTarget(renderer, nullptr);
 	SDL_RenderClear(renderer);
 	GameButtons[0].DrawButton({ LOGICAL_WIDTH / 2 - GameButtons[0].Size.x / 2 / 2,500 }, 2);
 	GameButtons[3].DrawButton({ LOGICAL_WIDTH / 2 - GameButtons[1].Size.x / 2 / 2,650 }, 2);
@@ -44,9 +44,9 @@ void PauseMenu()
     static Timer PauseDelay(1);
 	static bool HideHUD = false;
     if (!PauseDelay.Started) PauseDelay.Start();
-    SDL_SetRenderTarget(renderer, NULL);
+    SDL_SetRenderTarget(renderer, nullptr);
     SDL_RenderClear(renderer);
-    SDL_RenderCopy(renderer, CamTexture, NULL, NULL);
+    SDL_RenderCopy(renderer, CamTexture, nullptr, nullptr);
 	if (!HideHUD)
 	{
 		GameButtons[1].DrawButton({ LOGICAL_WIDTH / 2 - GameButtons[0].Size.x / 2 / 2,250 }, 2);
@@ -102,8 +102,8 @@ void GameOver()
 		Mix_HaltChannel(0);
 	}
 	static SDL_Rect ScoreRect[3];
-	static SDL_Texture* ScoreAnnounce[3] = { NULL,NULL,NULL };
-	if (ScoreAnnounce[0] == NULL)
+	static SDL_Texture* ScoreAnnounce[3] = { nullptr,nullptr,nullptr };
+	if (ScoreAnnounce[0] == nullptr)
 	{
 		SDL_Surface* TempSurface = TTF_RenderText_Solid(GlobalFont, "You died.", { 178,34,34 });
 		ScoreAnnounce[0] = SDL_CreateTextureFromSurface(renderer, TempSurface);
@@ -113,7 +113,7 @@ void GameOver()
 	if (!gamestate.game_is_over)
 	{
 		gamestate.game_is_over = true;
-		SDL_SetRenderTarget(renderer, NULL);
+		SDL_SetRenderTarget(renderer, nullptr);
 		SDL_ShowCursor(SDL_ENABLE);
 		SDL_Surface* TempSurface = TTF_RenderText_Solid(GlobalFont, std::to_string(SCORE).c_str(), { 178,34,34 });
 		ScoreAnnounce[1] = SDL_CreateTextureFromSurface(renderer, TempSurface);
@@ -158,9 +158,9 @@ void Settings()
 {
 	static bool VSync = false;
 	static std::string contents[] = { "Music","Sound effects","Resolution","Fullscreen","1280x720","1366x768","1600x900","1920x1080","VSync" };
-	static SDL_Texture* StringContent[] = { NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL };
+	static SDL_Texture* StringContent[] = { nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr };
 	static Buttons SettingButtons[6];
-	if (StringContent[0] == NULL)
+	if (StringContent[0] == nullptr)
 	{
 		for (int i = 0; i < 9; i++)
 		{
@@ -177,7 +177,7 @@ void Settings()
 		SettingButtons[5] = GameButtons[8];
 		SDL_SetTextureColorMod(StringContent[8], 192, 192, 192);
 	}
-	SDL_SetRenderTarget(renderer, NULL);
+	SDL_SetRenderTarget(renderer, nullptr);
 	SDL_RenderClear(renderer);
 	GameButtons[6].DrawButton({ 30,30 }, 2);
 	MusicVolumeBar.DrawBar({ 30,200 });
