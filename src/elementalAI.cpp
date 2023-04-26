@@ -5,6 +5,7 @@
 #include "player.h"
 #include "sounds.h"
 #include <cmath>
+#include <SDL_mixer.h>
 void ElementalLogics()
 {
 	for (int i = 0; i < Current_max_elementals; i++)
@@ -168,6 +169,7 @@ void ElementalAttacking(Elementals* elemental)
 					elemental->AttackType = 3;
 				}
 				else do { elemental->ChooseAttack(); } while (elemental->AttackType == 3);
+				if (elemental->AttackType == 6) Mix_PlayChannel(-1, SoundEffects[15], 0);
 				elemental->Attack();
 			}
 			return;
@@ -475,20 +477,27 @@ void ElementalAttacking(Elementals* elemental)
 			switch (elemental->AttackType)
 			{
 			case 3:
-				SDL_FRect AttackBox = elemental->AttackBox;
-				if (elemental->flip == SDL_FLIP_NONE) AttackBox.w = 170;
-				else
 				{
-					AttackBox.x += AttackBox.w - 170;
-					AttackBox.w = 170;
-				}
-				if (elemental->CurrentSprite == 5 && SDL_HasIntersectionF(&AttackBox, &player1.hitbox))
-				{
-					player1.Hurt(25);
-					elemental->CurrentSprite++;
+					SDL_FRect AttackBox = elemental->AttackBox;
+					if (elemental->flip == SDL_FLIP_NONE) AttackBox.w = 170;
+					else
+					{
+						AttackBox.x += AttackBox.w - 170;
+						AttackBox.w = 170;
+					}
+					if (elemental->CurrentSprite == 5 && SDL_HasIntersectionF(&AttackBox, &player1.hitbox))
+					{
+						player1.Hurt(25);
+						elemental->CurrentSprite++;
+					}
 				}
 				break;
 			case 4:
+				if (elemental->CurrentSprite == 4) 
+				{
+					Mix_PlayChannel(-1, SoundEffects[10], 0);
+					elemental->CurrentSprite++;
+				}
 				if (elemental->CurrentSprite == 9)
 				{
 					for (int i = 0; i < Current_max_enemies; i++) if (!Projectiles[i]->isShot)
@@ -604,13 +613,13 @@ void ElementalSlashDamage(Elementals* elemental, bool &ElementalDamaged)
 		ElementalBlockMelee(elemental);
 		if (elemental->isDefending)
 		{
-			Mix_HaltChannel(PlayingChannel);
-			PlayingChannel = Mix_PlayChannel(-1, SoundEffects[12], 0);
+			Mix_HaltChannel(1);
+			Mix_PlayChannel(1, SoundEffects[12], 0);
 		}
 		if (!elemental->isDefending && !elemental->isDodging)
 		{
-			Mix_HaltChannel(PlayingChannel);
-			PlayingChannel = Mix_PlayChannel(-1, SoundEffects[13], 0);
+			Mix_HaltChannel(1);
+			Mix_PlayChannel(-1, SoundEffects[13], 0);
 			elemental->Health -= player1.PlayerWeapon.damage;
 			if (elemental->Health <= 0) elemental->Death();
 			else

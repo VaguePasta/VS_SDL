@@ -121,6 +121,7 @@ void EnemyProjectiles::Shoot()
 		SpriteSize = { 512,256 };
 		break;
 	case 5:
+		Mix_PlayChannel(-1, SoundEffects[18], 0);
 		if (Target.x < -150) Target.x += LEVEL_WIDTH;
 		else if (Target.x > LEVEL_WIDTH - 150) Target.x -= LEVEL_WIDTH;
 		if (Target.y < -60) Target.y += LEVEL_HEIGHT;
@@ -134,6 +135,7 @@ void EnemyProjectiles::Shoot()
 		SpriteSize = { 512,256 };
 		break;
 	case 6:
+		Mix_PlayChannel(-1, SoundEffects[14], 0);
 		Target = { player1.position.x + 50,player1.position.y + 50 };
 		if (abs(Target.x - Origin.x) > LEVEL_WIDTH / 2)
 		{

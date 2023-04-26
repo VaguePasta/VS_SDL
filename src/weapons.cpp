@@ -18,7 +18,7 @@ std::vector <std::vector<float>> WeaponSpritesList =                //So thu tu,
 	{0,83.3,1200,12,8,33},
 	{1,83.3,1200,14,10,22},
 	{2,100,1800,10,0.5,400},
-	{3,100,200,0,2,200},
+	{3,100,150,0,2,200},
 };
 weapon::weapon(int CurrentWeapon)
 {

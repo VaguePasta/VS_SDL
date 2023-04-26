@@ -105,7 +105,7 @@ void player::Death()
 	isMoving = false;
 	isAttacking = false;
 	MeleeAttacking = false;
-	if (BackgroundMusicIsPlaying) Mix_HaltChannel(BackgroundMusicChannel);
+	if (Mix_Playing(0)) Mix_HaltChannel(0);
 	LoadTexture(3);
 	hitbox = { 0,0,0,0 };
 }

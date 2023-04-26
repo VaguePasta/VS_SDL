@@ -118,8 +118,8 @@ void BulletExplosion(bullet* CurrentBullet)
 		}
 	}
 	CurrentBullet->Explosion(8, 8);
-	Mix_HaltChannel(PlayingChannel);
-	Mix_PlayChannel(-1, SoundEffects[3], 0);
+	Mix_HaltChannel(1);
+	Mix_PlayChannel(1, SoundEffects[3], 0);
 }
 void bullet::Explosion(int NumOfFrame, int _framespeed)
 {

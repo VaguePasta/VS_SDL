@@ -6,12 +6,9 @@
 #define NUM_OF_BACKGROUND_MUSIC 4
 #define NUM_OF_SOUNDTRACK 15
 Mix_Music* BackgroundMusic[NUM_OF_BACKGROUND_MUSIC];
-Mix_Chunk* SoundEffects[14];
+Mix_Chunk* SoundEffects[19];
 Mix_Chunk* BackgroundSoundtracks[NUM_OF_SOUNDTRACK];
-int PlayingChannel;
 int CurrentMusic = -1;
-bool BackgroundMusicIsPlaying = false;
-int BackgroundMusicChannel = -1;
 int BackGroundMusicPlaying = -1;
 void LoadSounds()
 {
@@ -30,8 +27,14 @@ void LoadSounds()
 	SoundEffects[11] = Mix_LoadWAV("resources/sounds/effects/Slash.mp3");
 	SoundEffects[12] = Mix_LoadWAV("resources/sounds/effects/SwordHitShield.mp3");
 	SoundEffects[13] = Mix_LoadWAV("resources/sounds/effects/SwordHit.mp3");
+	SoundEffects[14] = Mix_LoadWAV("resources/sounds/effects/LaserBeam.mp3");
+	SoundEffects[15] = Mix_LoadWAV("resources/sounds/effects/LaserCharging.mp3");
+	SoundEffects[16] = Mix_LoadWAV("resources/sounds/effects/SwordDraw.mp3");
+	SoundEffects[17] = Mix_LoadWAV("resources/sounds/effects/GunCocking.mp3");
+	SoundEffects[18] = Mix_LoadWAV("resources/sounds/effects/ArrowShower.mp3");
 	for (int i = 0; i < NUM_OF_SOUNDTRACK; i++) BackgroundSoundtracks[i] = Mix_LoadWAV(("resources/sounds/backgroundsoundtracks/Soundtrack" + std::to_string(i) + ".mp3").c_str());
-	Mix_AllocateChannels(32);
+	Mix_AllocateChannels(48);
+	Mix_ReserveChannels(2);
 }
 void PlayMusic()
 {
@@ -45,19 +48,17 @@ void PlayMusic()
 		Mix_PlayMusic(BackgroundMusic[random], 1);
 		CurrentMusic = random;
 	}
-	if (!gamestate.pause && gamestate.start && !BackgroundMusicIsPlaying &&!player1.isDead)
+	if (!gamestate.pause && gamestate.start && !Mix_Playing(0) &&!player1.isDead)
 	{
 		if (rand() % 10000 <= 4)
 		{
-			BackgroundMusicIsPlaying = true;
 			int random = BackGroundMusicPlaying;
 			while (random == BackGroundMusicPlaying)
 			{
 				random = rand() % NUM_OF_SOUNDTRACK;
 			}
-			BackgroundMusicChannel = Mix_PlayChannel(-1, BackgroundSoundtracks[random], 1);
+			Mix_PlayChannel(0, BackgroundSoundtracks[random], 1);
 			BackGroundMusicPlaying = random;
 		}
 	}
-	else if (!Mix_Playing(BackgroundMusicChannel)) BackgroundMusicIsPlaying = false;
 }

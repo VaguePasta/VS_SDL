@@ -150,7 +150,7 @@ void Pause()
 		gamestate.pause = true;
 		MouseLeftDown = false;
 		MouseRightDown = false;
-		if (BackgroundMusicIsPlaying) Mix_HaltChannel(BackgroundMusicChannel);
+		if (Mix_Playing(0)) Mix_HaltChannel(0);
 		Mix_ResumeMusic();
 		SDL_ShowCursor(SDL_ENABLE);
 		SDL_SetTextureColorMod(CamTexture, 192, 192, 192);

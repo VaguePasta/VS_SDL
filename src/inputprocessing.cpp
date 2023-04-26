@@ -26,24 +26,28 @@ void ChangeWeapon()
 		{
 			player1.CurrentWeapon = 0;
 			player1.PlayerWeapon.LoadWeapon(player1.CurrentWeapon);
+			Mix_PlayChannel(-1, SoundEffects[17], 0);
 			Delay.Restart();
 		}
 		else if (Keyboard[SDL_SCANCODE_2] != 0 && player1.CurrentWeapon != 1)
 		{
 			player1.CurrentWeapon = 1;
 			player1.PlayerWeapon.LoadWeapon(player1.CurrentWeapon);
+			Mix_PlayChannel(-1, SoundEffects[17], 0);
 			Delay.Restart();
 		}
 		else if (Keyboard[SDL_SCANCODE_3] != 0 && player1.CurrentWeapon != 2)
 		{
 			player1.CurrentWeapon = 2;
 			player1.PlayerWeapon.LoadWeapon(player1.CurrentWeapon);
+			Mix_PlayChannel(-1, SoundEffects[17], 0);
 			Delay.Restart();
 		}
 		else if (Keyboard[SDL_SCANCODE_4] != 0 && player1.CurrentWeapon != 3)
 		{
 			player1.CurrentWeapon = 3;
 			player1.PlayerWeapon.LoadWeapon(player1.CurrentWeapon);
+			Mix_PlayChannel(-1, SoundEffects[16], 0);
 			Delay.Restart();
 		}
 	}

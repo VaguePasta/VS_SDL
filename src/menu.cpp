@@ -97,10 +97,9 @@ void PauseMenu()
 }
 void GameOver()
 {
-	if (BackgroundMusicIsPlaying)
+	if (Mix_Playing(0))
 	{
-		Mix_HaltChannel(BackgroundMusicChannel);
-		BackgroundMusicIsPlaying = false;
+		Mix_HaltChannel(0);
 	}
 	static SDL_Rect ScoreRect[3];
 	static SDL_Texture* ScoreAnnounce[3] = { NULL,NULL,NULL };
@@ -242,11 +241,12 @@ void Settings()
 	{
 		ChangeVolume(MusicVolumeBar);
 		Mix_VolumeMusic(MusicVolumeBar.Value * 1.0 / 100 * MIX_MAX_VOLUME);
+		Mix_Volume(0, MusicVolumeBar.Value * 1.0 / 100 * MIX_MAX_VOLUME);
 	}
 	else if (SDL_PointInRect(&MousePosition, &SoundEffectVolumeBar.BarRect) && MouseState & SDL_BUTTON(1))
 	{
 		ChangeVolume(SoundEffectVolumeBar);
-		Mix_MasterVolume(SoundEffectVolumeBar.Value * 1.0 / 100 * MIX_MAX_VOLUME);
+		for (int i = 1; i < 48; i++)Mix_Volume(i, SoundEffectVolumeBar.Value * 1.0 / 100 * MIX_MAX_VOLUME);
 	}
 }
 void Start_Button()

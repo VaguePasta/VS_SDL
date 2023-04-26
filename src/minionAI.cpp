@@ -239,8 +239,8 @@ void MinionSlashDamage(Minions* minion, bool& MinionDamaged)
 	float enemyDistance = DistanceCalculation(MinionCenter, PlayerCenter);
 	if (abs(enemyAngle - player1.PlayerWeapon.angle) <= 5 && enemyDistance <= player1.PlayerWeapon.range && !MinionDamaged)
 	{
-		Mix_HaltChannel(PlayingChannel);
-		PlayingChannel = Mix_PlayChannel(-1, SoundEffects[13], 0);
+		Mix_HaltChannel(1);
+		Mix_PlayChannel(-1, SoundEffects[13], 0);
 		minion->Health -= player1.PlayerWeapon.damage;
 		if (minion->Health <= 0) minion->Death();
 		else

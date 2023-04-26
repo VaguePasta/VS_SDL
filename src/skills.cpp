@@ -152,8 +152,8 @@ void GunShoot(bool& Recoil, Timer& RecoilTimer, float& ShootAngle)
 				RecoilTimer.Start();
 				Recoil = true;
 			}
-			if (player1.CurrentWeapon == 2) PlayingChannel = Mix_PlayChannel(-1, player1.PlayerWeapon.GunSound, 0);
-			else PlayingChannel = Mix_PlayChannel(-1, player1.PlayerWeapon.GunSound, 0);
+			if (player1.CurrentWeapon == 2) Mix_PlayChannel(1, player1.PlayerWeapon.GunSound, 0);
+			else Mix_PlayChannel(-1, player1.PlayerWeapon.GunSound, 0);
 			break;
 		}
 	}
@@ -168,7 +168,7 @@ void Slash()
 	else player1.PlayerWeapon.angle += 225;
 	SlashEffect.angle = player1.PlayerWeapon.angle;
 	SlashEffect.flip = player1.flip;
-	PlayingChannel = Mix_PlayChannel(-1, player1.PlayerWeapon.GunSound, 0);
+	Mix_PlayChannel(1, player1.PlayerWeapon.GunSound, 0);
 }
 void SlashRecover()
 {
