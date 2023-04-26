@@ -3,7 +3,7 @@
 #include <SDL.h>
 #include <SDL_mixer.h>
 #include <string>
-#define NUM_OF_BACKGROUND_MUSIC 4
+#define NUM_OF_BACKGROUND_MUSIC 5
 #define NUM_OF_SOUNDTRACK 15
 Mix_Music* BackgroundMusic[NUM_OF_BACKGROUND_MUSIC];
 Mix_Chunk* SoundEffects[19];
