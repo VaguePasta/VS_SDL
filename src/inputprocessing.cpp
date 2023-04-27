@@ -257,8 +257,13 @@ void Skills()
 {
 	PlayerShield();
 }
-void inputprocessing()
+void PlayerLogic()
 {
+	if (player1.Health <= 0 && !player1.isDead)
+	{
+		player1.Death();
+		return;
+	}
 	Moving();
 	ChangeWeapon();
 	WeaponPosition(); 
@@ -266,7 +271,7 @@ void inputprocessing()
 	PlayerAttacking();
 	Skills();
 }
-void GetMouseClick()
+void GetMousePosition()
 {
 	float ScaleX = LOGICAL_WIDTH * 1.0 / SCREEN_WIDTH;
 	float ScaleY = LOGICAL_HEIGHT * 1.0 / SCREEN_HEIGHT;
@@ -279,6 +284,9 @@ void GetMouseClick()
 	if (MouseRelativePosition.y < 0) MouseRelativePosition.y += LEVEL_HEIGHT;
 	if (MouseRelativePosition.x > LEVEL_WIDTH) MouseRelativePosition.x -= LEVEL_WIDTH;
 	if (MouseRelativePosition.y > LEVEL_HEIGHT) MouseRelativePosition.y -= LEVEL_HEIGHT;
+}
+void GetMouseClick()
+{
 	static bool Down1l, Down1r, Down2l = false, Down2r = false;
 	Down1l = false;
 	if (MouseState & SDL_BUTTON(1))

@@ -1,8 +1,6 @@
 #include <SDL.h>
 #include <SDL_mixer.h>
 #include "minions.h"
-#include "player.h"
-#include "weapons.h"
 #include "global.h"
 #include "minionAI.h"
 #include "elementals.h"
@@ -10,31 +8,6 @@
 #include "gameobjects.h"
 #include "sounds.h"
 #include <cmath>
-void BulletUpdate()
-{
-	for (int i = 0; i < Max_Bullets; i++)
-	{
-	    if (!player1.PlayerWeapon.bullets[i]->isShot) continue;
-		if (!player1.PlayerWeapon.bullets[i]->Decayed)
-		{
-			if (player1.PlayerWeapon.bullets[i]->Decay())
-			{
-				delete player1.PlayerWeapon.bullets[i];
-				player1.PlayerWeapon.bullets[i] = new bullet(player1.CurrentWeapon);
-				return;
-			}
-			else
-            {
-                player1.PlayerWeapon.bullets[i]->Update();
-            }
-		}
-		else if (player1.PlayerWeapon.bullets[i]->CurrentSprite >= player1.PlayerWeapon.bullets[i]->NumOfSprites - 1)
-		{
-			delete player1.PlayerWeapon.bullets[i];
-			player1.PlayerWeapon.bullets[i] = new bullet(player1.CurrentWeapon);
-		}
-	}
-}
 void SpawnAndDeadMinions()
 {
 	for (int i = 0; i < Current_max_minions; i++)
@@ -132,14 +105,21 @@ void SpawnAndDeadElementals()
 		}
 	}
 }
-void GameLogic()
+void SpawnEnemies()
 {
 	SpawnAndDeadMinions();
 	SpawnAndDeadElementals();
-	if (!player1.isDead) UpdateUI();
-	BulletUpdate();
+}
+void EnemyLogic()
+{
 	MinionLogics();
 	ElementalLogics();
+}
+void GameLogic()
+{
+	SpawnEnemies();
+	if (!player1.isDead) UpdateUI();
+	BulletUpdate();
+	EnemyLogic();
 	EnemyProjectilesProcessing();
-	FrameCount++;
 }

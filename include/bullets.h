@@ -24,3 +24,4 @@ class bullet:public sprite
 };
 extern std::vector <std::vector<float>> BulletSpritesList;
 void BulletExplosion(bullet*);
+void BulletUpdate();

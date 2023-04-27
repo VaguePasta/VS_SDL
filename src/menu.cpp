@@ -1,9 +1,6 @@
 #include "menu.h"
 #include "gameobjects.h"
 #include "sounds.h"
-#include "texturerendering.h"
-#include "background.h"
-#include "rendering.h"
 #include <SDL.h>
 #include <SDL_mixer.h>
 #include <string>
@@ -152,7 +149,6 @@ void GameOver()
 			gamestate.settings = true;
 		}
 	}
-
 }
 void Settings()
 {
@@ -202,10 +198,6 @@ void Settings()
 			MouseRightDown = false;
 			SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN_DESKTOP);
 			SDL_GetWindowSize(window, &SCREEN_WIDTH, &SCREEN_HEIGHT);
-			SDL_DestroyTexture(GameBackground);
-			Drawbackground();
-			combinetexture();
-			WrapCamera();
 		}
 		else if (SDL_PointInRect(&MousePosition, &SettingButtons[1].ButtonRect) && SCREEN_WIDTH != 1280)
 		{
@@ -266,8 +258,6 @@ void Menu_Button()
 	SCORE = 0;
 	SDL_ShowCursor(SDL_ENABLE);
 	SDL_SetTextureColorMod(CamTexture, 255, 255, 255);
-	ClearTexture(screentexture);
-	ClearTexture(CamTexture);
 	gamestate.start = false;
 	FPSTexture = nullptr;
 	for (int i = 0; i < Max_Bullets; i++)
@@ -290,8 +280,6 @@ void Menu_Button()
 		delete Projectiles[i];
 		Projectiles[i] = new EnemyProjectiles();
 	}
-	SDL_DestroyTexture(GameBackground);
-	Drawbackground();
 	player1.Init(0, 0);
 }
 void Back_Button()
@@ -348,5 +336,35 @@ void ChangeButton(Buttons SettingButton[],SDL_Texture *StringContent[],int Num_C
 			SettingButton[i] = GameButtons[Change_from];
 			SDL_SetTextureColorMod(StringContent[i + 3], 192, 192, 192);
 		}
+	}
+}
+void Pause()
+{
+	static Timer PauseDelay(1);
+	if (!PauseDelay.Started && !gamestate.pause) PauseDelay.Start();
+	if (Keyboard[SDL_SCANCODE_ESCAPE] && !gamestate.pause && !player1.isDead && PauseDelay.GetTime() >= 500)
+	{
+		gamestate.pause = true;
+		MouseLeftDown = false;
+		MouseRightDown = false;
+		if (Mix_Playing(0)) Mix_HaltChannel(0);
+		Mix_ResumeMusic();
+		SDL_ShowCursor(SDL_ENABLE);
+		SDL_SetTextureColorMod(CamTexture, 192, 192, 192);
+		player1.DashCooldown.Pause();
+		player1.PlayerShield.Time.Pause();
+		player1.PlayerWeapon.ShootingDelay.Pause();
+		for (int i = 0; i < Current_max_minions; i++)
+			if (minion[i]->isSpawn)
+			{
+				minion[i]->Cooldown.Pause();
+			}
+		for (int i = 0; i < Current_max_elementals; i++)
+			if (elemental[i]->isSpawn)
+			{
+				elemental[i]->Cooldown.Pause();
+			}
+		FPSCounter.Pause();
+		PauseDelay.Reset();
 	}
 }

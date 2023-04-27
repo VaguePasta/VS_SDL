@@ -40,6 +40,6 @@ SDL_Texture* Cursor[1];
 SDL_Texture* GameBackground;
 SDL_Texture* BackgroundSprites[4];
 const int Max_Bullets = 40;
-int Current_max_enemies = 21;
-int Current_max_elementals = std::ceil(Current_max_enemies / 5);
+int Current_max_enemies = 18;
+int Current_max_elementals =  std::ceil(Current_max_enemies / 5);
 int Current_max_minions = Current_max_enemies - Current_max_elementals;

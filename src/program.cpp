@@ -80,15 +80,7 @@ void InitObjects()
 	DashIcon.Init("resources/UI/icons/DashIcon.PNG");
 	player1.PlayerShield.ShieldIcon.Init("resources/UI/icons/ShieldIcon.PNG");
 	Cursor[0] = IMG_LoadTexture(renderer, "resources/UI/crosshairs/CrossHair1.PNG");
-	GameButtons[0].Init(0);
-	GameButtons[1].Init(1);
-	GameButtons[2].Init(2);
-	GameButtons[3].Init(3);
-	GameButtons[4].Init(4);
-	GameButtons[5].Init(5);
-	GameButtons[6].Init(6);
-	GameButtons[7].Init(7);
-	GameButtons[8].Init(8);
+	for (int i = 0; i < 9; i++) GameButtons[i].Init(i);
 	player1.Init(0, 0);
 	SlashEffect.texture = EffectSprites[1];
 	SDL_QueryTexture(SlashEffect.texture, nullptr, nullptr, &SlashEffect.texturesize.x, &SlashEffect.texturesize.y);
@@ -97,13 +89,13 @@ void InitObjects()
 }
 void GameProcessing()
 {
-	if (player1.Health <= 0 && !player1.isDead) player1.Death();
+	if (!player1.isDead) PlayerLogic();
 	GameLogic();
-	if (!player1.isDead) inputprocessing();
 	combinetexture();
 }
 void GameLoop()
 {
+	GetMousePosition();
 	GetMouseClick();
 	PlayMusic();
 	SDL_RenderClear(renderer);
@@ -136,38 +128,9 @@ void GameLoop()
     {
         GameProcessing();
         rendergame();
+		FrameCount++;
         LoopTime = SDL_GetPerformanceCounter() * freq - GetTime;
         GetTime = SDL_GetPerformanceCounter() * freq;
         DeltaTime = 1.0 * (LoopTime) / 16666666;
     }
-}
-void Pause()
-{
-	static Timer PauseDelay(1);
-	if (!PauseDelay.Started && !gamestate.pause) PauseDelay.Start();
-	if (Keyboard[SDL_SCANCODE_ESCAPE] && !gamestate.pause && !player1.isDead && PauseDelay.GetTime() >= 500)
-	{
-		gamestate.pause = true;
-		MouseLeftDown = false;
-		MouseRightDown = false;
-		if (Mix_Playing(0)) Mix_HaltChannel(0);
-		Mix_ResumeMusic();
-		SDL_ShowCursor(SDL_ENABLE);
-		SDL_SetTextureColorMod(CamTexture, 192, 192, 192);
-		player1.DashCooldown.Pause();
-		player1.PlayerShield.Time.Pause();
-		player1.PlayerWeapon.ShootingDelay.Pause();
-		for (int i = 0; i < Current_max_minions; i++)
-			if (minion[i]->isSpawn)
-			{
-				minion[i]->Cooldown.Pause();
-			}
-		for (int i = 0; i < Current_max_elementals; i++)
-			if (elemental[i]->isSpawn)
-			{
-				elemental[i]->Cooldown.Pause();
-			}
-		FPSCounter.Pause();
-		PauseDelay.Reset();
-	}
 }
