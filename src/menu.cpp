@@ -8,7 +8,6 @@
 #include "UI.h"
 void StartMenu()
 {
-	if (gamestate.start) return;
 	SDL_ShowCursor(SDL_ENABLE);
 	SDL_SetRenderTarget(renderer, nullptr);
 	SDL_RenderClear(renderer);
@@ -109,6 +108,7 @@ void GameOver()
 	}
 	if (!gamestate.game_is_over)
 	{
+		SDL_RenderSetVSync(renderer, 1);
 		gamestate.game_is_over = true;
 		SDL_SetRenderTarget(renderer, nullptr);
 		SDL_ShowCursor(SDL_ENABLE);
@@ -152,7 +152,6 @@ void GameOver()
 }
 void Settings()
 {
-	static bool VSync = false;
 	static std::string contents[] = { "Music","Sound effects","Resolution","Fullscreen","1280x720","1366x768","1600x900","1920x1080","VSync" };
 	static SDL_Texture* StringContent[] = { nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr };
 	static Buttons SettingButtons[6];
@@ -224,7 +223,6 @@ void Settings()
 			VSync = !VSync;
 			SettingButtons[5] = GameButtons[VSync ? 7 : 8];
 			SDL_SetTextureColorMod(StringContent[8], VSync ? 255 : 192, VSync ? 255 : 192, VSync ? 255 : 192);
-			SDL_RenderSetVSync(renderer, VSync);
 			MouseLeftDown = false;
 			MouseRightDown = false;
 		}
@@ -244,6 +242,7 @@ void Settings()
 void Start_Button()
 {
 	gamestate.start = true;
+	SDL_RenderSetVSync(renderer, VSync);
 	Mix_PauseMusic();
 	SDL_ShowCursor(SDL_DISABLE);
 	UpdateCurrentScore();
@@ -284,6 +283,7 @@ void Menu_Button()
 }
 void Back_Button()
 {
+	SDL_RenderSetVSync(renderer, VSync);
 	gamestate.pause = false;
 	Mix_PauseMusic();
 	SDL_ShowCursor(SDL_DISABLE);
@@ -344,6 +344,7 @@ void Pause()
 	if (!PauseDelay.Started && !gamestate.pause) PauseDelay.Start();
 	if (Keyboard[SDL_SCANCODE_ESCAPE] && !gamestate.pause && !player1.isDead && PauseDelay.GetTime() >= 500)
 	{
+		SDL_RenderSetVSync(renderer, 1);
 		gamestate.pause = true;
 		MouseLeftDown = false;
 		MouseRightDown = false;

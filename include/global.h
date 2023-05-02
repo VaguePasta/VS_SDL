@@ -9,6 +9,7 @@ extern const int LOGICAL_WIDTH;
 extern const int LOGICAL_HEIGHT;
 extern const int LEVEL_WIDTH;
 extern const int LEVEL_HEIGHT;
+extern bool VSync;
 extern Uint32 FrameCount;
 extern Uint64 GetTime;
 extern Uint16 freq;

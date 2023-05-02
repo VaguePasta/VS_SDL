@@ -8,6 +8,7 @@ const int LOGICAL_WIDTH = 1600;
 const int LOGICAL_HEIGHT = 900;
 const int LEVEL_WIDTH = 4096;
 const int LEVEL_HEIGHT = 4096;
+bool VSync = false;
 bool isFullScreen = true;
 int SCORE = 0;
 int HIGH_SCORE = 0;
